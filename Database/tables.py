@@ -5,7 +5,8 @@
 TODO: 报名
 """
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData,ForeignKey,DateTime,Boolean
-from sqlalchemy.types import CHAR, Integer, VARCHAR
+from sqlalchemy.types import CHAR, Integer, VARCHAR,Boolean
+from sqlalchemy.sql.functions import  func
 import sys
 reload(sys)
 from models import Base
@@ -15,17 +16,23 @@ from models import Base
 class User(Base): # 用户表
     __tablename__ = 'User'
 
-    userID = Column(Integer, nullable=False, primary_key=True)  # 主键
-    password = Column(VARCHAR(64), nullable=False)  # 密码
-    phone = Column(VARCHAR(11),nullable=False)  # 手机
-    nick_name = Column(VARCHAR(64), nullable=False)  # 昵称
-    real_name = Column(VARCHAR(64))
-    level = Column(Integer, default=1)  # 等级
-    location = Column(VARCHAR(128))  # 住址
-    birthday = Column(DateTime)  # 生日
+    Uid = Column(Integer, nullable=False, primary_key=True)  # 主键
+    Upassword = Column(VARCHAR(16), nullable=False)
+    Utel = Column(CHAR(11),nullable=False,unique=True)
+    Ualais = Column(VARCHAR(24),nullable=False,unique=True) # 昵称
+    Uname = Column(VARCHAR(24),nullable=True) # 真实姓名
+    Ulocation = Column(VARCHAR(128))
+    Umainbox = Column(VARCHAR(32),unique=True)
+    Ubirthday = Column(DateTime)
+    Uscore = Column(Integer,default=0)
+    UregistT = Column(DateTime,nullable=False)
+    Usex = Column(Boolean,nullable=False)
+    Usign = Column(VARCHAR(256))
 
-    regist_time = Column(DateTime)  # 注册时间
-
+class Verfication(Base): # 短信验证码及生成用户auth_key时间
+    Vphone = Column(CHAR(11),ForeignKey('User.Uid',onupdate='CASCADE')) # 请兰威查找该参数含义，共两种
+    Vcode = Column(CHAR(6),nullable=False)
+    VT = Column(DateTime(timezone=True), server_default=func.now()) # 待测试是插入数据的时间还是最后一次更新该表的时间
 
 class Activity(Base):
     __tablename__ = 'Activity'
