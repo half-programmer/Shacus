@@ -23,15 +23,15 @@ class RegisterHandler(BaseHandler):
         if type == '10001':  # 验证手机号
             m_phone=self.get_argument('phone')
             try:
-                user = self.db.query(User).filter(User.phone == m_phone).one()
+                user = self.db.query(User).filter(User.Utel == m_phone).one()
                 if user:
                     self.retjson['content'] = u"该手机号已经被注册，请更换手机号或直接登录"
                     self.retjson['code'] = 10005
             except:
                 code=generate_verification_code()
                 veri=Verification(
-                    phone=m_phone,
-                    verificationcode=code
+                    Vphone=m_phone,
+                    Vcode=code,
                 )
                 self.db.merge(veri)
                 try:
@@ -47,8 +47,8 @@ class RegisterHandler(BaseHandler):
             m_phone=self.get_argument('phone')
             code=self.get_argument('code')
             try:
-               item=self.db.query(Verification).filter(Verification.phone==m_phone).one()
-               if item.verificationcode==code:
+               item=self.db.query(Verification).filter(Verification.Vphone==m_phone).one()
+               if item.Vcode==code:
                    self.retjson['code']=10004
                    self.retjson['contents']=u'验证码验证成功'
                else:
@@ -63,17 +63,19 @@ class RegisterHandler(BaseHandler):
             m_nick_name=self.get_argument('nickName')  # 昵称
             m_phone=self.get_argument('phone')
             new_user=User(
-                    password=m_password,
-                    nick_name=m_nick_name,
-                    real_name='',
-                    level=1,  #  新用户注册默认level为1
-                    location='',
-                    birthday='',
-                    phone=m_phone,
-                    regist_time=''
+                    Upassword=m_password,
+                    Ualais=m_nick_name,
+                    Uname='',
+                    Ulocation='',  #  新用户注册默认level为1
+                    Umailbox='',
+                    Ubirthday='',
+                    Utel=m_phone,
+                    Uscore=0,
+                    Usex=1,
+                    Usign=''
             )
             try:
-                same_nickname_user = self.db.query(User).filter(User.nick_name == m_nick_name).one()
+                same_nickname_user = self.db.query(User).filter(User.Ualais == m_nick_name).one()
                 if same_nickname_user:  # 该昵称已被使用
                     self.retjson['code'] = 10008  # Request Timeout
                     self.retjson['contents'] =u'该昵称已被使用，请更换昵称'
