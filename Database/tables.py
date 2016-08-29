@@ -11,7 +11,7 @@ from models import Base
 import sys
 reload(sys)
 
-# from models import engine
+from models import engine
 
 # 每个类对应一个表
 class User(Base): # 用户表
