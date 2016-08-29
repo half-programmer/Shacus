@@ -29,6 +29,7 @@ class RegisterHandler(BaseHandler):
                     self.retjson['contents'] = u"该手机号已经被注册，请更换手机号或直接登录"
                     self.retjson['code'] = 10005
             except Exception,e:
+                print e
                 code=generate_verification_code()
                 veri=Verification(
                     Vphone=m_phone,
@@ -40,6 +41,7 @@ class RegisterHandler(BaseHandler):
                     self.retjson['code'] = 10004 # success
                     self.retjson['contents'] = u'手机号验证成功，发送验证码'
                 except:
+                    print e
                     self.db.rollback()
                     self.retjson['code'] = 10009  # Request Timeout
                     self.retjson['contents'] = u'服务器错误'
