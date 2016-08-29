@@ -1,7 +1,7 @@
-# coding=utf-8
+# -*- coding:utf-8 -*-
 import json
 from  BaseHandlerh import BaseHandler
-from Database.tables import Appointment,User
+from Database.tables import User
 from Database.tables import Verification
 import random
 from messsage import message
@@ -17,6 +17,7 @@ def generate_verification_code(len=6):
  return verification_code
 
 class RegisterHandler(BaseHandler):
+    print "进入regist"
     retjson = {'code': '400', 'contents': 'None'}
     def post(self):
         type = self.get_argument('type', default='unsolved')

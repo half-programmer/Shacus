@@ -7,16 +7,9 @@ import tornado.web
 # from loginHandler import LoginHandler
 from sqlalchemy.orm import scoped_session, sessionmaker
 from tornado.options import define, options
-
-import RegisterHandler
 from Database.models import engine
-# from AppointmentsAskHandler import AskAppointment
-# #from  Database.tables import Activity,ActivityParticipate,Appointment,AppointmenmtEntry,AppointmentRegister,Estimation,Style,User
-# from AppointmentHandler import CreateAppointment, RegistAppointment
-# from RegisterHandler import RegisterHandler
+from RegisterHandler import RegisterHandler
 from ImageCallback import ImageCallback
-# from ActivityHandler import ActivityCommit, ActivityJoin
-# from ActivityAskHandler import AskActivity
 from loginHandler import LoginHandler
 
 define("port", default=800, help="run on the given port", type=int)
