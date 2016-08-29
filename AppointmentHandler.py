@@ -1,21 +1,41 @@
 # coding=utf-8
+'''
+  黄鑫晨&&兰威
+  2016.08.29
+
+'''
 import json
 import commonFunctions
 from  BaseHandlerh import BaseHandler
-from Database.tables import Appointment, User, AppointmentRegister, AppointmenmtEntry
+from Database.tables import Appointment, User,ActivityImage
 
 
 class CreateAppointment(BaseHandler):  # 创建约拍
+    retjson = {'code': '400', 'content': 'None'}
     def post(self):
-        m_sponsorID = self.get_argument('sponsorID')  # 发起人
-        m_location = self.get_argument('location')  # 位置
-        m_start_time = self.get_argument('startTime')
-        m_end_time = self.get_argument('endTime')
-        m_appointment_name = self.get_argument('appointmentName')
-        m_appointment_introduction = self.get_argument('appointmentIntroduction')
-        m_self_introduction = self.get_argument('selfIntroduction')  # 自我介绍
-        m_styleID = self.get_argument('styleID')  # 风格类型
-        retjson = {'code': '400', 'content': 'None'}
+        # 10201 客户端请求，摄影师发布约拍  start
+        user_phone=self.get_argument('phone')
+        auth_key=self.get_argument('auth_key')
+        title=self.get_argument('title')
+        type=self.get_argument('type')
+
+        sponsor =  self.db.query(User).filter(User.Utel==user_phone).one()
+
+        # 判断返回是否许可
+
+        # 10201 客户端请求，摄影师发布约拍 end
+
+
+        # m_appointment_title = self.get_argument('appointmentTitle') # 标题
+        # m_sponsorid = self.get_argument('sponsorID')  # 发起人
+        # m_location = self.get_argument('location')  # 位置
+        # m_start_time = self.get_argument('startTime')
+        # m_end_time = self.get_argument('endTime')
+        #
+        # m_appointment_introduction = self.get_argument('appointmentIntroduction')
+        # m_self_introduction = self.get_argument('selfIntroduction')  # 自我介绍
+        # m_styleID = self.get_argument('styleID')  # 风格类型
+
         try:
             user = self.db.query(User).filter(User.userID == m_sponsorID).one()
             if user:  # 已注册
