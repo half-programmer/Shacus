@@ -9,28 +9,41 @@ class LoginHandler(BaseHandler):
 
     retjson = {'code': '400', 'contents': u'未处理 ', 'Code': ''}
     def post(self):
-        askcode = self.get_argument('askCode')
+        askcode = self.get_argument('askCode')  # 请求码
         m_phone = self.get_argument('phone')
         if askcode == '10106':  # 手动登录
             m_password = self.get_argument('password')
             if not m_phone or not m_password:
-                LoginHandler.retjson['code'] = 400
-                LoginHandler.retjson['contents'] = u'用户名密码不能为空'
+                self.retjson['code'] = 400
+                self.retjson['contents'] = 10105  # '用户名密码不能为空'
 
         # 防止重复注册
             else:
                 try:
-                    user = self.db.query(User).filter(User.phone == m_phone).one()
+                    user = self.db.query(User).filter(User.Utel).one()
                     if user:  # 用户存在
-                        password = user.password
+                        password = user.Upassword
                         if m_password == password:  # 密码正确
                             self.retjson['code'] = 200
+                            if user.Ubirthday:
+                                Ubirthday = user.Ubirthday.strftime('%Y-%m-%dT%H:%M:%S'),
+                            else:
+                                Ubirthday = ''
                             retdata = []
                             user_model = dict(
-                                id=user.userID,
-                                phone=user.phone,
-                                nick_name=user.nick_name,
-                                avatar="图片链接",
+                                id=user.Uid,
+                                phone=user.Utel,
+                                nickName=user.Ualais,
+                                realName=user.Uname,
+                                sign=user.Usign,
+                                sex=user.Usex,
+                                score=user.Uscore,
+                                location=user.Ulocation,
+                                birthday=Ubirthday,
+                                registTime=user.UregistT.strftime('%Y-%m-%dT%H:%M:%S'),
+                                mailBox=user.Umailbox,
+
+
                             )
                             data = dict(
                             askCode="10106",
@@ -42,23 +55,23 @@ class LoginHandler(BaseHandler):
                             headImage="用户头像url"
                             )
                             retdata.append(data)
-                            LoginHandler.retjson['Code'] = 10101
-                            LoginHandler.retjson['contents'] = retdata
+                            self.retjson['Code'] = 10101
+                            self.retjson['contents'] = retdata
 
                         else:
-                            LoginHandler.retjson['Code'] = 10104  # 密码错误
+                            self.retjson['Code'] = 10104  # 密码错误
                     else:  # 用户不存在
-                        LoginHandler. retjson['Code'] = 10103
+                        self.retjson['Code'] = 10103
                 except Exception, e:  # 还没有注册
                     print "异常："
                     print e
                     self.retjson['code'] = 400
-                    self.retjson['Code'] = u'该用户名不存在'
+                    self.retjson['Code'] = 10103 # '该用户名不存在'
         elif askcode == '10105':  # 自动登录
             authcode = self.get_argument("authcode")  # 授权码
         else:
-            LoginHandler.retjson['data'] = "去你妈了个吧"
-        self.write(json.dumps(LoginHandler.retjson, ensure_ascii=False, indent=2))
+            self.retjson['data'] = u"登录类型不满足要求，请重新登录！"
+        self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
 
 
