@@ -4,35 +4,39 @@
 from qiniu import Auth, put_file, etag, urlsafe_base64_encode
 import qiniu.config
 
-#需要填写的 Access Key 和 Secret Key
-access_key = 'yzAza_Cm87nXkh9IyFfpg7LL7qKJ097VK5IOpLj0'
-secret_key = 'GFWHU9hYkU4hepDwpWfHaNDt3gJCDsAk3Kz6DGdk'
-
-#构建鉴权对象
-Auth_key = Auth(access_key, secret_key)
-
-#要上传的空间
-bucket_name = 'shacus'
-
-#上传到七牛后保存的文件名
-key = '20160829.jpg'
 
 
-#生成上传 Token，可以指定过期时间等
-auth_token = Auth_key.upload_token(bucket_name, key, 3600)
+
+
+
+
+
 #print auth_token
 
 
 # todo 封装auth_token
-# class AuthKeyHandler:
-#     auth_token = Auth_key.upload_token(bucket_name, key, 3600)
-#     @property
-#     def Authkey(self):
-#         return Auth_key
-#
-#     @property
-#     def token(self):
-#         print  self.auth_token
-#         return self.auth_token
-#
-# print  AuthKeyHandler.token
+class AuthKeyHandler:
+    def __init__(self):
+        self.access_key = 'yzAza_Cm87nXkh9IyFfpg7LL7qKJ097VK5IOpLj0'
+        self.secret_key = 'GFWHU9hYkU4hepDwpWfHaNDt3gJCDsAk3Kz6DGdk'
+        self.Auth_key = Auth(self.access_key, self.secret_key)
+        self.auth_tokens = []
+    # 构建鉴权对象
+    def generateToken(self,names):
+       bucket_name = 'shacus' # 要上传的空间
+       tokens = []
+       for title in names:
+           print 'title:',title
+           token = self.Auth_key.upload_token(bucket_name, title, 3600)
+           self.auth_tokens.append(token)
+       return self.auth_tokens
+    def get_auth_key(self):
+        return self.Auth_key
+    def get_token(self):
+        return self.auth_tokens
+
+if __name__ == "__main__":
+    names = ["asdw.png","asdw.png", "qruo.jpeg"]
+    auh = AuthKeyHandler()
+    print auh.generateToken(names)
+
