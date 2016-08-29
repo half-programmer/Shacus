@@ -62,10 +62,12 @@ class CreateAppointment(BaseHandler):  # 创建约拍
             except Exception,e:
                 print e
                 self.retjson['contents']="该用户名不存在"
-        #elif type == 10205: # 开始传输数据
-        #     user_phone = self.get_argument('phone')
-        #     auth_key = self.get_argument('auth_key')
-        #     title = self.get_argument('title')
+        # elif type == 10205: # 开始传输数据
+        #      user_phone = self.get_argument('phone')
+        #      auth_key = self.get_argument('auth_key')
+        #      title = self.get_argument('title')
+
+
             self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
 

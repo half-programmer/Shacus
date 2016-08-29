@@ -69,11 +69,12 @@ class RegisterHandler(BaseHandler):
                     Uname='',
                     Ulocation='',  #  新用户注册默认level为1
                     Umailbox='',
-                    Ubirthday='',
+                    Ubirthday='0000-00-00 00:00:00',
                     Utel=m_phone,
                     Uscore=0,
                     Usex=1,
-                    Usign=''
+                    Usign='',
+                    Uauthkey=''
             )
             try:
                 same_nickname_user = self.db.query(User).filter(User.Ualais == m_nick_name).one()
