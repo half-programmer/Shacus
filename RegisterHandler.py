@@ -25,7 +25,7 @@ class RegisterHandler(BaseHandler):
             try:
                 user = self.db.query(User).filter(User.Utel == m_phone).one()
                 if user:
-                    self.retjson['content'] = u"该手机号已经被注册，请更换手机号或直接登录"
+                    self.retjson['contents'] = u"该手机号已经被注册，请更换手机号或直接登录"
                     self.retjson['code'] = 10005
             except:
                 code=generate_verification_code()
