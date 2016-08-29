@@ -5,8 +5,10 @@
 
 '''
 import json
+import types
+
 import commonFunctions
-from FileHandler.Upload import auth_token
+from FileHandler.Upload import AuthKeyHandler
 from  BaseHandlerh import BaseHandler
 from Database.tables import Appointment, User,Verification
 
@@ -21,11 +23,10 @@ class CreateAppointment(BaseHandler):  # 创建约拍
             user_phone = self.get_argument('phone')
             auth_key = self.get_argument('auth_key')
             ap_title = self.get_argument('title')
+            ap_imgs = self.get_argument('imgs')
             try:
                 sponsor = self.db.query(User).filter(User.Utel == user_phone).one()
                 key = sponsor.Uauthkey
-                print "key: ", key
-                print "auth_key: ", auth_key
                 ap_sponsorid = sponsor.Uid
                 # todo 判断该活动是否存在
                 if auth_key == key:  #认证成功
@@ -35,8 +36,10 @@ class CreateAppointment(BaseHandler):  # 创建约拍
                             self.retjson['contents'] = '该约拍已存在'
                     except Exception, e:
                         print e
-                        upload_auth_token = auth_token  # 上传授权凭证
-                        retjson_body = {'auth_key': upload_auth_token, 'apId':''}
+                        retjson_body = {'auth_key': '', 'apId': ''}
+                        auth_key_handler = AuthKeyHandler()
+                        ap_imgs_json =json.loads(ap_imgs)
+                        retjson_body['auth_key'] = auth_key_handler.generateToken(ap_imgs_json)
                         self.retjson['code'] = 200
                         self.retjson['Code'] = 10200
 
@@ -50,7 +53,8 @@ class CreateAppointment(BaseHandler):  # 创建约拍
                             APcontent='',  # 活动介绍
                             APclosed=0,
                             APlikeN=0,
-                            APvalid=1)
+                            APvalid=1
+                        )
                         self.db.merge(new_appointment)
                         self.db.commit()
                         ap_id = self.db.query(Appointment.APid).filter(
