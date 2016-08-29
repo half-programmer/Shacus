@@ -5,11 +5,10 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')  # python的str默认是ascii编码，和unicode编码冲突,需处理
 
-# DB_CONNECT_STRING = 'mysql+mysqldb://root:hxc@127.0.0.1/hearld_activity?charset=utf8'
-# DB_CONNECT_STRING = 'mysql+mysqldb://root:hxc@127.0.0.1:3306/hearld_activity?charset=utf8'
-#DB_CONNECT_STRING = 'mysql+mysqldb://root@127.0.0.1/shacustest?charset=utf8'
+DB_CONNECT_STRING = 'mysql+mysqldb://root@127.0.0.1/shacustest?charset=utf8'
 #DB_CONNECT_STRING= 'mysql+mysqldb://root:ydrs.sql.7234@localhost:3306/vita?charset=utf8'
-DB_CONNECT_STRING = 'mysql+mysqldb://root@127.0.0.1:3307/shacustest?charset=utf8'
+#DB_CONNECT_STRING = 'mysql+mysqldb://root@127.0.0.1:3307/shacustest?charset=utf8'
+
 engine = create_engine(DB_CONNECT_STRING, echo=True)  # 返回数据库引擎，即连接数据库
 connection = engine.connect()
 
