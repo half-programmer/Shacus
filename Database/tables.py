@@ -6,7 +6,7 @@ TODO: 报名
 """
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData,ForeignKey,DateTime,Boolean
 from sqlalchemy.types import CHAR, Integer, VARCHAR,Boolean,Float
-from sqlalchemy.sql.functions import  func
+from sqlalchemy.sql.functions import func
 from models import Base
 import sys
 reload(sys)
@@ -25,10 +25,11 @@ class User(Base): # 用户表
     Ulocation = Column(VARCHAR(128))
     Umailbox = Column(VARCHAR(32))#unique=True) # unique表示唯一性
     Ubirthday = Column(DateTime)
-    Uscore = Column(Integer,default=0)
+    Uscore = Column(Integer, default=0)
     UregistT = Column(DateTime(timezone=True), server_default=func.now())
     Usex = Column(Boolean,nullable=False)
     Usign = Column(VARCHAR(256))
+    Uauthkey = Column(VARCHAR(32))
 
 class Verification(Base): # 短信验证码及生成用户auth_key时间
     __tablename__ = 'Verification'
@@ -42,18 +43,18 @@ class Activity(Base):#活动表
 
     ACid = Column(Integer,nullable=False,primary_key=True)
     ACsponsorid = Column(Integer,ForeignKey('User.Uid',onupdate='CASCADE'))#活动发起者
-    AClocation = Column(VARCHAR(128))
-    ACtitle = Column(VARCHAR(24)) # 活动的名称？确认长度
+    AClocation = Column(VARCHAR(128),nullable=False)
+    ACtitle = Column(VARCHAR(24),nullable=False) # 活动的名称？确认长度
     ACtag = Column(VARCHAR(12)) # 活动的标签？确认类型
-    ACstartT = Column(DateTime)
-    ACendT = Column(DateTime)
+    ACstartT = Column(DateTime, nullable=False)
+    ACendT = Column(DateTime, nullable=False)
     ACjoinT = Column(DateTime) # 活动报名截止时间
-    ACcontent = Column(VARCHAR(128)) # 活动介绍
+    ACcontent = Column(VARCHAR(128), nullable=False) # 活动介绍
     ACfree = Column(Boolean)
     ACprice = Column(Float)
-    ACclosed = Column(Boolean,default=1) # 活动是否已经结束
+    ACclosed = Column(Boolean,default=1, nullable=False) # 活动是否已经结束
     ACcreateT = Column(DateTime(timezone=True), server_default=func.now())
-    ACcommentnumber = Column(Integer,default=0)
+    ACcommentnumber = Column(Integer,default=0, nullable=False)
     ACmaxp = Column(Integer)
     ACminp = Column(Integer)
     ACscore = Column(Integer,default=0)
@@ -131,21 +132,22 @@ class Appointment(Base):  #摄影师-模特约拍
 
     APid = Column(Integer, primary_key=True,nullable=False)
     APsponsorid = Column(Integer, ForeignKey('User.Uid', ondelete='CASCADE'), nullable=False)  # 发起者
-    APtitle=Column(VARCHAR(24))
+    APtitle=Column(VARCHAR(24),nullable=False)
     APlocation = Column(VARCHAR(128), nullable=False)
     APtag=Column(VARCHAR(12)) # 约拍标签？确认长度
-    APstartT = Column(DateTime)
-    APendT = Column(DateTime)
+    APstartT = Column(DateTime, nullable=False, default='')
+    APendT = Column(DateTime,nullable=False, default='')
     APjoinT=Column(DateTime)
-    APcontent=Column(VARCHAR(128))
+    APcontent=Column(VARCHAR(128),nullable=False, default='')
     APfree = Column(Boolean)
     APprice = Column(Float)
     APclosed = Column(Boolean)
     APcreateT = Column(DateTime(timezone=True), server_default=func.now())
-    APtype = Column(Boolean) # 约拍类型，模特约摄影师或摄影师约模特
-    Apaddallowed = Column(Boolean)
-    AplikeN = Column(Integer,default=0)
-    APvalid = Column(Boolean,default=1)
+    APtype = Column(Boolean,nullable=False,default=0) # 约拍类型，模特约摄影师(1)或摄影师约模特(0)
+    APaddallowed = Column(Boolean,default=0)
+    APlikeN = Column(Integer, default=0, nullable=False)
+    APvalid = Column(Boolean, default=1, nullable=False)
+
 
 class AppointmentInfo(Base):
     __tablename__ = "Appointmentinfo"
