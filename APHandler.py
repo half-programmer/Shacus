@@ -72,7 +72,6 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
                 self.retjson['contents']="该用户名不存在"
         elif ap_type == '10205': # 开始传输数据
             print "进入10205"
-            ap_sponsorid =self.get_argument('uid')
             ap_id = self.get_argument('apid')
             auth_key = self.get_argument('auth_key')
             # todo: auth_key经常使用，可以优化
@@ -84,38 +83,47 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
             ap_free = self.get_argument('free')
             ap_price = self.get_argument('price')
             ap_content = self.get_argument('contents')
-            ap_tag =  self.get_argument('tags')  # 约拍标签？确认长度
+            ap_tag = self.get_argument('tags')  # 约拍标签？确认长度
             ap_addallowed = self.get_argument('ap_allowed')
             ap_type = self.get_argument('ap_type')
             try:
-                exist = self.db.query(Appointment).filter(Appointment.APtype == ap_type,
-                                                          Appointment.APtitle == ap_title,
-                                                          Appointment.APsponsorid == ap_sponsorid ).one()
-                if exist:
-                    self.retjson['Code'] = '10210'
-                    self.retjson['contents'] = '该约拍已存在'
-            except Exception,e:
+                uid = self.db.query(User.Uid).filter(User.Uauthkey == auth_key).first() # 查看该用户id
                 try:
-                    exist = self.db.query(Appointment).filter(Appointment.APid == ap_id,
-                                                              Appointment.APsponsorid == ap_sponsorid
-                                                          ).one()
+                    exist = self.db.query(Appointment).filter(Appointment.APtype == ap_type,
+                                                          Appointment.APtitle == ap_title,
+                                                          Appointment.APsponsorid == uid
+                                                              ).one()  # 判断该活动是否已经存在
                     if exist:
-                        self.db.query(Appointment).filter(Appointment.APid == ap_id).\
-                        update({Appointment.APstartT: ap_start_time, Appointment.APendT: ap_end_time,
-                                Appointment.APjoinT: ap_join_time,
-                                Appointment.APlocation: ap_location, Appointment.APfree: ap_free,
-                                Appointment.APprice: ap_price, Appointment.APcontent: ap_content,
-                                Appointment.APtag: ap_tag, Appointment.APaddallowed: ap_addallowed,
-                                Appointment.APtype: ap_type
-                                }, synchronize_session=False)
-                        self.db.commit()
-                        self.retjson['code'] = '200'
-                        self.retjson['Code'] = '10206'
-                        self.retjson['contents'] = '发布约拍成功'
+                        self.retjson['Code'] = '10210'
+                        self.retjson['contents'] = '该约拍已存在'
                 except Exception, e:
                     print e
-                    self.retjson['Code'] = '10206'
-                    self.retjson['contents'] = r'该发布尚未获得权限！'
+                    try:
+                        exist = self.db.query(Appointment).filter(Appointment.APid == ap_id,
+                                                              Appointment.APtitle == ap_title
+                                                              ).one()
+                        if exist:
+                            if uid == ap_id:
+                                self.db.query(Appointment).filter(Appointment.APid == ap_id). \
+                                    update({Appointment.APstartT: ap_start_time, Appointment.APendT: ap_end_time,
+                                        Appointment.APjoinT: ap_join_time,
+                                        Appointment.APlocation: ap_location, Appointment.APfree: ap_free,
+                                        Appointment.APprice: ap_price, Appointment.APcontent: ap_content,
+                                        Appointment.APtag: ap_tag, Appointment.APaddallowed: ap_addallowed,
+                                        Appointment.APtype: ap_type
+                                        }, synchronize_session=False)
+                                self.db.commit()
+                                self.retjson['code'] = '200'
+                                self.retjson['Code'] = '10206'
+                                self.retjson['contents'] = '发布约拍成功'
+                    except Exception, e:
+                        print e
+                        self.retjson['Code'] = '10206'
+                        self.retjson['contents'] = r'该发布尚未获得权限！'
+            except Exception, e:
+                print e
+                self.retjson['contents'] = r'用户授权码错误！'
+
         else:
             print 'ap_type: ', ap_type
 
@@ -129,7 +137,7 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
 
 class ApregistHandler(BaseHandler):  # 报名约拍
     def __init__(self):
-        self.retjson = {'code':'','Code':'','contents':''}
+        self.retjson = {'code': '', 'Code': '', 'contents': ''}
     def post(self):
         auth_key = self.get_argument('authkey')
 

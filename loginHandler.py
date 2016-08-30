@@ -20,7 +20,7 @@ class LoginHandler(BaseHandler):
         # 防止重复注册
             else:
                 try:
-                    user = self.db.query(User).filter(User.Utel).one()
+                    user = self.db.query(User).filter(User.Utel == m_phone).one()
                     if user:  # 用户存在
                         password = user.Upassword
                         if m_password == password:  # 密码正确
@@ -42,8 +42,6 @@ class LoginHandler(BaseHandler):
                                 birthday=Ubirthday,
                                 registTime=user.UregistT.strftime('%Y-%m-%dT%H:%M:%S'),
                                 mailBox=user.Umailbox,
-
-
                             )
                             data = dict(
                             askCode="10106",
