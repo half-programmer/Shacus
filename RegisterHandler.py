@@ -102,7 +102,13 @@ class RegisterHandler(BaseHandler):
                     try:
                         self.db.commit()
                         self.retjson['code'] = 10004  # success
-                        self.retjson['contents'] = m_auth_key
+                        retdata=[]
+                        data=dict(
+                            phone=m_phone
+                        )
+                        retdata.append(m_auth_key)
+                        retdata.append(data)
+                        self.retjson['contents'] = retdata
                     except:
                         self.db.rollback()
                         self.retjson['code'] = 10009  # Request Timeout
