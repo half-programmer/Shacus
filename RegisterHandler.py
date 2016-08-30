@@ -16,6 +16,21 @@ def generate_verification_code(len=6):
  verification_code = ''.join(myslice) # list to string
  return verification_code
 
+def generate_auth_key(len=32):
+   # 随机生成32位的验证码
+   code_list = []
+   for i in range(10):
+       code_list.append(str(i))
+   for i in range(65,91):
+       code_list.append(chr(i))
+   for i in range(97,123):
+       code_list.append(chr(i))
+   myslice = random.sample(code_list,len)
+   auth_key=''.join(myslice)
+   return  auth_key
+
+
+
 class RegisterHandler(BaseHandler):
     print "进入regist"
     retjson = {'code': '400', 'contents': 'None'}
@@ -63,6 +78,7 @@ class RegisterHandler(BaseHandler):
             m_password=self.get_argument('password')
             m_nick_name=self.get_argument('nickName')  # 昵称
             m_phone=self.get_argument('phone')
+            m_auth_key=generate_auth_key()
             new_user=User(
                     Upassword=m_password,
                     Ualais=m_nick_name,
@@ -74,7 +90,7 @@ class RegisterHandler(BaseHandler):
                     Uscore=0,
                     Usex=1,
                     Usign='',
-                    Uauthkey=''
+                    Uauthkey=m_auth_key
             )
             try:
                 same_nickname_user = self.db.query(User).filter(User.Ualais == m_nick_name).one()
@@ -86,7 +102,7 @@ class RegisterHandler(BaseHandler):
                     try:
                         self.db.commit()
                         self.retjson['code'] = 10004  # success
-                        self.retjson['contents'] = u'注册成功'
+                        self.retjson['contents'] = m_auth_key
                     except:
                         self.db.rollback()
                         self.retjson['code'] = 10009  # Request Timeout
