@@ -72,7 +72,7 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
                 self.retjson['contents']="该用户名不存在"
         elif ap_type == '10205': # 开始传输数据
             print "进入10205"
-            #ap_uid =self.get_argument('uid')
+            ap_sponsorid =self.get_argument('uid')
             ap_id = self.get_argument('apid')
             auth_key = self.get_argument('auth_key')
             # todo: auth_key经常使用，可以优化
@@ -90,24 +90,32 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
             try:
                 exist = self.db.query(Appointment).filter(Appointment.APtype == ap_type,
                                                           Appointment.APtitle == ap_title,
-                                                          Appointment.APcontent == ap_content).one()
-
+                                                          Appointment.APsponsorid == ap_sponsorid ).one()
                 if exist:
                     self.retjson['Code'] = '10210'
                     self.retjson['contents'] = '该约拍已存在'
             except Exception,e:
-                print e
-                self.db.query(Appointment).filter(Appointment.APid == ap_id).\
-                    update({Appointment.APstartT: ap_start_time, Appointment.APendT: ap_end_time, Appointment.APjoinT: ap_join_time,
-                            Appointment.APlocation: ap_location, Appointment.APfree: ap_free,
-                            Appointment.APprice: ap_price, Appointment.APcontent: ap_content,
-                            Appointment.APtag: ap_tag, Appointment.APaddallowed: ap_addallowed,
-                            Appointment.APtype: ap_type
-                            }, synchronize_session=False)
-                self.db.commit()
-                self.retjson['code'] = '200'
-                self.retjson['Code'] = '10206'
-                self.retjson['contents'] = '发布约拍成功'
+                try:
+                    exist = self.db.query(Appointment).filter(Appointment.APid == ap_id,
+                                                              Appointment.APsponsorid == ap_sponsorid
+                                                          ).one()
+                    if exist:
+                        self.db.query(Appointment).filter(Appointment.APid == ap_id).\
+                        update({Appointment.APstartT: ap_start_time, Appointment.APendT: ap_end_time,
+                                Appointment.APjoinT: ap_join_time,
+                                Appointment.APlocation: ap_location, Appointment.APfree: ap_free,
+                                Appointment.APprice: ap_price, Appointment.APcontent: ap_content,
+                                Appointment.APtag: ap_tag, Appointment.APaddallowed: ap_addallowed,
+                                Appointment.APtype: ap_type
+                                }, synchronize_session=False)
+                        self.db.commit()
+                        self.retjson['code'] = '200'
+                        self.retjson['Code'] = '10206'
+                        self.retjson['contents'] = '发布约拍成功'
+                except Exception, e:
+                    print e
+                    self.retjson['Code'] = '10206'
+                    self.retjson['contents'] = r'该发布尚未获得权限！'
         else:
             print 'ap_type: ', ap_type
 
@@ -129,27 +137,37 @@ class ApregistHandler(BaseHandler):  # 报名约拍
 class APaskHandler(BaseHandler): # 请求约拍相关信息
     retjson = {'code': '400', 'Code': '', 'contents': ''}
     retdata = []
+    def no_result_found(self,e):
+        print e
+        self.retjson['code'] = 400
+        self.retdata = 'no result found'
+
     def post(self):
         auth_key = self.get_argument('authkey')
         request_type = self.get_argument('type')
-        if request_type == '10231': # 请求所有设定地点的摄影师发布的约拍
+        if request_type == '10231': # 请求所有设定地点的摄影师发布的约拍中未关闭的
             try:
-                appointments = self.db.query(Appointment).filter(Appointment.APtype == 1).all()
+                appointments = self.db.query(Appointment).filter(Appointment.APtype == 1, Appointment.APclosed == 0).all()
                 AppFuncs.response(appointments, self.retdata)
                 self.retjson['contents'] = self.retdata
-            except Exception,e:
-                print e
-                self.retjson['code'] = 400
-                self.retdata = 'no result found'
+            except Exception, e:
+                self.no_result_found(e)
         elif request_type == '10235':  # 请求所有设定地点的模特发布的约拍
             try:
                 appointments = self.db.query(Appointment).filter(Appointment.APtype == 2).all()
                 AppFuncs.response(appointments, self.retdata)
-                self.retjson['contents']=self.retdata
+                self.retjson['contents'] = self.retdata
             except Exception, e:
-                print e
-                self.retjson['code'] = 400
-                self.retdata = 'no result found'
+                self.no_result_found(e)
+        elif request_type == '10240':  # 请求用户自己发布的所有约拍
+            ap_sponsorid = self.get_argument('sponsorid')
+            try:
+                appointments = self.db.query(Appointment).filter(Appointment.APsponsorid == ap_sponsorid).all()
+                AppFuncs.response(appointments, self.retdata)
+                self.retjson['contents'] = self.retdata
+            except Exception, e:
+                self.no_result_found(e)
+
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
             # if type == 'AskMyAppointments':  # 1.请求我发布的所有约拍
             #     userID = self.get_argument('userID', default='unsolved')
