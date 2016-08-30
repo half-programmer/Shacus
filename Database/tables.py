@@ -105,6 +105,7 @@ class Image(Base):
     IMid = Column(Integer,primary_key=True,nullable=False)
     IMvalid = Column(Boolean,default=1)
     IMT = Column(DateTime(timezone=True), default=func.now())
+    IMname = Column(VARCHAR(128), nullable=False)
 
 class ActivityImage(Base):
     __tablename__ = "ActivityImage"
