@@ -14,7 +14,7 @@ from Database.tables import Appointment, User,Verification
 from AppFuncs import response
 
 class AppcreateHandler(BaseHandler):  # 创建约拍
-    retjson = {'code': '400', 'contents': 'None', 'Code': ''}
+    retjson = {'code': '', 'contents': 'None'}
     def post(self):
         # 10201 客户端请求，摄影师发布约拍  start
 
@@ -33,7 +33,7 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
                     try:
                         appointment = self.db.query(Appointment).filter(Appointment.APtitle == ap_title).one()
                         if appointment:
-                            self.retjson['Code'] = '10210'
+                            self.retjson['code'] = '10210'
                             self.retjson['contents'] = r'该约拍已存在'
                     except Exception, e:
                         print e
@@ -41,8 +41,7 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
                         auth_key_handler = AuthKeyHandler()
                         ap_imgs_json =json.loads(ap_imgs)
                         retjson_body['auth_key'] = auth_key_handler.generateToken(ap_imgs_json)
-                        self.retjson['code'] = 200
-                        self.retjson['Code'] = 10200
+                        self.retjson['code'] = 10200
 
                         new_appointment = Appointment(
                             APtitle=ap_title,
@@ -64,11 +63,11 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
                         retjson_body['apId'] = ap_id
                         self.retjson['contents'] = retjson_body
                 else:
-                    self.retjson['Code'] = '10211'
+                    self.retjson['code'] = '10211'
                     self.retjson['contents'] = r'用户认证码错误'
             except Exception,e:
                 print e
-                self.retjson['Code'] = '10212'
+                self.retjson['code'] = '10212'
                 self.retjson['contents']="该用户名不存在"
         elif ap_type == '10205': # 开始传输数据
             print "进入10205"
@@ -99,7 +98,7 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
                                                               ).one()  # 判断该活动是否已经存在
                     if exist:
                         print '活动存在'
-                        self.retjson['Code'] = '10210'
+                        self.retjson['code'] = '10210'
                         self.retjson['contents'] = '该约拍已存在'
                 except Exception, e:
                     print e
@@ -121,25 +120,20 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
                                         Appointment.APtype: ap_type
                                         }, synchronize_session=False)
                                 self.db.commit()
-                                self.retjson['code'] = '200'
-                                self.retjson['Code'] = '10206'
+                                self.retjson['code'] = '10206'
                                 self.retjson['contents'] = '发布约拍成功'
                             else:
                                 print 'fd'
                     except Exception, e:
                         print e
-                        self.retjson['Code'] = '10206'
+                        self.retjson['code'] = '10206'
                         self.retjson['contents'] = r'该发布尚未获得权限！'
             except Exception, e:
                 print e
                 self.retjson['contents'] = r'用户授权码错误！'
-
         else:
             print 'ap_type: ', ap_type
-
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
-
-
 
         # 判断返回是否许可
 
@@ -147,13 +141,13 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
 
 class ApregistHandler(BaseHandler):  # 报名约拍
     def __init__(self):
-        self.retjson = {'code': '', 'Code': '', 'contents': ''}
+        self.retjson = {'code': '', 'contents': ''}
     def post(self):
         auth_key = self.get_argument('authkey')
 
 
 class APaskHandler(BaseHandler): # 请求约拍相关信息
-    retjson = {'code': '400', 'Code': '', 'contents': ''}
+    retjson = {'code': '', 'contents': ''}
     retdata = []
     def no_result_found(self,e):
         print e
