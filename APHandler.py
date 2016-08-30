@@ -87,13 +87,18 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
             ap_addallowed = self.get_argument('ap_allowed')
             ap_type = self.get_argument('ap_type')
             try:
-                uid = self.db.query(User.Uid).filter(User.Uauthkey == auth_key).first() # 查看该用户id
+                user = self.db.query(User.Uid).filter(User.Uauthkey == auth_key).one() # 查看该用户id
+                uid = user.Uid
+                print 'uid: ',uid
+                print '找到用户id'
                 try:
+                    print '判断该活动是否已经存在'
                     exist = self.db.query(Appointment).filter(Appointment.APtype == ap_type,
                                                           Appointment.APtitle == ap_title,
                                                           Appointment.APsponsorid == uid
                                                               ).one()  # 判断该活动是否已经存在
                     if exist:
+                        print '活动存在'
                         self.retjson['Code'] = '10210'
                         self.retjson['contents'] = '该约拍已存在'
                 except Exception, e:
@@ -102,8 +107,11 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
                         exist = self.db.query(Appointment).filter(Appointment.APid == ap_id,
                                                               Appointment.APtitle == ap_title
                                                               ).one()
+                        print '判断授权是否存在'
                         if exist:
-                            if uid == ap_id:
+                            ap_sponsorid = exist.APsponsorid
+                            if uid == ap_sponsorid:
+                                print '授权存在'
                                 self.db.query(Appointment).filter(Appointment.APid == ap_id). \
                                     update({Appointment.APstartT: ap_start_time, Appointment.APendT: ap_end_time,
                                         Appointment.APjoinT: ap_join_time,
@@ -116,6 +124,8 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
                                 self.retjson['code'] = '200'
                                 self.retjson['Code'] = '10206'
                                 self.retjson['contents'] = '发布约拍成功'
+                            else:
+                                print 'fd'
                     except Exception, e:
                         print e
                         self.retjson['Code'] = '10206'
