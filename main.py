@@ -4,7 +4,7 @@ import tornado.httpserver
 import  tornado.ioloop
 import  tornado.options
 import tornado.web
-from APHandler import AppcreateHandler,APaskHandler,ApregistHandler
+from APHandler import APpcreateHandler, APaskHandler, APregistHandler
 from sqlalchemy.orm import scoped_session, sessionmaker
 from tornado.options import define, options
 from Database.models import engine
@@ -18,7 +18,7 @@ define("port", default=800, help="run on the given port", type=int)
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
-             (r"/appointment/create", AppcreateHandler),
+             (r"/appointment/create", APcreateHandler),
              (r"/appointment/ask", APaskHandler),
              # (r"/appointment/ask", AskAppointment),
              # (r"/appointment/register", RegistAppointment),

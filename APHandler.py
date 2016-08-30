@@ -13,7 +13,7 @@ from  BaseHandlerh import BaseHandler
 from Database.tables import Appointment, User,Verification
 from AppFuncs import response
 
-class AppcreateHandler(BaseHandler):  # 创建约拍
+class APpcreateHandler(BaseHandler):  # 创建约拍
     retjson = {'code': '', 'contents': 'None'}
     def post(self):
         # 10201 客户端请求，摄影师发布约拍  start
@@ -64,7 +64,7 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
                         self.retjson['contents'] = retjson_body
                 else:
                     self.retjson['code'] = '10211'
-                    self.retjson['contents'] = r'用户认证码错误'
+                    self.retjson['contents'] = r'用户授权码错误'
             except Exception,e:
                 print e
                 self.retjson['code'] = '10212'
@@ -120,16 +120,17 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
                                         Appointment.APtype: ap_type
                                         }, synchronize_session=False)
                                 self.db.commit()
-                                self.retjson['code'] = '10206'
+                                self.retjson['code'] = '10200'
                                 self.retjson['contents'] = '发布约拍成功'
                             else:
                                 print 'fd'
                     except Exception, e:
                         print e
-                        self.retjson['code'] = '10206'
+                        self.retjson['code'] = '10213'
                         self.retjson['contents'] = r'该发布尚未获得权限！'
             except Exception, e:
                 print e
+                self.retjson['code'] = '10211'
                 self.retjson['contents'] = r'用户授权码错误！'
         else:
             print 'ap_type: ', ap_type
@@ -139,7 +140,7 @@ class AppcreateHandler(BaseHandler):  # 创建约拍
 
         # 10201 客户端请求，摄影师发布约拍 end
 
-class ApregistHandler(BaseHandler):  # 报名约拍
+class APregistHandler(BaseHandler):  # 报名约拍
     def __init__(self):
         self.retjson = {'code': '', 'contents': ''}
     def post(self):
@@ -147,6 +148,7 @@ class ApregistHandler(BaseHandler):  # 报名约拍
 
 
 class APaskHandler(BaseHandler): # 请求约拍相关信息
+
     retjson = {'code': '', 'contents': ''}
     retdata = []
     def no_result_found(self,e):
@@ -154,42 +156,55 @@ class APaskHandler(BaseHandler): # 请求约拍相关信息
         self.retjson['code'] = 400
         self.retdata = 'no result found'
 
+    def ap_ask_user(self,user): # 查询指定用户的所有约拍
+        '''
+        :param user: 传入一个User对象
+        :return: 无返回，直接修改retjson
+        '''
+        uid = user.Uid
+        try:
+            appointments = self.db.query(Appointment).filter(Appointment.APsponsorid == uid).all()
+            AppFuncs.response(appointments, self.retdata)
+            self.retjson['contents'] = self.retdata
+        except Exception, e:
+            self.no_result_found(e)
+
     def post(self):
         auth_key = self.get_argument('authkey')
         request_type = self.get_argument('type')
-        if request_type == '10231': # 请求所有设定地点的摄影师发布的约拍中未关闭的
+        if request_type == '10231':  # 请求所有设定地点的摄影师发布的约拍中未关闭的
             try:
-                appointments = self.db.query(Appointment).filter(Appointment.APtype == 1, Appointment.APclosed == 0).all()
+                appointments = self.db.query(Appointment).\
+                    filter(Appointment.APtype == 1, Appointment.APclosed == 0).all()
                 AppFuncs.response(appointments, self.retdata)
                 self.retjson['contents'] = self.retdata
             except Exception, e:
                 self.no_result_found(e)
-        elif request_type == '10235':  # 请求所有设定地点的模特发布的约拍
+        elif request_type == '10235':  # 请求所有设定地点的模特发布的约拍中未关闭的
             try:
-                appointments = self.db.query(Appointment).filter(Appointment.APtype == 2).all()
+                appointments = self.db.query(Appointment).\
+                    filter(Appointment.APtype == 2 ,Appointment.APclosed == 0).all()
                 AppFuncs.response(appointments, self.retdata)
                 self.retjson['contents'] = self.retdata
             except Exception, e:
                 self.no_result_found(e)
         elif request_type == '10240':  # 请求用户自己发布的所有约拍
-            ap_sponsorid = self.get_argument('sponsorid')
             try:
-                appointments = self.db.query(Appointment).filter(Appointment.APsponsorid == ap_sponsorid).all()
-                AppFuncs.response(appointments, self.retdata)
-                self.retjson['contents'] = self.retdata
+                user = self.db.query(User).filter(User.Uauthkey == auth_key).one()
+                self.ap_ask_user(user)
+            except Exception,e:
+                self.retjson['contents'] = '授权码不存在或已过期'
+                self.retjson['code'] = '10214'
+        elif request_type == '10241': # 请求指定用户发布的所有约拍
+            uid = self.get_argument('uid') # 指定用户的id
+            try:
+                user = self.db.query(User).filter(User.Uid == uid).one()
+                self.ap_ask_user(user)
             except Exception, e:
-                self.no_result_found(e)
+                self.retjson['contents'] = '授权码不存在或已过期'
+                self.retjson['code'] = '10214'
 
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
-            # if type == 'AskMyAppointments':  # 1.请求我发布的所有约拍
-            #     userID = self.get_argument('userID', default='unsolved')
-            #     try:
-            #         data = self.db.query(Appointment).filter(Appointment.sponsorID == userID).all()
-            #         AppointmentFunctions.response(data, self.retdata)
-            #     except:
-            #         self.retjson['code'] = 400
-            #         self.retdata = 'no result found'
-
 
             # elif type == 'AskOpenAppointments':  # 3.获得所有未关闭约拍
             #     userID = self.get_argument('userID', default='unsolved')
@@ -215,40 +230,41 @@ class APaskHandler(BaseHandler): # 请求约拍相关信息
             # self.retjson['content'] = retdata
             # self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))  # 返回中文
 
-# class RegistAppointment(BaseHandler):  # 报名约拍
-#     def post(self):
-#         m_user = self.get_argument('userID', default='unsolved')
-#         m_appointment_number = self.get_argument('appointmentID', default='unsolved')  # 想报名的活动
-#         retjson = {'code': '400', 'content': 'None'}
-#         try:
-#             appointment = self.db.query(Appointment).filter(Appointment.appointmentID == m_appointment_number).one()
-#             if not appointment.closed:  # 活动未关闭
-#                 if m_user != appointment.sponsorID:  # 不是发布人
-#                     try:
-#                         if self.db.query(AppointmentRegister).filter(
-#                                         AppointmentRegister.appointmentID == m_appointment_number,
-#                                         AppointmentRegister.registerID == m_user).one():  # 已经报过名
-#                             retjson['content'] = '不能重复报名'
-#                     except:
-#                         new_register = AppointmentRegister(
-#                             appointmentID=m_appointment_number,
-#                             registerID=m_user
-#                         )
-#                         self.db.merge(new_register)  # 在报名人中加入该项
-#                         retjson['code'] = 200
-#                         retjson['content'] = '报名成功'
-#                         commonFunctions.commit(self, retjson)  # 提交
-#                 else:
-#                     retjson['code'] = 400
-#                     retjson['content'] = '不能报名自己发布的活动'
-#             else:
-#                 retjson['code'] = 400
-#                 retjson['content'] = '该活动已关闭'
-#         except:
-#             retjson['code'] = 400
-#             retjson['content'] = '该活动不存在或未登陆'
-#
-#         self.write(json.dumps(retjson, ensure_ascii=False, indent=2))  # ensure_ascii:允许中文
-#
+
+class APregietHandler(BaseHandler):  # 报名约拍
+    def post(self):
+        m_user = self.get_argument('userID', default='unsolved')
+        m_appointment_number = self.get_argument('appointmentID', default='unsolved')  # 想报名的活动
+        retjson = {'code': '400', 'content': 'None'}
+        try:
+            appointment = self.db.query(Appointment).filter(Appointment.appointmentID == m_appointment_number).one()
+            if not appointment.closed:  # 活动未关闭
+                if m_user != appointment.sponsorID:  # 不是发布人
+                    try:
+                        if self.db.query(AppointmentRegister).filter(
+                                        AppointmentRegister.appointmentID == m_appointment_number,
+                                        AppointmentRegister.registerID == m_user).one():  # 已经报过名
+                            retjson['content'] = '不能重复报名'
+                    except:
+                        new_register = AppointmentRegister(
+                            appointmentID=m_appointment_number,
+                            registerID=m_user
+                        )
+                        self.db.merge(new_register)  # 在报名人中加入该项
+                        retjson['code'] = 200
+                        retjson['content'] = '报名成功'
+                        commonFunctions.commit(self, retjson)  # 提交
+                else:
+                    retjson['code'] = 400
+                    retjson['content'] = '不能报名自己发布的活动'
+            else:
+                retjson['code'] = 400
+                retjson['content'] = '该活动已关闭'
+        except:
+            retjson['code'] = 400
+            retjson['content'] = '该活动不存在或未登陆'
+
+        self.write(json.dumps(retjson, ensure_ascii=False, indent=2))  # ensure_ascii:允许中文
+
 #
 #         # self.db.query(Appointment).filter(Appointment.appointmentID == m_appointment_number).update({"closed": True})  #
