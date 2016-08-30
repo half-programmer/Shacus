@@ -42,7 +42,7 @@ class Activity(Base):#活动表
     __tablename__ = 'Activity'
 
     ACid = Column(Integer,nullable=False, primary_key=True)
-    ACsponsorid = Column(Integer,ForeignKey('User.Uid' onupdate='CASCADE'))#活动发起者
+    ACsponsorid = Column(Integer,ForeignKey('User.Uid', onupdate='CASCADE'))  #活动发起者
     AClocation = Column(VARCHAR(128), nullable=False)
     ACtitle = Column(VARCHAR(24), nullable=False) # 活动的名称？确认长度
     ACtag = Column(VARCHAR(12)) # 活动的标签？确认类型

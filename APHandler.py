@@ -13,7 +13,7 @@ from  BaseHandlerh import BaseHandler
 from Database.tables import Appointment, User,Verification
 from AppFuncs import response
 
-class APpcreateHandler(BaseHandler):  # 创建约拍
+class APcreateHandler(BaseHandler):  # 创建约拍
     retjson = {'code': '', 'contents': 'None'}
     def post(self):
         # 10201 客户端请求，摄影师发布约拍  start
@@ -231,40 +231,40 @@ class APaskHandler(BaseHandler): # 请求约拍相关信息
             # self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))  # 返回中文
 
 
-class APregietHandler(BaseHandler):  # 报名约拍
-    def post(self):
-        m_user = self.get_argument('userID', default='unsolved')
-        m_appointment_number = self.get_argument('appointmentID', default='unsolved')  # 想报名的活动
-        retjson = {'code': '400', 'content': 'None'}
-        try:
-            appointment = self.db.query(Appointment).filter(Appointment.appointmentID == m_appointment_number).one()
-            if not appointment.closed:  # 活动未关闭
-                if m_user != appointment.sponsorID:  # 不是发布人
-                    try:
-                        if self.db.query(AppointmentRegister).filter(
-                                        AppointmentRegister.appointmentID == m_appointment_number,
-                                        AppointmentRegister.registerID == m_user).one():  # 已经报过名
-                            retjson['content'] = '不能重复报名'
-                    except:
-                        new_register = AppointmentRegister(
-                            appointmentID=m_appointment_number,
-                            registerID=m_user
-                        )
-                        self.db.merge(new_register)  # 在报名人中加入该项
-                        retjson['code'] = 200
-                        retjson['content'] = '报名成功'
-                        commonFunctions.commit(self, retjson)  # 提交
-                else:
-                    retjson['code'] = 400
-                    retjson['content'] = '不能报名自己发布的活动'
-            else:
-                retjson['code'] = 400
-                retjson['content'] = '该活动已关闭'
-        except:
-            retjson['code'] = 400
-            retjson['content'] = '该活动不存在或未登陆'
-
-        self.write(json.dumps(retjson, ensure_ascii=False, indent=2))  # ensure_ascii:允许中文
+# class APregietHandler(BaseHandler):  # 报名约拍
+#     def post(self):
+#         m_user = self.get_argument('userID', default='unsolved')
+#         m_appointment_number = self.get_argument('appointmentID', default='unsolved')  # 想报名的活动
+#         retjson = {'code': '400', 'content': 'None'}
+#         try:
+#             appointment = self.db.query(Appointment).filter(Appointment.appointmentID == m_appointment_number).one()
+#             if not appointment.closed:  # 活动未关闭
+#                 if m_user != appointment.sponsorID:  # 不是发布人
+#                     try:
+#                         if self.db.query(AppointmentRegister).filter(
+#                                         AppointmentRegister.appointmentID == m_appointment_number,
+#                                         AppointmentRegister.registerID == m_user).one():  # 已经报过名
+#                             retjson['content'] = '不能重复报名'
+#                     except:
+#                         new_register = AppointmentRegister(
+#                             appointmentID=m_appointment_number,
+#                             registerID=m_user
+#                         )
+#                         self.db.merge(new_register)  # 在报名人中加入该项
+#                         retjson['code'] = 200
+#                         retjson['content'] = '报名成功'
+#                         commonFunctions.commit(self, retjson)  # 提交
+#                 else:
+#                     retjson['code'] = 400
+#                     retjson['content'] = '不能报名自己发布的活动'
+#             else:
+#                 retjson['code'] = 400
+#                 retjson['content'] = '该活动已关闭'
+#         except:
+#             retjson['code'] = 400
+#             retjson['content'] = '该活动不存在或未登陆'
+#
+#         self.write(json.dumps(retjson, ensure_ascii=False, indent=2))  # ensure_ascii:允许中文
 
 #
 #         # self.db.query(Appointment).filter(Appointment.appointmentID == m_appointment_number).update({"closed": True})  #

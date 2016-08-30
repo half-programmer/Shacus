@@ -31,6 +31,7 @@ class LoginHandler(BaseHandler):
                             else:
                                 Ubirthday = ''
                             retdata = []
+                            u_auth_key = user.Uauthkey
                             user_model = dict(
                                 id=user.Uid,
                                 phone=user.Utel,
@@ -44,7 +45,7 @@ class LoginHandler(BaseHandler):
                                 registTime=user.UregistT.strftime('%Y-%m-%dT%H:%M:%S'),
                                 mailBox=user.Umailbox,
                                 headImage=u"用户头像url",
-                                authKey=u"待生成"
+                                authKey=u_auth_key
                             )
                             data = dict(
                             userModel=user_model,
