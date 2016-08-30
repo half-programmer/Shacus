@@ -46,7 +46,7 @@ class LoginHandler(BaseHandler):
                             data = dict(
                             askCode="10106",
                             authKey="待生成",
-                            userModer=user_model,
+                            userModel=user_model,
                             daohanglan="约拍首页顶部滑动图片,应设置与本地对比或增加一特定链接，图片未更新时应使用本地缓存",
                             photoList="摄影师榜前十名,每人是一组数据,用python字典存,返回后可用JSON解析",
                             modelList="模特榜前十名，每人是一组数据,用python字典存,返回后可用JSON解析",
