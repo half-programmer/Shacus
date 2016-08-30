@@ -102,14 +102,29 @@ class RegisterHandler(BaseHandler):
                     try:
                         self.db.commit()
                         self.retjson['code'] = 10004  # success
-                        retdata=[]
+                        m_time = self.db.query(User.UregistT).filter(User.Uauthkey == m_auth_key).one()
+                        m_id = self.db.query(User.Uid).filter(User.Uauthkey == m_auth_key).one()
+                        retdata = []
+                        retdata_body = {}
                         data=dict(
-                            phone=m_phone
+                            phone = m_phone,
+                            authkey  = m_auth_key,
+                            nickName = m_nick_name,
+                            headImage ='',
+                            realName ='',
+                            birthday ='',
+                            sign ='',
+                            score ='',
+                            location ='',
+                            registTime ='',
+                            mailbaox = '',
+                            id = m_id[0]
                         )
-                        retdata.append(m_auth_key)
-                        retdata.append(data)
+                        retdata_body['useModel'] =data
+                        retdata.append(retdata_body)
                         self.retjson['contents'] = retdata
-                    except:
+                    except Exception, e:
+                        print e
                         self.db.rollback()
                         self.retjson['code'] = 10009  # Request Timeout
                         self.retjson['contents'] = u'Some errors when commit to database, please try again'
