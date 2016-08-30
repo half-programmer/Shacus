@@ -88,7 +88,7 @@ class APcreateHandler(BaseHandler):  # 创建约拍
             try:
                 user = self.db.query(User.Uid).filter(User.Uauthkey == auth_key).one() # 查看该用户id
                 uid = user.Uid
-                print 'uid: ',uid
+                print 'uid: ', uid
                 print '找到用户id'
                 try:
                     print '判断该活动是否已经存在'
