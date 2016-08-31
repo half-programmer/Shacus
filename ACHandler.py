@@ -123,8 +123,13 @@ class ActivityCreate(BaseHandler):   #创建活动
                 print e
                 self.retjson['code'] = '10320'
                 self.retjson['contents'] = '用户授权码错误'
+        self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
-        elif ac_type == '10305': #报名活动
+class ActivityAsk(BaseHandler):
+    retjson = {'code': '10300', 'contents': 'None'}
+    def post(self):
+        ac_type = self.get_argument('type')
+        if ac_type == '10305': #报名活动
             ac_id = self.get_argument('acid')
             ac_registerid = self.get_argument('registerid')
             try :
@@ -180,14 +185,6 @@ class ActivityCreate(BaseHandler):   #创建活动
                 print e
                 self.retjson['contents'] = r'您未报名该活动'
                 self.retjson['code'] = '10352'
-
-
-
-
-
-
-
-
 
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
