@@ -27,11 +27,14 @@ class APcreateHandler(BaseHandler):  # 创建约拍
             auth_key = self.get_argument('auth_key')
             ap_title = self.get_argument('title')
             ap_imgs = self.get_argument('imgs')
+            print '获得图片'
             try:
                 sponsor = self.db.query(User).filter(User.Utel == user_phone).one()
+                print '进入try::::::'
                 key = sponsor.Uauthkey
                 ap_sponsorid = sponsor.Uid
                 if auth_key == key:  # 认证成功
+                    print '认证成功'
                     try:
                         appointment = self.db.query(Appointment).filter(Appointment.APtitle == ap_title).one()
                         if appointment:

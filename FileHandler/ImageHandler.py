@@ -28,22 +28,22 @@ class ImageHandler(BaseHandler):
             imid = new_img.IMid
             imgs.append(new_img)
 
-    # def insert_user_image(self, list, user):
-    #              '''
-    #              :param list: 图片名的列表
-    #              :param user: 发布该约拍的用户
-    #              :return:
-    #              '''
-    #
-    #         for img_name in list:
-    #             image = UserImage(
-    #                 UIuid=user.Uid,
-    #                 UIimid=
-    #         )
-    #             self.db.merge(image)
-    #             self.db.commit()
-    #
-    #
+    def insert_user_image(self, list, user):
+                 '''
+                 :param list: 图片名的列表
+                 :param user: 发布该约拍的用户
+                 :return:
+                 '''
+
+            for img_name in list:
+                image = UserImage(
+                    UIuid=user.Uid,
+                    UIimid=
+            )
+                self.db.merge(image)
+                self.db.commit()
+
+
 
 
 
