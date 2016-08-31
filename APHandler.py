@@ -33,6 +33,8 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                 print '进入try::::::'
                 key = sponsor.Uauthkey
                 ap_sponsorid = sponsor.Uid
+                print  'ap_sponsorid::::',ap_sponsorid
+                print 'ap_title::::',ap_title
                 if auth_key == key:  # 认证成功
                     print '认证成功'
                     try:
@@ -63,10 +65,14 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                         )
                         self.db.merge(new_appointment)
                         self.db.commit()
-                        ap_id = self.db.query(Appointment.APid).filter(
-                            Appointment.APtitle == ap_title and Appointment.APsponsorid == ap_sponsorid).one()
-                        retjson_body['apId'] = ap_id
-                        self.retjson['contents'] = retjson_body
+                        try:
+                            ap_id = self.db.query(Appointment).filter(
+                                   Appointment.APtitle == ap_title, Appointment.APsponsorid == ap_sponsorid).one()
+                            retjson_body['apId'] = ap_id
+                            self.retjson['contents'] = retjson_body
+                        except Exception,e:
+                            print '插入失败！！'
+                            self.retjson['contents'] = '服务器插入失败'
                 else:
                     self.retjson['code'] = '10211'
                     self.retjson['contents'] = r'用户授权码错误'
