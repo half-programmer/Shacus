@@ -66,13 +66,15 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                         self.db.merge(new_appointment)
                         self.db.commit()
                         try:
-                            ap_id = self.db.query(Appointment).filter(
+                            print '插入成功，进入查询'
+                            ap = self.db.query(Appointment).filter(
                                    Appointment.APtitle == ap_title, Appointment.APsponsorid == ap_sponsorid).one()
+                            ap_id = ap.APid
                             retjson_body['apId'] = ap_id
                             self.retjson['contents'] = retjson_body
                         except Exception,e:
                             print '插入失败！！'
-                            self.retjson['contents'] = '服务器插入失败'
+                            self.retjson['contents'] = r'服务器插入失败'
                 else:
                     self.retjson['code'] = '10211'
                     self.retjson['contents'] = r'用户授权码错误'
