@@ -55,8 +55,8 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                             APsponsorid=sponsor.Uid,
                             APtype=ap_type,
                             APlocation='',
-                            APstartT='',
-                            APendT='',
+                            APstartT='0000-00-00:00:00:00',
+                            APendT='0000-00-00:00:00:00',
                             APcontent='',  # 活动介绍
                             APclosed=0,
                             APlikeN=0,
