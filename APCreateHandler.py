@@ -7,7 +7,7 @@
 import json
 import types
 
-import commonFunctions
+#import commonFunctions
 from FileHandler.Upload import AuthKeyHandler
 from  BaseHandlerh import BaseHandler
 from Database.tables import Appointment, User,Verification
