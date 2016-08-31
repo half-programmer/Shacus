@@ -9,7 +9,7 @@ from BaseHandlerh import BaseHandler
 from Database.tables import Appointment, AppointmentRegister, AppointmenmtEntry
 import json
 from datetime import date, datetime
-import  AppointmentFunctions
+import  AppFuncs
 
 class AskAppointment(BaseHandler):  # 对约拍的一系列请求
     retjson = {'code': 200, 'content': 'none'}
@@ -24,7 +24,7 @@ class AskAppointment(BaseHandler):  # 对约拍的一系列请求
             userID = self.get_argument('userID', default='unsolved')
             try:
                 data = self.db.query(Appointment).filter(Appointment.sponsorID == userID).all()
-                AppointmentFunctions.response(data, self.retdata)
+                AppFuncs.response(data, self.retdata)
             except:
                 self.retjson['code'] = 400
                 self.retdata = 'no result found'
@@ -33,7 +33,7 @@ class AskAppointment(BaseHandler):  # 对约拍的一系列请求
             userID = self.get_argument('userID', default='unsolved')
             try:
                 appointments = self.db.query(Appointment).all()  # 返回所有约拍
-                AppointmentFunctions.response(appointments, self.retdata)
+                AppFuncs.response(appointments, self.retdata)
             except:
                 self.retjson['code'] = 400
                 self.retdata = 'no result found'
@@ -41,7 +41,7 @@ class AskAppointment(BaseHandler):  # 对约拍的一系列请求
             userID = self.get_argument('userID', default='unsolved')
             try:
                 appointments = self.db.query(Appointment).filter(Appointment.closed == False).all()  # 返回所有未关闭约拍
-                AppointmentFunctions.response(appointments, self.retdata)
+                AppFuncs.response(appointments, self.retdata)
             except:
                 self.retjson['code'] = 400
                 self.retdata = 'no result found'
@@ -52,7 +52,7 @@ class AskAppointment(BaseHandler):  # 对约拍的一系列请求
                 registers = self.db.query(AppointmentRegister).filter(AppointmentRegister.appointmentID==appointmentID).all() # 某个约拍所有报名者
                 for user in registers:
                     response = user.userID
-                    AppointmentFunctions.response(response, self.retdata)
+                    AppFuncs.response(response, self.retdata)
             except:
                 self.retjson['code'] = 400
                 self.retdata = 'no result found'

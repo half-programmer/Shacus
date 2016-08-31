@@ -41,10 +41,10 @@ class Verification(Base): # 短信验证码及生成用户auth_key时间
 class Activity(Base):#活动表
     __tablename__ = 'Activity'
 
-    ACid = Column(Integer,nullable=False,primary_key=True)
-    ACsponsorid = Column(Integer,ForeignKey('User.Uid',onupdate='CASCADE'))#活动发起者
-    AClocation = Column(VARCHAR(128),nullable=False)
-    ACtitle = Column(VARCHAR(24),nullable=False) # 活动的名称？确认长度
+    ACid = Column(Integer,nullable=False, primary_key=True)
+    ACsponsorid = Column(Integer,ForeignKey('User.Uid', onupdate='CASCADE'))  #活动发起者
+    AClocation = Column(VARCHAR(128), nullable=False)
+    ACtitle = Column(VARCHAR(24), nullable=False) # 活动的名称？确认长度
     ACtag = Column(VARCHAR(12)) # 活动的标签？确认类型
     ACstartT = Column(DateTime, nullable=False)
     ACendT = Column(DateTime, nullable=False)
@@ -105,6 +105,7 @@ class Image(Base):
     IMid = Column(Integer,primary_key=True,nullable=False)
     IMvalid = Column(Boolean,default=1)
     IMT = Column(DateTime(timezone=True), default=func.now())
+    IMname = Column(VARCHAR(128), nullable=False)
 
 class ActivityImage(Base):
     __tablename__ = "ActivityImage"
@@ -135,10 +136,10 @@ class Appointment(Base):  #摄影师-模特约拍
     APtitle=Column(VARCHAR(24),nullable=False)
     APlocation = Column(VARCHAR(128), nullable=False)
     APtag=Column(VARCHAR(12)) # 约拍标签？确认长度
-    APstartT = Column(DateTime, nullable=False, default='')
-    APendT = Column(DateTime,nullable=False, default='')
-    APjoinT=Column(DateTime)
-    APcontent=Column(VARCHAR(128),nullable=False, default='')
+    APstartT = Column(DateTime, nullable=False, default='0000-00-00 00:00:00 ')
+    APendT = Column(DateTime, nullable=False, default='0000-00-00 00:00:00 ')
+    APjoinT=Column(DateTime, nullable=False, default='0000-00-00 00:00:00 ')
+    APcontent=Column(VARCHAR(128), nullable=False, default='')
     APfree = Column(Boolean)
     APprice = Column(Float)
     APclosed = Column(Boolean)
