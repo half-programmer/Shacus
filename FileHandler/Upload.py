@@ -1,18 +1,12 @@
 # -*- coding: utf-8 -*-
 # flake8: noqa
-
+'''
+ 作用：处理七牛云上传凭证获取
+ 创建者：黄鑫晨
+ 创建时间：2016-08-30 18:05
+'''
 from qiniu import Auth, put_file, etag, urlsafe_base64_encode
 import qiniu.config
-
-
-
-
-
-
-
-
-#print auth_token
-
 
 # todo 封装auth_token
 class AuthKeyHandler:
@@ -34,9 +28,4 @@ class AuthKeyHandler:
         return self.Auth_key
     def get_token(self):
         return self.auth_tokens
-
-if __name__ == "__main__":
-    names = ["asdw.png","asdw.png", "qruo.jpeg"]
-    auh = AuthKeyHandler()
-    print auh.generateToken(names)
 

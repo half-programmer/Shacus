@@ -31,6 +31,7 @@ class LoginHandler(BaseHandler):
                             else:
                                 Ubirthday = ''
                             retdata = []
+                            u_auth_key = user.Uauthkey
                             user_model = dict(
                                 id=user.Uid,
                                 phone=user.Utel,
@@ -44,8 +45,9 @@ class LoginHandler(BaseHandler):
                                 registTime=user.UregistT.strftime('%Y-%m-%dT%H:%M:%S'),
                                 mailBox=user.Umailbox,
                                 headImage=u"用户头像url",
-                                authKey=u"待生成"
+                                auth_key=u_auth_key
                             )
+                            print 'authkey:::::', u_auth_key
                             data = dict(
                             userModel=user_model,
                             daohanglan=u"约拍首页顶部滑动图片,应设置与本地对比或增加一特定链接，图片未更新时应使用本地缓存",
