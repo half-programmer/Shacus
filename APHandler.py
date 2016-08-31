@@ -49,11 +49,12 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                         ap_imgs_json = json.loads(ap_imgs)
                         retjson_body['auth_key'] = auth_key_handler.generateToken(ap_imgs_json)
                         self.retjson['code'] = 10200
+                        aptype = int(ap_type) - 10201
 
                         new_appointment = Appointment(
                             APtitle=ap_title,
                             APsponsorid=sponsor.Uid,
-                            APtype=ap_type,
+                            APtype=int(ap_type)-10201,
                             APlocation='',
                             APstartT='0000-00-00:00:00:00',
                             APendT='0000-00-00:00:00:00',
