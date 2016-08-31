@@ -11,6 +11,7 @@ from Database.models import engine
 from RegisterHandler import RegisterHandler
 from ImageCallback import ImageCallback
 from loginHandler import LoginHandler
+from ACHandler import ActivityCreate
 
 define("port", default=800, help="run on the given port", type=int)
 
@@ -24,7 +25,7 @@ class Application(tornado.web.Application):
              # (r"/appointment/register", RegistAppointment),
              (r"/login", LoginHandler),
              (r"/regist", RegisterHandler),
-             # (r"/Activity/create", ActivityCommit),
+              (r"/activity/create", ActivityCreate),
              # (r"/Activity/ask", AskActivity),
              # (r"/Activity/register", ActivityJoin),
              (r"/ImageCallback",ImageCallback)
