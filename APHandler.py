@@ -200,7 +200,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         elif request_type == '10235':  # 请求所有设定地点的模特发布的约拍中未关闭的
             try:
                 appointments = self.db.query(Appointment). \
-                    filter(Appointment.APtype == 2, Appointment.APclosed == 0).all()
+                    filter(Appointment.APtype == 0, Appointment.APclosed == 0).all()
                 AppFuncs.response(appointments, self.retdata)
                 self.retjson['contents'] = self.retdata
             except Exception, e:
