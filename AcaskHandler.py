@@ -4,7 +4,7 @@ from BaseHandlerh import  BaseHandler
 from Database.tables import Activity,User
 import json
 from datetime import date, datetime
-import AcFunction
+import ACFunction
 
 class AskActivity(BaseHandler): #关于用户的一系列活动
     retjson = {'code': 200, 'contents': 'none'}
@@ -15,7 +15,7 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
             try:
                 data = self.db.query(Activity).all()
                 for item in (0 ,10):
-                    AcFunction.response(data[item], self.retdata)
+                    ACFunction.response(data[item], self.retdata)
                 self.retjson['contents'] = self.retdata
             except Exception, e:
                 print e
