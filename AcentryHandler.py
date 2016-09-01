@@ -24,20 +24,27 @@ class AskEntry(BaseHandler): #互动表相关操作
             except Exception,e:
                 print e
                 self.retjson['code']=10309
-                self.retjson['contents']='no entry'
-        elif type=='10310':
+                self.retjson['contents']='page failed'
+        elif type=='10308':
                 m_ACEacid=self.get_argument("ACEacid",default="null")
                 m_ACEregisterid=self.get_argument("ACEregisterid",default="null")
                 m_comments=self.get_argument("ACEcomment",default="null")
                 try:
-                    data=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACEacid and Activity.ACEregisterid==m_ACEregisterid).all()
-                    for comm in data:
-                       comm.ACEcomment=m_comments
-                       self.db.commit()
-                       AcentryFunction.response(comm,self.retdata)
-                    self.retjson['contents']=self.retdata
-                except:
-                    self.retjson["code"]=10310
+                    data=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACEacid, ActivityEntry.ACEregisterid==m_ACEregisterid).one()
+                    if not data.ACEcomment:
+                        data.ACEcomment=m_comments
+                        self.db.commit()
+                        AcentryFunction.response(data,self.retdata)
+                        self.retjson['code'] = '10381'
+                        self.retjson['contents'] = "评论成功"
+                    else:
+                        self.retjson['contents']='评论已经存在'
+                        self.retjson['code']='10383'
+
+                except Exception,e:
+                    print '哈哈哈哈'
+                    print e
+                    self.retjson["code"]='10382'
                     self.retdata["contents"]="no comments"
 
 

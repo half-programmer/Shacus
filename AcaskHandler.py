@@ -14,9 +14,15 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
         if type == '10303':  # 1.查看所有活动
             try:
                 data = self.db.query(Activity).all()
-                for item in (0 ,10):
-                    AcFunction.response(data[item], self.retdata)
-                self.retjson['contents'] = self.retdata
+                length=len(data)
+                if length < 10:
+                    for i in range(length):
+                        AcFunction.response(data[i],self.retdata)
+                        self.retjson['contents']=self.retdata
+                else:
+                    for item in range(0,10):
+                            AcFunction.response(data[item], self.retdata)
+                            self.retjson['contents'] = self.retdata
             except Exception, e:
                 print e
                 self.retjson['code'] = 10303
