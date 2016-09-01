@@ -51,7 +51,7 @@ class Activity(Base):#活动表
     ACjoinT = Column(DateTime) # 活动报名截止时间
     ACcontent = Column(VARCHAR(128), nullable=False) # 活动介绍
     ACfree = Column(Boolean)
-    ACprice = Column(Float)
+    ACprice = Column(VARCHAR(64))
     ACclosed = Column(Boolean,default=1, nullable=False) # 活动是否已经结束
     ACcreateT = Column(DateTime(timezone=True), default=func.now())
     ACcommentnumber = Column(Integer,default=0, nullable=False)
@@ -142,7 +142,7 @@ class Appointment(Base):  #摄影师-模特约拍
     APjoinT=Column(DateTime, nullable=False, default='0000-00-00 00:00:00 ')
     APcontent=Column(VARCHAR(128), nullable=False, default='')
     APfree = Column(Boolean)
-    APprice = Column(Float)
+    APprice = Column(VARCHAR(64))
     APclosed = Column(Boolean)
     APcreateT = Column(DateTime(timezone=True), default=func.now())
     APtype = Column(Boolean,nullable=False,default=0) # 约拍类型，模特约摄影师(1)或摄影师约模特(0)

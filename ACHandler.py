@@ -46,7 +46,7 @@ class ActivityCreate(BaseHandler):   #创建活动
                             ACjoinT = '0000-00-00 00:00:00',
                             ACcontent = '',
                             ACfree = 0,
-                            ACprice = 0,
+                            ACprice = '',
                             ACclosed = 0,
                             ACcommentnumber = 0,
                             ACmaxp = 0,
@@ -105,7 +105,7 @@ class ActivityCreate(BaseHandler):   #创建活动
                             update({Activity.AClocation: ac_location,
                                     Activity.ACstartT: ac_startT,Activity.ACendT:ac_entT,
                                     Activity.ACjoinT: ac_joinT,Activity.ACcontent: ac_content,
-                                    Activity.ACfree: ac_free,
+                                    Activity.ACfree: ac_free,Activity.ACprice: ac_price,
                                     Activity.ACmaxp: ac_maxp,Activity.ACminp: ac_minp},synchronize_session = False)
                         try :
                            self.db.commit()
