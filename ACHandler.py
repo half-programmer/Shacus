@@ -53,7 +53,7 @@ class ActivityCreate(BaseHandler):   #创建活动
                             ACminp = 0,
                             AClikenumber = 0,
                             ACvalid = 1,
-                            ACregistN =0
+                            ACregistN =1
 
                         )
                         self.db.merge(my_activity)
@@ -193,11 +193,11 @@ class ActivityRegister(BaseHandler):#报名活动未考虑人数是否已满
                     self.retjson['code'] = '10361'
                 else:  # 用户曾经报名过该活动
                     self.retjson['contents'] = r'您未报名该活动'
-                    self.retjson['code'] = '10352'
+                    self.retjson['code'] = '10362'
             except Exception, e:  # 用户从未报名过该活动
                 print e
                 self.retjson['contents'] = r'您未报名该活动'
-                self.retjson['code'] = '10352'
+                self.retjson['code'] = '10362'
 
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
