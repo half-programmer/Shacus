@@ -52,5 +52,5 @@ class Ufuncs(BaseHandler):
             print e
             return 0
 
-    def auth_key_is_valid(self):
-        
+   # def auth_key_is_valid(self):
+

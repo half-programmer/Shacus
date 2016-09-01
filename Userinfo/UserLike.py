@@ -6,8 +6,9 @@
 
 from  Database.tables import UserLike, User
 from BaseHandlerh import BaseHandler
-
+from Ufuncs import Ufuncs
 class FindUlike(BaseHandler):
+
     def __init__(self):
         self.retjson={'code' : '', 'contents': ''}
         self.retdata = []
@@ -19,6 +20,16 @@ class FindUlike(BaseHandler):
         u_auth_key = self.get_argument('authkey')
         u_id = self.get_argument('uid')
         type = self.get_argument('type')
+        ufunc = Ufuncs()
+        if type == '10403':
+            if ufunc.judge_user_valid(u_id, u_auth_key):
+                self.find_my_like(u_id)
+            else:
+                self.retjson['code'] = '10412'
+                self.retjson['contents'] = '用户不合法'
+
+
+
 
 
     def find_my_like(self, uid):
@@ -31,11 +42,7 @@ class FindUlike(BaseHandler):
             my_likes = self.db.query(UserLike).filter(UserLike.ULlikeid == uid).all()
 
             for my_like in my_likes:
-                user_json ={'uid': '', 'ualais': '', 'usign': '', 'uimgurl': ''}
-                user_json['uid'] = my_like.Uid
-                user_json['ualais'] = my_like.Ualais
-                user_json['usign'] = my_like.Usign
-                user_json['uimgurl'] = ''
+                user_json = {'uid': my_like.Uid, 'ualais': my_like.Ualais, 'usign': my_like.Usign, 'uimgurl': ''}
                 self.retdata.append(user_json)
                 self.retjson['users'] = self.retdata
         except Exception,e:
