@@ -8,14 +8,19 @@ import json
 import types
 from operator import and_
 
-import AppFuncs
-import ApInfoFuncion
-from FileHandler.Upload import AuthKeyHandler
+import APinfoFuncion
+import APFuncs
+from APFuncs import response
 from  BaseHandlerh import BaseHandler
+
 
 from Database.tables import Appointment, User, Verification,AppointmentInfo,AppointEntry,UserImage
 
 from AppFuncs import response
+
+
+from Database.tables import Appointment, User, Verification,AppointmentInfo,AppointEntry
+from FileHandler.Upload import AuthKeyHandler
 
 
 
@@ -254,7 +259,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         uid = user.Uid
         try:
             appointments = self.db.query(Appointment).filter(Appointment.APsponsorid == uid).all()
-            AppFuncs.response(appointments, self.retdata)
+            APFuncs.response(appointments, self.retdata)
             self.retjson['contents'] = self.retdata
         except Exception, e:
             self.no_result_found(e)
@@ -266,15 +271,15 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
             try:
                 appointments = self.db.query(Appointment). \
                     filter(Appointment.APtype == 1, Appointment.APclosed == 0).all()
-                AppFuncs.response(appointments, self.retdata)
+                APFuncs.response(appointments, self.retdata)
                 self.retjson['contents'] = self.retdata
             except Exception, e:
                 self.no_result_found(e)
         elif request_type == '10235':  # 请求所有设定地点的模特发布的约拍中未关闭的
             try:
                 appointments = self.db.query(Appointment). \
-                    filter(Appointment.APtype == 2, Appointment.APclosed == 0).all()
-                AppFuncs.response(appointments, self.retdata)
+                    filter(Appointment.APtype == 0, Appointment.APclosed == 0).all()
+                APFuncs.response(appointments, self.retdata)
                 self.retjson['contents'] = self.retdata
             except Exception, e:
                 self.no_result_found(e)
@@ -300,16 +305,13 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
             m_AEapid=self.get_argument("AEapid",default="null")
             try:
                 data=self.db.query(AppointEntry).filter(AppointEntry.AEapid==m_AEapid,AppointEntry.AEvalid==1).all()
-                print data
-                print '哈哈哈'
                 for item in data:
                     ApInfo=self.db.query(User).filter(User.Uid==item.AEregisterID).one()
-                    print '哦哦'
-                    print ApInfo
                     ApImage=self.db.query(UserImage).filter(UserImage.UIuid==item.AEregisterID).one()
-                    ApInfoFuncion.APinfochoose(ApInfo, ApImage, self.retdata)
+                    APinfoFuncion.APinfochoose(ApInfo, ApImage, self.retdata)
                     self.retjson['contents']= self.retdata
-                self.retjson['code']='12703'
+                    self.retjson['code']='12703'
+
             except Exception, e:
                     print e
                     self.retjson['contents']='选择约拍对象失败'
@@ -343,10 +345,6 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 print e
                 self.retjson['code'] = '10262'
                 self.retjson['contents'] = '用户未参加此约拍的报名'
-
-
-
-
 
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
