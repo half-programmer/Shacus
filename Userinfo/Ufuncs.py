@@ -7,6 +7,8 @@ from BaseHandlerh import BaseHandler
 from Database.tables import User
 
 class Ufuncs(BaseHandler):
+    def __init__(self):
+        a  = 1
     def get_user_id(self, u_auth_key):
         '''
         通过用户auth_key获得id
@@ -33,6 +35,7 @@ class Ufuncs(BaseHandler):
                u_auth_key = user.Uauthkey
                return u_auth_key
         except Exception, e:
+            print 'edsdsd:::',e
             return 0
 
 
@@ -43,10 +46,11 @@ class Ufuncs(BaseHandler):
         :return:合法返回1，不合法返回0
         '''
         try:
-            u_id = self.get_user_authkey(uid)
+            u_id = self.get_user_id(u_authkey)
             if u_id == uid:
                 return 1   # 合法
             else:
+                print 'shdasidasd'
                 return 0   # 不合法
         except Exception, e:
             print e
