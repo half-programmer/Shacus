@@ -23,7 +23,7 @@ class AskEntry(BaseHandler): #互动表相关操作
                 self.retjson['contents'] = self.retdata
             except Exception,e:
                 print e
-                self.retjson['code']=1039
+                self.retjson['code']=10309
                 self.retjson['contents']='no entry'
         elif type=='10310':
                 m_ACEacid=self.get_argument("ACEacid",default="null")

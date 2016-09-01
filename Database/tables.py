@@ -165,6 +165,7 @@ class AppointmentInfo(Base):
 class AppointEntry(Base):
     __tablename__ = "AppointEntry"
 
+    AEapid=Column(Integer,ForeignKey('Appointment.APid' ,onupdate="CASCADE") )
     AEid = Column(Integer,primary_key=True)
     AEregisterID = Column(Integer,ForeignKey('User.Uid', onupdate='CASCADE'))
     AEvalid = Column(Boolean)

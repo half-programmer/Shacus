@@ -6,12 +6,16 @@
 '''
 import json
 import types
+from operator import and_
 
 import AppFuncs
+import ApInfoFuncion
 from FileHandler.Upload import AuthKeyHandler
 from  BaseHandlerh import BaseHandler
-from Database.tables import Appointment, User, Verification
+from Database.tables import Appointment, User, Verification ,AppointEntry
+#from ApInfoFuncion import ApUserinfo
 from AppFuncs import response
+
 
 
 class APcreateHandler(BaseHandler):  # 创建约拍
@@ -221,6 +225,39 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
             except Exception, e:
                 self.retjson['contents'] = '授权码不存在或已过期'
                 self.retjson['code'] = '10214'
+        elif request_type == '10270':#在报名约拍中的人里选择约拍对象
+           # uid = self.get_argument("uid",default="none")
+
+            m_AEapid=self.get_argument("AEapid",default="null")
+            try:
+                data=self.db.query(AppointEntry).filter(AppointEntry.AEapid==m_AEapid  and AppointEntry.AEvalid==1).all()
+                for item in data:
+                    ApInfo=self.db.query(User).filter(User.Uid==item.AEregisterID).all()
+                    for data in ApInfo:
+                        ApInfoFuncion.ApUserinfo(data ,self.retdata)
+                        self.retjson['code']='success'
+                        self.retjson['contents']= self.retdata
+            except Exception, e:
+                    print e
+                    self.retjson['contents']='选择约拍对象失败'
+                    self.retdata['code']='10270'
+        elif request_type == '10271':
+           # choose = True
+            m_APid=self.get_argument("APid",default="null")
+            m_AEregisterid=self.get_argument("AEregisterid",default="null")
+            m =int(m_AEregisterid)
+            try:
+                #data=self.db.query(AppointEntry).filter(AppointEntry.AEapid == m_APid and AppointEntry.AEregisterID == m_AEregisterid).one()
+                data=self.db.query(AppointEntry).filter(AppointEntry.AEapid == m_APid and AppointEntry.AEregisterID == m).one()
+                data.AEchoosed = True
+                self.db.commit()
+                self.retjson["code"]="10271"
+                self.retjson["contents"]="选择成功！"
+            except Exception, e:
+                print e
+                self.retjson['contents'] = '选择约拍对象失败'
+                self.retdata['code'] = '10271'
+
 
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
