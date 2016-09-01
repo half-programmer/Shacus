@@ -16,6 +16,21 @@ def generate_verification_code(len=6):
  verification_code = ''.join(myslice) # list to string
  return verification_code
 
+def generate_auth_key(len=32):
+   # 随机生成32位的验证码
+   code_list = []
+   for i in range(10):
+       code_list.append(str(i))
+   for i in range(65,91):
+       code_list.append(chr(i))
+   for i in range(97,123):
+       code_list.append(chr(i))
+   myslice = random.sample(code_list,len)
+   auth_key=''.join(myslice)
+   return  auth_key
+
+
+
 class RegisterHandler(BaseHandler):
     print "进入regist"
     retjson = {'code': '400', 'contents': 'None'}
@@ -65,17 +80,19 @@ class RegisterHandler(BaseHandler):
             m_password=self.get_argument('password')
             m_nick_name=self.get_argument('nickName')  # 昵称
             m_phone=self.get_argument('phone')
+            m_auth_key=generate_auth_key()
             new_user=User(
                     Upassword=m_password,
                     Ualais=m_nick_name,
                     Uname='',
                     Ulocation='',  #  新用户注册默认level为1
                     Umailbox='',
-                    Ubirthday='',
+                    Ubirthday='0000-00-00 00:00:00',
                     Utel=m_phone,
                     Uscore=0,
                     Usex=1,
-                    Usign=''
+                    Usign='',
+                    Uauthkey=m_auth_key
             )
             try:
                 same_nickname_user = self.db.query(User).filter(User.Ualais == m_nick_name).one()
@@ -87,8 +104,29 @@ class RegisterHandler(BaseHandler):
                     try:
                         self.db.commit()
                         self.retjson['code'] = 10004  # success
-                        self.retjson['contents'] = u'注册成功'
-                    except:
+                        m_time = self.db.query(User.UregistT).filter(User.Uauthkey == m_auth_key).one()
+                        m_id = self.db.query(User.Uid).filter(User.Uauthkey == m_auth_key).one()
+                        retdata = []
+                        retdata_body = {}
+                        data=dict(
+                            phone = m_phone,
+                            authkey  = m_auth_key,
+                            nickName = m_nick_name,
+                            headImage ='',
+                            realName ='',
+                            birthday ='',
+                            sign ='',
+                            score ='',
+                            location ='',
+                            registTime ='',
+                            mailbaox = '',
+                            id = m_id[0]
+                        )
+                        retdata_body['userModel'] =data
+                        retdata.append(retdata_body)
+                        self.retjson['contents'] = retdata
+                    except Exception, e:
+                        print e
                         self.db.rollback()
                         self.retjson['code'] = 10009  # Request Timeout
                         self.retjson['contents'] = u'Some errors when commit to database, please try again'

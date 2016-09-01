@@ -4,7 +4,7 @@ import tornado.httpserver
 import  tornado.ioloop
 import  tornado.options
 import tornado.web
-# from loginHandler import LoginHandler
+from APHandler import APcreateHandler, APaskHandler, APregistHandler
 from sqlalchemy.orm import scoped_session, sessionmaker
 from tornado.options import define, options
 #import RegisterHandler
@@ -16,21 +16,41 @@ from RegisterHandler import RegisterHandler
 from ImageCallback import ImageCallback
 from loginHandler import LoginHandler
 
+from ACHandler import ActivityCreate,ActivityRegister
+
+
+from AcaskHandler import AskActivity
+from AcentryHandler import AskEntry
+from ACHandler import ActivityCreate
 define("port", default=800, help="run on the given port", type=int)
+
 
 
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
-             # (r"/appointment/create", CreateAppointment),
+             (r"/appointment/create", APcreateHandler),
+             (r"/appointment/ask", APaskHandler),
+             (r"/appointment/register",APregistHandler),
              # (r"/appointment/ask", AskAppointment),
              # (r"/appointment/register", RegistAppointment),
-             (r"/login",LoginHandler),
+             (r"/login", LoginHandler),
              (r"/regist", RegisterHandler),
+
+
              # (r"/Activity/create", ActivityCommit),
+             (r"/Activity/ask", AskActivity),
+            (r"/Activity/entry",AskEntry),
+
+
+
+             (r"/activity/create", ActivityCreate),
+             (r"/activity/register",ActivityRegister),
+
              # (r"/Activity/ask", AskActivity),
+
              # (r"/Activity/register", ActivityJoin),
-             (r"/ImageCallback",ImageCallback)
+             (r"/ImageCallback",ImageCallback),
 
         ]
         tornado.web.Application.__init__(self, handlers)
