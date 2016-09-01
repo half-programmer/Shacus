@@ -13,7 +13,7 @@ import ApInfoFuncion
 from FileHandler.Upload import AuthKeyHandler
 from  BaseHandlerh import BaseHandler
 
-from Database.tables import Appointment, User, Verification,AppointmentInfo,AppointEntry
+from Database.tables import Appointment, User, Verification,AppointmentInfo,AppointEntry,UserImage
 
 from AppFuncs import response
 
@@ -299,17 +299,21 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
 
             m_AEapid=self.get_argument("AEapid",default="null")
             try:
-                data=self.db.query(AppointEntry).filter(AppointEntry.AEapid==m_AEapid  and AppointEntry.AEvalid==1).all()
+                data=self.db.query(AppointEntry).filter(AppointEntry.AEapid==m_AEapid,AppointEntry.AEvalid==1).all()
+                print data
+                print '哈哈哈'
                 for item in data:
-                    ApInfo=self.db.query(User).filter(User.Uid==item.AEregisterID).all()
-                    for data in ApInfo:
-                        ApInfoFuncion.ApUserinfo(data ,self.retdata)
-                        self.retjson['code']='success'
-                        self.retjson['contents']= self.retdata
+                    ApInfo=self.db.query(User).filter(User.Uid==item.AEregisterID).one()
+                    print '哦哦'
+                    print ApInfo
+                    ApImage=self.db.query(UserImage).filter(UserImage.UIuid==item.AEregisterID).one()
+                    ApInfoFuncion.APinfochoose(ApInfo, ApImage, self.retdata)
+                    self.retjson['contents']= self.retdata
+                self.retjson['code']='12703'
             except Exception, e:
                     print e
                     self.retjson['contents']='选择约拍对象失败'
-                    self.retdata['code']='10270'
+                    self.retjson['code']='10270'
         elif request_type == '10271':
            # choose = True
             m_APid=self.get_argument("APid",default="null")

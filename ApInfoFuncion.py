@@ -30,3 +30,13 @@ def ApUserinfo(item,retdata):
     Uauthkey = item.Uauthkey
     )
     retdata.append(m_ApUserinfo)
+
+
+def APinfochoose(item,item2,retdata):
+    m_APinfochoose=dict(
+        Uid=item.Uid,
+        Usign=item.Usign,
+        UIurl=item2.UIurl,
+    )
+    retdata.append(m_APinfochoose)
+
