@@ -4,8 +4,8 @@ from BaseHandlerh import  BaseHandler
 from Database.tables import ActivityEntry,User,Activity
 from datetime import date, datetime
 import json
-import AcentryFunction
-import AcFunction
+import ACentryFunction
+import ACFunction
 
 class AskEntry(BaseHandler): #互动表相关操作
     retjson = {'code': 200, 'contents': 'none'}
@@ -19,7 +19,7 @@ class AskEntry(BaseHandler): #互动表相关操作
                 for ID in data:
                      dataask = self.db.query(Activity).filter(Activity.ACid==ID.ACEacid).all()
                      for item in dataask:
-                        AcFunction.response(item, self.retdata)
+                        ACFunction.response(item, self.retdata)
                 self.retjson['contents'] = self.retdata
             except Exception,e:
                 print e
@@ -34,7 +34,7 @@ class AskEntry(BaseHandler): #互动表相关操作
                     for comm in data:
                        comm.ACEcomment=m_comments
                        self.db.commit()
-                       AcentryFunction.response(comm,self.retdata)
+                       ACentryFunction.response(comm, self.retdata)
                     self.retjson['contents']=self.retdata
                 except:
                     self.retjson["code"]=10310

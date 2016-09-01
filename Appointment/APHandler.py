@@ -8,15 +8,12 @@ import json
 import types
 from operator import and_
 
-import AppFuncs
-import ApInfoFuncion
-from FileHandler.Upload import AuthKeyHandler
+import ACInfoFuncion
+import APFuncs
+from APFuncs import response
 from  BaseHandlerh import BaseHandler
-
 from Database.tables import Appointment, User, Verification,AppointmentInfo,AppointEntry
-
-from AppFuncs import response
-
+from FileHandler.Upload import AuthKeyHandler
 
 
 class APcreateHandler(BaseHandler):  # 创建约拍
@@ -254,7 +251,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         uid = user.Uid
         try:
             appointments = self.db.query(Appointment).filter(Appointment.APsponsorid == uid).all()
-            AppFuncs.response(appointments, self.retdata)
+            APFuncs.response(appointments, self.retdata)
             self.retjson['contents'] = self.retdata
         except Exception, e:
             self.no_result_found(e)
@@ -266,7 +263,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
             try:
                 appointments = self.db.query(Appointment). \
                     filter(Appointment.APtype == 1, Appointment.APclosed == 0).all()
-                AppFuncs.response(appointments, self.retdata)
+                APFuncs.response(appointments, self.retdata)
                 self.retjson['contents'] = self.retdata
             except Exception, e:
                 self.no_result_found(e)
@@ -274,7 +271,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
             try:
                 appointments = self.db.query(Appointment). \
                     filter(Appointment.APtype == 0, Appointment.APclosed == 0).all()
-                AppFuncs.response(appointments, self.retdata)
+                APFuncs.response(appointments, self.retdata)
                 self.retjson['contents'] = self.retdata
             except Exception, e:
                 self.no_result_found(e)
@@ -303,7 +300,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 for item in data:
                     ApInfo=self.db.query(User).filter(User.Uid==item.AEregisterID).all()
                     for data in ApInfo:
-                        ApInfoFuncion.ApUserinfo(data ,self.retdata)
+                        ACInfoFuncion.ApUserinfo(data, self.retdata)
                         self.retjson['code']='success'
                         self.retjson['contents']= self.retdata
             except Exception, e:
@@ -339,10 +336,6 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 print e
                 self.retjson['code'] = '10262'
                 self.retjson['contents'] = '用户未参加此约拍的报名'
-
-
-
-
 
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
