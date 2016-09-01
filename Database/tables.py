@@ -51,7 +51,7 @@ class Activity(Base):#活动表
     ACjoinT = Column(DateTime) # 活动报名截止时间
     ACcontent = Column(VARCHAR(128), nullable=False) # 活动介绍
     ACfree = Column(Boolean)
-    ACprice = Column(Float)
+    ACprice = Column(VARCHAR(64))
     ACclosed = Column(Boolean,default=1, nullable=False) # 活动是否已经结束
     ACcreateT = Column(DateTime(timezone=True), default=func.now())
     ACcommentnumber = Column(Integer,default=0, nullable=False)
@@ -60,6 +60,7 @@ class Activity(Base):#活动表
     ACscore = Column(Integer,default=0)
     AClikenumber = Column(Integer,default=0)
     ACvalid = Column(Boolean,default=1) # 活动是否已经删除
+    ACregistN = Column(Integer,default=0)
 
 
 class ActivityEntry(Base):  #活动报名表
@@ -141,7 +142,7 @@ class Appointment(Base):  #摄影师-模特约拍
     APjoinT=Column(DateTime, nullable=False, default='0000-00-00 00:00:00 ')
     APcontent=Column(VARCHAR(128), nullable=False, default='')
     APfree = Column(Boolean)
-    APprice = Column(Float)
+    APprice = Column(VARCHAR(64))
     APclosed = Column(Boolean)
     APcreateT = Column(DateTime(timezone=True), default=func.now())
     APtype = Column(Boolean,nullable=False,default=0) # 约拍类型，模特约摄影师(1)或摄影师约模特(0)
@@ -165,7 +166,9 @@ class AppointmentInfo(Base):
 class AppointEntry(Base):
     __tablename__ = "AppointEntry"
 
+    AEapid=Column(Integer,ForeignKey('Appointment.APid' ,onupdate="CASCADE") )
     AEid = Column(Integer,primary_key=True)
+    AEapid = Column(Integer,ForeignKey('Appointment.APid',onupdate='CASCADE'))
     AEregisterID = Column(Integer,ForeignKey('User.Uid', onupdate='CASCADE'))
     AEvalid = Column(Boolean)
     AEchoosed = Column(Boolean)

@@ -120,7 +120,7 @@ class RegisterHandler(BaseHandler):
                             mailbaox = '',
                             id = m_id[0]
                         )
-                        retdata_body['useModel'] =data
+                        retdata_body['userModel'] =data
                         retdata.append(retdata_body)
                         self.retjson['contents'] = retdata
                     except Exception, e:
