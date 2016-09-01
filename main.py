@@ -12,6 +12,9 @@ from RegisterHandler import RegisterHandler
 from ImageCallback import ImageCallback
 from loginHandler import LoginHandler
 
+from ACHandler import ActivityCreate,ActivityRegister
+
+
 from AcaskHandler import AskActivity
 from AcentryHandler import AskEntry
 from ACHandler import ActivityCreate
@@ -24,16 +27,22 @@ class Application(tornado.web.Application):
         handlers = [
              (r"/appointment/create", APcreateHandler),
              (r"/appointment/ask", APaskHandler),
+             (r"/appointment/register",APregistHandler),
              # (r"/appointment/ask", AskAppointment),
              # (r"/appointment/register", RegistAppointment),
              (r"/login", LoginHandler),
              (r"/regist", RegisterHandler),
 
+
              # (r"/Activity/create", ActivityCommit),
              (r"/Activity/ask", AskActivity),
             (r"/Activity/entry",AskEntry),
 
-              (r"/activity/create", ActivityCreate),
+
+
+             (r"/activity/create", ActivityCreate),
+             (r"/activity/register",ActivityRegister),
+
              # (r"/Activity/ask", AskActivity),
 
              # (r"/Activity/register", ActivityJoin),

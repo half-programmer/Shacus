@@ -1,6 +1,6 @@
 # coding=utf-8
 '''
-  黄鑫晨
+  黄鑫晨,王佳镭
   2016.08.29
 
 '''
@@ -12,8 +12,9 @@ import AppFuncs
 import ApInfoFuncion
 from FileHandler.Upload import AuthKeyHandler
 from  BaseHandlerh import BaseHandler
-from Database.tables import Appointment, User, Verification ,AppointEntry
-#from ApInfoFuncion import ApUserinfo
+
+from Database.tables import Appointment, User, Verification,AppointmentInfo,AppointEntry
+
 from AppFuncs import response
 
 
@@ -133,12 +134,12 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                                     update({Appointment.APstartT: ap_start_time, Appointment.APendT: ap_end_time,
                                             Appointment.APjoinT: ap_join_time,
                                             Appointment.APlocation: ap_location, Appointment.APfree: ap_free,
-                                            Appointment.APprice: ap_price, Appointment.APcontent: ap_content,
-                                            Appointment.APtag: ap_tag, Appointment.APaddallowed: ap_addallowed,
+                                            Appointment.APcontent: ap_content,
+                                            Appointment.APaddallowed: ap_addallowed,
                                             Appointment.APtype: ap_type
                                             }, synchronize_session=False)
                                 self.db.commit()
-                                self.retjson['code'] = '10200'
+                                self.retjson['code'] = '10214'
                                 self.retjson['contents'] = '发布约拍成功'
                             else:
                                 print 'fd'
@@ -160,11 +161,78 @@ class APcreateHandler(BaseHandler):  # 创建约拍
 
 
 class APregistHandler(BaseHandler):  # 报名约拍
-    def __init__(self):
-        self.retjson = {'code': '', 'contents': ''}
+    retjson = {'code': '', 'contents': ''}
 
     def post(self):
-        auth_key = self.get_argument('authkey')
+        ap_registe_type = self.get_argument('type')
+        if ap_registe_type == '10251':
+            auth_key = self.get_argument('auth_key')
+            ap_id = self.get_argument('apid')
+            try:
+                ap_user = self.db.query(User).filter(User.Uauthkey == auth_key).one()
+                ap_user_id = ap_user.Uid
+                try :
+                    exist = self.db.query(AppointEntry).\
+                    filter(AppointEntry.AEregisterID == ap_user_id and AppointEntry.AEapid == ap_id).one() # 应该再加上和ap_id的验证
+                    if exist:
+                        self.retjson['contents'] = '已报名过该约拍'
+                        self.retjson['code'] = '10250'
+                except Exception,e:
+                    new_appointmententry = AppointEntry(
+                        AEapid = ap_id,
+                        AEregisterID = ap_user_id,
+                        AEvalid = 1,
+                        AEchoosed = 0
+                    )
+                    self.db.merge(new_appointmententry)
+                    try :
+                        self.db.commit()
+                        self.retjson['contents'] = '用户报名成功'
+                        self.retjson['code'] = '10253'
+                    except Exception,e:
+                        print e
+                        self.rollback()
+                        self.retjson['contents'] = '数据库插入错误'
+                        self.retjson['code'] = '10254'
+            except Exception,e:
+                print e
+                self.retjson['contents'] = '授权码不存在或已过期'
+                self.retjson['code'] = '10214'
+        if ap_registe_type == '10252': #用户取消报名
+            auth_key = self.get_argument('authkey')
+            ap_id = self.get_argument('apid')
+            try:
+                ap_user = self.db.query(User).filter(User.Uauthkey == auth_key).one()
+                ap_user_id = ap_user.Uid
+                try:
+                    exist = self.db.query(AppointEntry).filter(
+                        AppointEntry.AEregisterID == ap_user_id and AppointEntry.AEapid == ap_id).one()  # 应该再加上和ap_id的验证
+                    if exist.AEvalid:
+                        self.db.query(AppointEntry).filter(AppointEntry.AEregisterID == ap_user_id).\
+                            updata({AppointEntry.AEvalid == 0})
+                        try :
+                            self.db.commit()
+                            self.retjson['contents'] = '取消报名成功'
+                            self.retjson['code'] = '10255'
+                        except Exception,e:
+                            print e
+                            self.rollback()
+                            self.retjson['contents'] = '数据库更新错误'
+                            self.retjson['code'] = '10254'
+                    else :
+                        self.retjson['contents'] = '用户已经取消报名'
+                        self.retjson['code'] = '10256'
+                except Exception, e:
+                    self.retjson['contents'] = '用户未报名过该约拍'
+                    self.retjson['code'] = '10257'
+            except Exception, e:
+                print e
+                self.retjson['contents'] = '授权码不存在或已过期'
+                self.retjson['code'] = '10214'
+        self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
+
+
+
 
 
 class APaskHandler(BaseHandler):  # 请求约拍相关信息
@@ -225,6 +293,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
             except Exception, e:
                 self.retjson['contents'] = '授权码不存在或已过期'
                 self.retjson['code'] = '10214'
+
         elif request_type == '10270':#在报名约拍中的人里选择约拍对象
            # uid = self.get_argument("uid",default="none")
 
@@ -257,6 +326,22 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 print e
                 self.retjson['contents'] = '选择约拍对象失败'
                 self.retdata['code'] = '10271'
+
+        elif request_type =='10261':   #查看自己报名的约拍的结果
+            uid = self.get_argument('uid')
+            ap_id = self.get_argument('apid')
+            try:
+                u_result = self.db.query(AppointEntry.AEchoosed).\
+                    filter(AppointEntry.AEapid ==ap_id and AppointEntry.AEregisterID == uid).one()
+                self.retjson['code'] = '10263'
+                self.retjson['contents'] = u_result[0]
+            except Exception,e:
+                print e
+                self.retjson['code'] = '10262'
+                self.retjson['contents'] = '用户未参加此约拍的报名'
+
+
+
 
 
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))

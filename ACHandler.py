@@ -46,13 +46,14 @@ class ActivityCreate(BaseHandler):   #创建活动
                             ACjoinT = '0000-00-00 00:00:00',
                             ACcontent = '',
                             ACfree = 0,
-                            ACprice = 0,
+                            ACprice = '',
                             ACclosed = 0,
                             ACcommentnumber = 0,
                             ACmaxp = 0,
                             ACminp = 0,
                             AClikenumber = 0,
-                            ACvalid = 1
+                            ACvalid = 1,
+                            ACregistN =1
 
                         )
                         self.db.merge(my_activity)
@@ -81,7 +82,7 @@ class ActivityCreate(BaseHandler):   #创建活动
             print "进入10302，传输数据"
             ac_id = self.get_argument('acid')
             ac_title = self.get_argument('actitle')
-            ac_auth_key = self.get_argument('authkey')
+            ac_auth_key = self.get_argument('auth_key')
             ac_location = self.get_argument('location')
             ac_tag = self.get_argument('tags')
             ac_startT = self.get_argument('startT')
@@ -101,7 +102,7 @@ class ActivityCreate(BaseHandler):   #创建活动
                     if exist: #验证用户授权成功
                         print '授权验证成功'
                         self.db.query(Activity).filter(Activity.ACid == ac_id).\
-                            update({Activity.AClocation: ac_location,Activity.ACtag: ac_tag,
+                            update({Activity.AClocation: ac_location,
                                     Activity.ACstartT: ac_startT,Activity.ACendT:ac_entT,
                                     Activity.ACjoinT: ac_joinT,Activity.ACcontent: ac_content,
                                     Activity.ACfree: ac_free,Activity.ACprice: ac_price,
@@ -125,45 +126,56 @@ class ActivityCreate(BaseHandler):   #创建活动
                 self.retjson['contents'] = '用户授权码错误'
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
-class ActivityAsk(BaseHandler):
+
+class ActivityRegister(BaseHandler):#报名活动未考虑人数是否已满
     retjson = {'code': '10300', 'contents': 'None'}
+    def updata_activity_number(self,activity_id,num):    #在活动表中增加人数
+        ac_activity= self.db.query(Activity).filter(Activity.ACid ==activity_id).one()
+        ac_activity.ACregistN = ac_activity.ACregistN + num
+        self.db.commit()
+
     def post(self):
         ac_type = self.get_argument('type')
-        if ac_type == '10305': #报名活动
+        if ac_type == '10305':#报名活动
             ac_id = self.get_argument('acid')
             ac_registerid = self.get_argument('registerid')
-            try :
-                exist = self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid == ac_id and
-                                                            ActivityEntry.ACEregisterid == ac_registerid ).one()
-                if exist.ACEregisttvilid :
-                    self.retjson['contents'] = r'您已经报名该活动'
-                    self.retjson['code'] = '10351'
-                else: #用户曾经报名过该活动
-                    self.db.query(ActivityEntry).\
-                        filter(ActivityEntry.ACEacid == ac_id and ActivityEntry.ACEregisterid == ac_registerid ).\
-                        update({ActivityEntry.ACEregisttvilid : 1},synchronize_session = False)
-                    self.db.commit()
-                    self.retjson['contents'] = r'您已报名成功'
-                    self.retjson['code'] = '10352'
-            except Exception,e: #用户从未报名过该活动
-                print e
-                new_activityEntry = ActivityEntry(
-                    ACEacid = ac_id,
-                    ACEregisterid = ac_registerid,
-                    ACEregisttvilid = 1,
-                    ACEscore = 0,
-                    ACEcomment  = 0,
-                )
-                self.db.merge(new_activityEntry)
+            ac_activity =self.db.query(Activity).filter(Activity.ACid == ac_id).one()
+            if ac_activity.ACmaxp == ac_activity.ACregistN :#报名人数是否已满
+                self.retjson['contents'] = '报名人数已满，无法报名'
+                self.retjson['code'] = '10353'
+            else :
                 try :
-                    self.db.commit()
-                    self.retjson['contents'] = r'您已报名成功'
-                    self.retjson['code'] = '10352'
-                except Exception,e:
+                    exist = self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid == ac_id and
+                                                                ActivityEntry.ACEregisterid == ac_registerid ).one()
+                    if exist.ACEregisttvilid :
+                        self.retjson['contents'] = r'您已经报名该活动'
+                        self.retjson['code'] = '10351'
+                    else: #用户曾经报名过该活动
+                        self.db.query(ActivityEntry).\
+                            filter(ActivityEntry.ACEacid == ac_id and ActivityEntry.ACEregisterid == ac_registerid ).\
+                            update({ActivityEntry.ACEregisttvilid : 1},synchronize_session = False)
+                        self.updata_activity_number(ac_id,1)
+                        self.retjson['contents'] = r'您已报名成功'
+                        self.retjson['code'] = '10352'
+                except Exception,e: #用户从未报名过该活动
                     print e
-                    self.db.rollback()
-                    self.retjson['contents'] = r'服务器出错'
-                    self.retjson['code'] = '10359'
+                    new_activityEntry = ActivityEntry(
+                        ACEacid = ac_id,
+                        ACEregisterid = ac_registerid,
+                        ACEregisttvilid = 1,
+                        ACEscore = 0,
+                        ACEcomment  = 0,
+                    )
+                    self.db.merge(new_activityEntry)
+                    try :
+                        self.updata_activity_number(ac_id, 1)
+                        self.retjson['contents'] = r'您已报名成功'
+                        self.retjson['code'] = '10352'
+                    except Exception,e:
+                        print e
+                        self.db.rollback()
+                        self.retjson['contents'] = r'服务器出错'
+                        self.retjson['code'] = '10359'
 
         elif ac_type == '10306': #用户取消报名活动
             ac_id = self.get_argument('acid')
@@ -176,15 +188,16 @@ class ActivityAsk(BaseHandler):
                         filter(ActivityEntry.ACEacid == ac_id and ActivityEntry.ACEregisterid == ac_registerid). \
                         update({ActivityEntry.ACEregisttvilid: 0})
                     self.db.commit()
+                    self.updata_activity_number(ac_id, -1)
                     self.retjson['contents'] = r'取消报名活动成功'
                     self.retjson['code'] = '10361'
                 else:  # 用户曾经报名过该活动
                     self.retjson['contents'] = r'您未报名该活动'
-                    self.retjson['code'] = '10352'
-            except Exception, e:  # 用户从未报名过该用户
+                    self.retjson['code'] = '10362'
+            except Exception, e:  # 用户从未报名过该活动
                 print e
                 self.retjson['contents'] = r'您未报名该活动'
-                self.retjson['code'] = '10352'
+                self.retjson['code'] = '10362'
 
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
