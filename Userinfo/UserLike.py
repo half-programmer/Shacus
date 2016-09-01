@@ -6,33 +6,45 @@
 
 from  Database.tables import UserLike, User
 from BaseHandlerh import BaseHandler
-class UserLike(BaseHandler):
+
+class FindUlike(BaseHandler):
     def __init__(self):
-        self.retjson={'code':'','users':''}
+        self.retjson={'code' : '', 'contents': ''}
         self.retdata = []
     '''
       处理用户互相关注
 
     '''
-   # def make_like(self):
+    def post(self):
+        u_auth_key = self.get_argument('authkey')
+        u_id = self.get_argument('uid')
+        type = self.get_argument('type')
+
+
     def find_my_like(self, uid):
         '''
         查询所有我关注的人
         :param uid:‘我的’Id
         :return:
         '''
-        my_likes = self.db.query(UserLike).filter(UserLike.ULlikeid == uid).all()
-        for my_like in my_likes:
-            user_json ={'uid': '', 'ualais': '', 'usign': '', 'uimgurl': ''}
-            user_json['uid'] = my_like.Uid
-            user_json['ualais'] = my_like.Ualais
-            user_json['usign'] = my_like.Usign
-            user_json['uimgurl'] = ''
-            self.retdata.append(user_json)
-        self.retjson['users'] = self.retdata
+        try:
+            my_likes = self.db.query(UserLike).filter(UserLike.ULlikeid == uid).all()
+
+            for my_like in my_likes:
+                user_json ={'uid': '', 'ualais': '', 'usign': '', 'uimgurl': ''}
+                user_json['uid'] = my_like.Uid
+                user_json['ualais'] = my_like.Ualais
+                user_json['usign'] = my_like.Usign
+                user_json['uimgurl'] = ''
+                self.retdata.append(user_json)
+                self.retjson['users'] = self.retdata
+        except Exception,e:
+            self.retjson['code'] = '10421'
+            self.retjson['contents'] = r'该用户没有关注任何人'
         self.write(self.retjson.dumps(self.retjson, ensure_ascii=False, indent=2))
 
 
+class UserLike(BaseHandler):
     def post(self):
         type = self.get_argument('type')
         if type == '10401':  # 用户关注
@@ -47,7 +59,7 @@ class UserLike(BaseHandler):
                                                            UserLike.ULlikedid == u_likeid).one()
                          if exist:
                             self.retjson['code'] = '10410'
-                            self.retjson['content'] = '您已经关注过该用户'
+                            self.retjson['contents'] = '您已经关注过该用户'
                     except Exception, e:
                          print '开始关注该用户'
                          new_userlike = UserLike(
@@ -59,13 +71,13 @@ class UserLike(BaseHandler):
                          try:
                            self.db.commit()
                            self.retjson['code'] = '10411'
-                           self.retjson['content'] = '关注成功'
+                           self.retjson['contents'] = '关注成功'
                          except Exception, e:
                             print e
                             self.rollback()
                             self.retjson['code'] = '10419'
-                            self.retjson['content'] = '服务器错误'
+                            self.retjson['contents'] = '服务器错误'
             except Exception, e:
                 print e
             self.retjson['code'] = '10412'
-            self.retjson['content'] = '用户授权码不正确'
+            self.retjson['contents'] = '用户授权码不正确'

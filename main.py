@@ -15,6 +15,7 @@ from Appointment.APHandler import APcreateHandler, APaskHandler, APregistHandler
 from Database.models import engine
 from ImageCallback import ImageCallback
 from RegisterHandler import RegisterHandler
+from Userinfo.UserLike import FindUlike
 from loginHandler import LoginHandler
 
 define("port", default=800, help="run on the given port", type=int)
@@ -32,10 +33,11 @@ class Application(tornado.web.Application):
              (r"/login", LoginHandler),
              (r"/regist", RegisterHandler),
 
+            (r"/userlike/mylike", FindUlike),
 
              # (r"/Activity/create", ActivityCommit),
              (r"/Activity/ask", AskActivity),
-            (r"/Activity/entry",AskEntry),
+             (r"/Activity/entry",AskEntry),
 
 
 
