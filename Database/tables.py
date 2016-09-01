@@ -60,6 +60,7 @@ class Activity(Base):#活动表
     ACscore = Column(Integer,default=0)
     AClikenumber = Column(Integer,default=0)
     ACvalid = Column(Boolean,default=1) # 活动是否已经删除
+    ACregistN = Column(Integer,default=0)
 
 
 class ActivityEntry(Base):  #活动报名表
@@ -166,6 +167,7 @@ class AppointEntry(Base):
     __tablename__ = "AppointEntry"
 
     AEid = Column(Integer,primary_key=True)
+    AEapid = Column(Integer,ForeignKey('Appointment.APid',onupdate='CASCADE'))
     AEregisterID = Column(Integer,ForeignKey('User.Uid', onupdate='CASCADE'))
     AEvalid = Column(Boolean)
     AEchoosed = Column(Boolean)
