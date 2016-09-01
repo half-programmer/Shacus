@@ -82,7 +82,7 @@ class ActivityCreate(BaseHandler):   #创建活动
             print "进入10302，传输数据"
             ac_id = self.get_argument('acid')
             ac_title = self.get_argument('actitle')
-            ac_auth_key = self.get_argument('authkey')
+            ac_auth_key = self.get_argument('auth_key')
             ac_location = self.get_argument('location')
             ac_tag = self.get_argument('tags')
             ac_startT = self.get_argument('startT')
@@ -102,10 +102,10 @@ class ActivityCreate(BaseHandler):   #创建活动
                     if exist: #验证用户授权成功
                         print '授权验证成功'
                         self.db.query(Activity).filter(Activity.ACid == ac_id).\
-                            update({Activity.AClocation: ac_location,Activity.ACtag: ac_tag,
+                            update({Activity.AClocation: ac_location,
                                     Activity.ACstartT: ac_startT,Activity.ACendT:ac_entT,
                                     Activity.ACjoinT: ac_joinT,Activity.ACcontent: ac_content,
-                                    Activity.ACfree: ac_free,Activity.ACprice: ac_price,
+                                    Activity.ACfree: ac_free,
                                     Activity.ACmaxp: ac_maxp,Activity.ACminp: ac_minp},synchronize_session = False)
                         try :
                            self.db.commit()
