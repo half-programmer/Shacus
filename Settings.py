@@ -13,17 +13,27 @@ class PaswChange(BaseHandler):
         if type=='10501':
             Userid=self.get_argument("Userid","noone")
             p_password=self.get_argument("oldpassword")
-            m_password=self.get_argument("newpassword")
-            try:
-                data=self.db.query(User).filter(Userid==User.Uid,p_password==User.Upassword).one()
-                data.Upassword=m_password
-                self.db.commit()
+           # m_password=self.get_argument("newpassword")
+            data=self.db.query(User).filter(Userid==User.Uid).one()
+            if data.Upassword==p_password:
                 self.retjson ['code']='10501'
-                self.retjson['contents']='修改密码成功'
-            except Exception,e:
-                print e
+                self.retjson['contents']='获得修改密码权限'
+            else:
                 self.retjson['code']='10502'
-                self.retjson['contents']='修改密码失败'
+                self.retjson['contents']='没有获得修改密码权限'
+        elif type=='10511':
+            Userid = self.get_argument("Userid", "noone")
+            m_password = self.get_argument("newpassword")
+            try:
+                data = self.db.query(User).filter(Userid == User.Uid).one()
+                data.Upassword = m_password
+                self.db.commit()
+                self.retjson['code'] = '10511'
+                self.retjson['contents'] = '修改密码成功'
+            except Exception, e:
+                print e
+                self.retjson['code'] = '10512'
+                self.retjson['contents'] = '修改密码失败'
         elif type=='10503': #修改用户昵称
                 Userid = self.get_argument("Userid", "noone")
                 Usernickname = self.get_argument("Usernickname", "noone")

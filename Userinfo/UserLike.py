@@ -183,10 +183,10 @@ class FindUlike(BaseHandler):
                     self.retjson['code'] = '10430'
                     self.retjson['contents'] = self.retdata
             else:
-                print ""
+                print '886'
                 self.retjson['code'] = '10431'
-                self.retjson['contents'] = r'该用户没有关注任何人'
+                self.retjson['contents'] = r'你是没有人关注的'
         except Exception,e:
-            self.retjson['code'] = '10431'
+            self.retjson['code'] = '10441'
             self.retjson['contents'] = r'该用户没有关注任何人'
 
