@@ -7,6 +7,7 @@ import tornado.web
 from sqlalchemy.orm import scoped_session, sessionmaker
 from tornado.options import define, options
 
+from Userhomepager import Userhomepager
 from ACHandler import ActivityCreate
 from ACHandler import ActivityCreate,ActivityRegister
 from ACentryHandler import AskEntry
@@ -32,6 +33,7 @@ class Application(tornado.web.Application):
              # (r"/appointment/register", RegistAppointment),
              (r"/login", LoginHandler),
              (r"/regist", RegisterHandler),
+            (r"/userhomepager",Userhomepager),
 
             (r"/userlike/mylike", FindUlike),
 

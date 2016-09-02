@@ -101,9 +101,11 @@ class FindUlike(BaseHandler):
                 userinfo = self.db.query(User).filter(User.Uid == my_like_id).one()
                 user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign, 'uimgurl': ''}
                 self.retdata.append(user_json)
+                print '成功返回关注者'
                 self.retjson['code'] = '10430'
                 self.retjson['contents'] = self.retdata
         except Exception,e:
+            print e
             self.retjson['code'] = '10431'
             self.retjson['contents'] = r'该用户没有关注任何人'
 
