@@ -68,11 +68,14 @@ class FindUlike(BaseHandler):
         type = self.get_argument('type')
         if self.judge_user_valid(u_id, u_auth_key):
             if type == '10403':  #查询所有我关注的人
+                print '进入10403'
                 self.find_my_like(u_id)
             if type =='10401':   #关注某一人
+                print '进入10401'
                 followerID = self.get_argument("followerid")
                 self.follow_user(u_id,followerID)
             if type =='10402': #取消关注某一人
+                print '进入10402'
                 followerID = self.get_argument("followerid")
                 self.not_follow_user(u_id, followerID)
 
@@ -95,6 +98,7 @@ class FindUlike(BaseHandler):
         '''
         try:
             my_likes = self.db.query(UserLike).filter(UserLike.ULlikeid == uid).all()
+            print '进入10403查询'
 
             for my_like in my_likes:
                 my_like_id = my_like.ULlikedid
