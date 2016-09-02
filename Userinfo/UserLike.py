@@ -97,10 +97,11 @@ class FindUlike(BaseHandler):
         :return:
         '''
         try:
-            my_likes = self.db.query(UserLike).filter(UserLike.ULlikeid == uid).all()
+            my_likes = self.db.query(UserLike).filter(UserLike.ULlikeid == uid).one()
             print '进入10403查询'
 
             for my_like in my_likes:
+                
                 my_like_id = my_like.ULlikedid
                 userinfo = self.db.query(User).filter(User.Uid == my_like_id).one()
                 user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign, 'uimgurl': ''}
