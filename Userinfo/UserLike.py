@@ -11,7 +11,7 @@ class FindUlike(BaseHandler):
 
     #def __init__(self):
     retjson={'code' : '', 'contents': ''}
-    retdata = []
+
     '''
       处理用户互相关注
 
@@ -96,6 +96,7 @@ class FindUlike(BaseHandler):
         :param uid:‘我的’Id
         :return:
         '''
+        retdata = []
         try:
             my_likes = self.db.query(UserLike).filter(UserLike.ULlikeid == uid).all()
             print '进入10403查询'
@@ -106,10 +107,10 @@ class FindUlike(BaseHandler):
                     my_like_id = my_like.ULlikedid
                     userinfo = self.db.query(User).filter(User.Uid == my_like_id).one()
                     user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign, 'uimgurl': ''}
-                    self.retdata.append(user_json)
+                    retdata.append(user_json)
                     print '成功返回关注者'
                     self.retjson['code'] = '10430'
-                    self.retjson['contents'] = self.retdata
+                    self.retjson['contents'] = retdata
             else:
                 print "没有关注任何人"
                 self.retjson['code'] = '10431'
