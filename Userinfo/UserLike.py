@@ -97,22 +97,27 @@ class FindUlike(BaseHandler):
         :return:
         '''
         try:
-            my_likes = self.db.query(UserLike).filter(UserLike.ULlikeid == uid).one()
+            my_likes = self.db.query(UserLike).filter(UserLike.ULlikeid == uid).all()
             print '进入10403查询'
+            if my_likes:
 
-            for my_like in my_likes:
-                
-                my_like_id = my_like.ULlikedid
-                userinfo = self.db.query(User).filter(User.Uid == my_like_id).one()
-                user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign, 'uimgurl': ''}
-                self.retdata.append(user_json)
-                print '成功返回关注者'
-                self.retjson['code'] = '10430'
-                self.retjson['contents'] = self.retdata
+                for my_like in my_likes:
+
+                    my_like_id = my_like.ULlikedid
+                    userinfo = self.db.query(User).filter(User.Uid == my_like_id).one()
+                    user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign, 'uimgurl': ''}
+                    self.retdata.append(user_json)
+                    print '成功返回关注者'
+                    self.retjson['code'] = '10430'
+                    self.retjson['contents'] = self.retdata
+            else:
+                print "没有关注任何人"
+                self.retjson['code'] = '10431'
+                self.retjson['contents'] = r'该用户没有关注任何人'
         except Exception,e:
-            print e
             self.retjson['code'] = '10431'
             self.retjson['contents'] = r'该用户没有关注任何人'
+
 
 
 
