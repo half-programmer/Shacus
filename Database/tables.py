@@ -31,6 +31,17 @@ class User(Base): # 用户表
     Usign = Column(VARCHAR(256))
     Uauthkey = Column(VARCHAR(32))
 
+class UCinfo(Base):
+    __tablename__ = 'UCinfo'
+
+    UCuid = Column(Integer,ForeignKey('User.Uid', onupdate='CASCADE'),nullable=False,primary_key=True)
+    UClikeN = Column(Integer,nullable=False,default=0)
+    UClikedN = Column(Integer,nullable=False,default=0)
+    UCapN = Column(Integer,nullable=False,default=0)
+    UCphotoN = Column(Integer,nullable=False,default=0)
+    UCcourseN = Column(Integer,nullable=False,default=0)
+    UCmomentN = Column(Integer,nullable=False,default=0)
+
 class Verification(Base): # 短信验证码及生成用户auth_key时间
     __tablename__ = 'Verification'
 
@@ -57,10 +68,10 @@ class Activity(Base):#活动表
     ACcommentnumber = Column(Integer,default=0, nullable=False)
     ACmaxp = Column(Integer)
     ACminp = Column(Integer)
-    ACscore = Column(Integer,default=0)
-    AClikenumber = Column(Integer,default=0)
-    ACvalid = Column(Boolean,default=1) # 活动是否已经删除
-    ACregistN = Column(Integer,default=0)
+    ACscore = Column(Integer,nullable=False,default=0)
+    AClikenumber = Column(Integer,nullable=False,default=0)
+    ACvalid = Column(Boolean,nullable=False,default=1) # 活动是否已经删除
+    ACregistN = Column(Integer,nullable=False,default=0)
 
 
 class ActivityEntry(Base):  #活动报名表
@@ -149,6 +160,7 @@ class Appointment(Base):  #摄影师-模特约拍
     APaddallowed = Column(Boolean,default=0)
     APlikeN = Column(Integer, default=0, nullable=False)
     APvalid = Column(Boolean, default=1, nullable=False)
+    APregistN = Column(Integer, nullable=False, default=0)
 
 
 class AppointmentInfo(Base):
