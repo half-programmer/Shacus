@@ -78,7 +78,11 @@ class FindUlike(BaseHandler):
                 print '进入10402'
                 followerID = self.get_argument("followerid")
                 self.not_follow_user(u_id, followerID)
+            if type =='10404':#c查询我的粉丝
+                print '进入10404'
+                myfans =self.get_argument("uid")
 
+                self.find_my_follow(self.myfans)
 
         else:
             self.retjson['code'] = '10412'
@@ -98,7 +102,7 @@ class FindUlike(BaseHandler):
         '''
         retdata = []
         try:
-            my_likes = self.db.query(UserLike).filter(UserLike.ULlikeid == uid).all()
+            my_likes = self.db.query(UserLike).filter(UserLike.ULlikeid == uid,UserLike.ULvalid).all()
             print '进入10403查询'
             if my_likes:
 
@@ -169,7 +173,7 @@ class FindUlike(BaseHandler):
 
     def find_my_follow(self,uid):
         try:
-            my_likes = self.db.query(UserLike).filter(UserLike.ULlikedid == uid).all()
+            my_likes = self.db.query(UserLike).filter(UserLike.ULlikedid == uid,UserLike.ULvalid).all()
             print '进入10404查询'
             if my_likes:
 
@@ -177,7 +181,14 @@ class FindUlike(BaseHandler):
 
                     my_like_id = my_like.ULlikeid
                     userinfo = self.db.query(User).filter(User.Uid == my_like_id).one()
-                    user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign, 'uimgurl': ''}
+                    #接来下测试是否我也关注了我的粉丝
+                    exist = self.db.query(UserLike).filter(UserLike.ULlikeid == my_like_id,
+                                                           UserLike.ULlikedid == uid ).one()
+                    if exist :
+                        text =True
+                    else:
+                        text=False
+                    user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign, 'uimgurl': '','fansback':text}
                     self.retdata.append(user_json)
                     print '成功返回粉丝'
                     self.retjson['code'] = '10430'
