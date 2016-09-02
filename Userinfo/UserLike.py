@@ -58,7 +58,7 @@ class FindUlike(BaseHandler):
         '''
         retdata = []
         try:
-            my_likes = self.db.query(UserLike).filter(UserLike.ULlikeid == uid,UserLike.ULvalid).all()
+            my_likes = self.db.query(UserLike).filter(UserLike.ULlikeid == uid,UserLike.ULvalid,UserLike.ULvalid == 1).all()
             print '进入10403查询'
             if my_likes:
 
@@ -130,14 +130,14 @@ class FindUlike(BaseHandler):
     def find_my_follow(self,uid):
         retdata = []
         try:
-            my_likes = self.db.query(UserLike).filter(UserLike.ULlikedid == uid,UserLike.ULvalid).all()
+            my_likes = self.db.query(UserLike).filter(UserLike.ULlikedid == uid,UserLike.ULvalid,UserLike.ULvalid == 1).all()
             print '进入10404查询'
             if my_likes:
 
                 for my_like in my_likes:
 
                     my_like_id = my_like.ULlikeid
-                    userinfo = self.db.query(User).filter(User.Uid == my_like_id).one()
+                    userinfo = self.db.query(User).filter(User.Uid == my_like_id,).one()
                     #接来下测试是否我也关注了我的粉丝
                     exist = self.db.query(UserLike).filter(UserLike.ULlikeid == my_like_id,
                                                            UserLike.ULlikedid == uid ).one()
