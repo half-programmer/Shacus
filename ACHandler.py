@@ -79,6 +79,9 @@ class ActivityCreate(BaseHandler):   #创建活动
                 self.retjson['contents'] = r'该用户不存在'
 
         elif ac_type ==  '10302': #开始传输数据
+
+            #todo  还没有将活动发起者加入到活动报名表中去
+
             print "进入10302，传输数据"
             ac_id = self.get_argument('acid')
             ac_title = self.get_argument('actitle')

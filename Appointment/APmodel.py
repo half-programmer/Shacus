@@ -26,3 +26,9 @@ class APmodelHandler:
 
 
 
+
+def user_ap_simply(ap_info):
+    ret_ap = {'apid': ap_info.APid, 'apsponsorid': ap_info.APsponsorid, 'aptitle': ap_info.APtitle,
+              'aplocation': ap_info.APlocation, 'apvalid': ap_info.APvalid,'aptype':ap_info.APtype,
+              }
+    return ret_ap
