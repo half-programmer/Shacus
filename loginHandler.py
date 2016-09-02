@@ -57,12 +57,12 @@ class LoginHandler(BaseHandler):
                                 for photo_list_each in photo_list_all:
                                     photo_list.append(ap_model_handler.ap_Model_simply(photo_list_each))
                                 for model_list__each in model_list_all:
-                                    model_list_all.append(ap_model_handler.ap_Model_simply(model_list__each))
+                                    model_list.append(ap_model_handler.ap_Model_simply(model_list__each))
                                 data = dict(
                                 userModel=user_model,
                                 daohanglan=u"约拍首页顶部滑动图片,应设置与本地对比或增加一特定链接，图片未更新时应使用本地缓存",
                                 photoList=photo_list,
-                                modelList=model_list_all,
+                                modelList=model_list,
                                 )
                                 retdata.append(data)
                                 self.retjson['code'] = 10101

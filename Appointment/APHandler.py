@@ -111,7 +111,8 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                     print '判断该活动是否已经存在'
                     exist = self.db.query(Appointment).filter(Appointment.APtype == ap_type,
                                                               Appointment.APtitle == ap_title,
-                                                              Appointment.APsponsorid == uid
+                                                              Appointment.APsponsorid == uid,
+                                                              Appointment.APcontent == ap_content
                                                               ).one()  # 判断该活动是否已经存在
                     if exist:
                         print '活动存在'

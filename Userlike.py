@@ -2,11 +2,16 @@
 
 from BaseHandlerh import BaseHandler
 from Database.tables import UserLike,User
+from Userinfo import Ufuncs
 '''
 兰威
 2016.09.01
 '''
-
+'''
+@author:黄鑫晨
+@type:用户收藏
+@time:2019-09-02
+'''
 
 class Userlike(BaseHandler):
     retjson = {'code': '','content':'none'}
