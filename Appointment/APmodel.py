@@ -18,7 +18,7 @@ class APmodelHandler:
         APid=appointment.APid,
         APtitle=appointment.APtitle,
         APimgurl='暂无',
-        APstartT=appointment.APstartT.strftime('%Y-%m-%d %H:%M:%S'),
+        APstartT=appointment.APstartT.strftime('%Y-%m-%dT%H:%M:%S'),
         APlikeN=appointment.APlikeN,
         APregistN=appointment.APregistN
         )

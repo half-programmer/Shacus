@@ -17,6 +17,7 @@ class FindUlike(BaseHandler):
 
     '''
 
+    @staticmethod
     def get_user_id(self, u_auth_key):
         '''
         通过用户auth_key获得id
