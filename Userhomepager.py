@@ -58,14 +58,15 @@ class Userhomepager(BaseHandler):
 
 
 
-    retjson = {'code':'','contents':''}
-    retdata_ap = []
-    ret_json_contents = {}
-    retdata_ac = []
+
 
     def post(self):
 
         # todo 还未增加图片地址,活动按时间排序
+        retjson = {'code': '', 'contents': ''}
+        retdata_ap = []
+        ret_json_contents = {}
+        retdata_ac = []
 
 
         u_id = self.get_argument('uid')
@@ -76,13 +77,13 @@ class Userhomepager(BaseHandler):
             #u_image_info = self.db.query(UserImage).filter(UserImage.UIuid == u_other_id).one()
             u_change_info =self.db.query(UCinfo).filter(UCinfo.UCuid == u_other_id).one()
             ret_user_info = userinfo_smply(u_info,u_change_info)
-            self.ret_json_contents['user_info'] = ret_user_info
+            ret_json_contents['user_info'] = ret_user_info
             exist = self.db.query(UserLike).filter(UserLike.ULlikeid == u_id,UserLike.ULlikedid == u_other_id,
                                                    UserLike.ULvalid ==1).all()
             if exist :
-                self.ret_json_contents['follow'] =True
+                ret_json_contents['follow'] =True
             else:
-                self.ret_json_contents['follow'] = False
+                ret_json_contents['follow'] = False
             u_appointment_infos = self.db.query(AppointEntry).filter(AppointEntry.AEregisterID == u_other_id,
                                                                      AppointEntry.AEvalid ==1).all()
             for u_appointment_info in u_appointment_infos:
@@ -90,30 +91,30 @@ class Userhomepager(BaseHandler):
                 try:
                     ap_info = self.db.query(Appointment).filter(Appointment.APid == ap_id).one()
                     ret_ap = user_ap_simply(ap_info)
-                    self.retdata_ap.append(ret_ap)
+                    retdata_ap.append(ret_ap)
                 except Exception,e:
                     print e
-                    self.retjson['code'] = '10602'
-                    self.retjson['contents']='该约拍不存在'
+                    retjson['code'] = '10602'
+                    retjson['contents']='该约拍不存在'
             u_spap_infos = self.db.query(Appointment).filter(Appointment.APsponsorid == u_other_id).all()
             for u_spap_info in u_spap_infos:
                 ret_ap = user_ap_simply(u_spap_info)
-                self.retdata_ap.append(ret_ap)
-            self.ret_json_contents['ap_info'] =self.retdata_ap
+                retdata_ap.append(ret_ap)
+            ret_json_contents['ap_info'] =retdata_ap
             u_ac_infos = self.db.query(ActivityEntry).filter(ActivityEntry.ACEregisterid == u_other_id,
                                                              ActivityEntry.ACEregisttvilid ==1).all()
             for u_ac_info in u_ac_infos:
                 ac_id = u_ac_info.ACEacid
                 ac_info = self.db.query(Activity).filter(Activity.ACid ==ac_id ).one()
                 ret_ac  = user_ac_simply(ac_info)
-                self.retdata_ac.append(ret_ac)
-            self.ret_json_contents['ac_info'] =self.retdata_ac
-            self.retjson['code'] = '10601'
-            self.retjson['contents'] =self.ret_json_contents
+                retdata_ac.append(ret_ac)
+            ret_json_contents['ac_info'] =retdata_ac
+            retjson['code'] = '10601'
+            retjson['contents'] =ret_json_contents
 
         else:
-            self.retjson['code'] = '10600'
-            self.retjson['contents'] ='授权码不正确'
-        self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
+            retjson['code'] = '10600'
+            retjson['contents'] ='授权码不正确'
+        self.write(json.dumps(retjson, ensure_ascii=False, indent=2))
 
 
