@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import json
 from  BaseHandlerh import BaseHandler
-from Database.tables import User
+from Database.tables import User, UCinfo
 from Database.tables import Verification
 import random
 from messsage import message
@@ -122,7 +122,23 @@ class RegisterHandler(BaseHandler):
                         )
                         retdata_body['userModel'] =data
                         retdata.append(retdata_body)
+                        try:
+                            u_info = UCinfo(
+                                UCuid = m_id[0],
+                                UClikeN=0,
+                                UClikedN=0,
+                                UCapN=0,
+                                UCphotoN=0,
+                                UCcourseN=0,
+                                UCmomentN=0
+                            )
+                            self.db.merge(u_info)
+                            self.db.commit()
+                        except Exception, e:
+                            print e
+                            self.retjson['contents'] =r'初始化用户信息时出错'  # ucinfo插入失败
                         self.retjson['contents'] = retdata
+
                     except Exception, e:
                         print e
                         self.db.rollback()

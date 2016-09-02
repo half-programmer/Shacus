@@ -31,6 +31,17 @@ class User(Base): # 用户表
     Usign = Column(VARCHAR(256))
     Uauthkey = Column(VARCHAR(32))
 
+class UCinfo(Base):
+    __tablename__ = 'UCinfo'
+
+    UCuid = Column(Integer,ForeignKey('User.Uid', onupdate='CASCADE'),nullable=False,primary_key=True)
+    UClikeN = Column(Integer,nullable=False,default=0)
+    UClikedN = Column(Integer,nullable=False,default=0)
+    UCapN = Column(Integer,nullable=False,default=0)
+    UCphotoN = Column(Integer,nullable=False,default=0)
+    UCcourseN = Column(Integer,nullable=False,default=0)
+    UCmomentN = Column(Integer,nullable=False,default=0)
+
 class Verification(Base): # 短信验证码及生成用户auth_key时间
     __tablename__ = 'Verification'
 
@@ -55,12 +66,12 @@ class Activity(Base):#活动表
     ACclosed = Column(Boolean,default=1, nullable=False) # 活动是否已经结束
     ACcreateT = Column(DateTime(timezone=True), default=func.now())
     ACcommentnumber = Column(Integer,default=0, nullable=False)
-    ACmaxp = Column(Integer)
-    ACminp = Column(Integer)
-    ACscore = Column(Integer,default=0)
-    AClikenumber = Column(Integer,default=0)
-    ACvalid = Column(Boolean,default=1) # 活动是否已经删除
-    ACregistN = Column(Integer,default=0)
+    ACmaxp = Column(Integer,nullable=False,default=0)
+    ACminp = Column(Integer,nullable=False,default=100)
+    ACscore = Column(Integer,nullable=False,default=0)
+    AClikenumber = Column(Integer,nullable=False,default=0)
+    ACvalid = Column(Boolean,nullable=False,default=1) # 活动是否已经删除
+    ACregistN = Column(Integer,nullable=False,default=0)
 
 
 class ActivityEntry(Base):  #活动报名表
@@ -70,8 +81,8 @@ class ActivityEntry(Base):  #活动报名表
     ACEacid = Column(Integer,ForeignKey('Activity.ACid',onupdate='CASCADE'))#活动ID
     ACEregisterid = Column(Integer,ForeignKey('User.Uid',onupdate='CASCADE'))#报名人ID
     ACEregisttvilid = Column(Boolean,default=1)
-    ACEscore = Column(Integer)
-    ACEcomment = Column(VARCHAR(128))
+    ACEscore = Column(Integer,nullable=False,default=0)
+    ACEcomment = Column(VARCHAR(128),nullable=False,default='')
     ACEregisterT = Column(DateTime(timezone=True), default=func.now())
 
 class ActivityLike(Base):
@@ -80,8 +91,8 @@ class ActivityLike(Base):
     ACLid=Column(Integer,primary_key=True)
     ACLacid = Column(Integer,ForeignKey('Activity.ACid',onupdate='CASCADE'))
     ACLuid = Column(Integer,ForeignKey('User.Uid',onupdate='CASCADE'))
-    ACLvalid = Column(Boolean)
-    ACLT = Column(DateTime)
+    ACLvalid = Column(Boolean,nullable=False,default=1)
+    ACLT = Column(DateTime, default=func.now())
 
 class CheckIn(Base):
     __tablename__ = 'CheckIn'
@@ -94,10 +105,10 @@ class CheckIn(Base):
 class UserLike(Base):
     __tablename__ = 'UserLike'
 
-    ULid=Column(Integer,primary_key=True)
-    ULlikeid = Column(Integer,ForeignKey('User.Uid',onupdate='CASCADE'))
-    ULlikedid = Column(Integer,ForeignKey('User.Uid',onupdate='CASCADE'))
-    ULvalid = Column(Boolean,default=1)
+    ULid=Column(Integer,primary_key=True,nullable=False)
+    ULlikeid = Column(Integer,ForeignKey('User.Uid',onupdate='CASCADE'),nullable=False)
+    ULlikedid = Column(Integer,ForeignKey('User.Uid',onupdate='CASCADE'),nullable=False)
+    ULvalid = Column(Boolean, nullable= False, default=1)
     ULlikeT = Column(DateTime(timezone=True), default=func.now())
 
 class Image(Base):
@@ -149,6 +160,7 @@ class Appointment(Base):  #摄影师-模特约拍
     APaddallowed = Column(Boolean,default=0)
     APlikeN = Column(Integer, default=0, nullable=False)
     APvalid = Column(Boolean, default=1, nullable=False)
+    APregistN = Column(Integer, nullable=False, default=0)
 
 
 class AppointmentInfo(Base):
@@ -170,8 +182,8 @@ class AppointEntry(Base):
     AEid = Column(Integer,primary_key=True)
     AEapid = Column(Integer,ForeignKey('Appointment.APid',onupdate='CASCADE'))
     AEregisterID = Column(Integer,ForeignKey('User.Uid', onupdate='CASCADE'))
-    AEvalid = Column(Boolean)
-    AEchoosed = Column(Boolean)
+    AEvalid = Column(Boolean,nullable=False,default=1)
+    AEchoosed = Column(Boolean,nullable=False,default=0)
     AEregistT = Column(DateTime(timezone=True), default=func.now())
 
 class AppointLike(Base):
@@ -180,7 +192,7 @@ class AppointLike(Base):
     ALid=Column(Integer,primary_key=True)
     ALapid = Column(Integer,ForeignKey('Appointment.APid',onupdate='CASCADE'))
     ALuid = Column(Integer,ForeignKey('User.Uid', onupdate='CASCADE'))
-    ALvalid = Column(Boolean)
+    ALvalid = Column(Boolean,nullable=False, default=1)
     ALT = Column(DateTime(timezone=True), default=func.now())
 
 

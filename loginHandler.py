@@ -16,7 +16,7 @@ class LoginHandler(BaseHandler):
             if not m_phone or not m_password:
                 self.retjson['code'] = 400
                 self.retjson['contents'] = 10105  # '用户名密码不能为空'
-
+        #todo:登录返回json的retdata多一层[]，客户端多0.5秒处理时间
         # 防止重复注册
             else:
                 try:
@@ -27,7 +27,7 @@ class LoginHandler(BaseHandler):
                             print u'密码正确'
                             self.retjson['code'] = 200
                             if user.Ubirthday:
-                                Ubirthday = user.Ubirthday.strftime('%Y-%m-%dT%H:%M:%S'),
+                                Ubirthday = user.Ubirthday.strftime('%Y-%m-%d %H:%M:%S'),
                             else:
                                 Ubirthday = ''
                             retdata = []
@@ -42,21 +42,34 @@ class LoginHandler(BaseHandler):
                                 score=user.Uscore,
                                 location=user.Ulocation,
                                 birthday=Ubirthday,
-                                registTime=user.UregistT.strftime('%Y-%m-%dT%H:%M:%S'),
+                                registTime=user.UregistT.strftime('%Y-%m-%d %H:%M:%S'),
                                 mailBox=user.Umailbox,
                                 headImage=u"用户头像url",
                                 auth_key=u_auth_key
                             )
-                            print 'authkey:::::', u_auth_key
-                            data = dict(
-                            userModel=user_model,
-                            daohanglan=u"约拍首页顶部滑动图片,应设置与本地对比或增加一特定链接，图片未更新时应使用本地缓存",
-                            photoList=u"摄影师榜前十名,每人是一组数据,用python字典存,返回后可用JSON解析",
-                            modelList=u"模特榜前十名，每人是一组数据,用python字典存,返回后可用JSON解析",
-                            )
-                            retdata.append(data)
-                            self.retjson['code'] = 10101
-                            self.retjson['contents'] = retdata
+                            photo_list = []  # 摄影师发布的约拍
+                            model_list = []
+                            try:
+                                photo_list_all = self.db.query(Appointment).filter(Appointment.APtype == 1).all()
+                                model_list_all = self.db.query(Appointment).filter(Appointment.APtype == 0).all()
+                                from Appointment.APModel import APmodelHandler
+                                ap_model_handler = APmodelHandler()  # 创建对象
+                                for photo_list_each in photo_list_all:
+                                    photo_list.append(ap_model_handler.ap_Model_simply(photo_list_each))
+                                for model_list__each in model_list_all:
+                                    model_list_all.append(ap_model_handler.ap_Model_simply(model_list__each))
+                                data = dict(
+                                userModel=user_model,
+                                daohanglan=u"约拍首页顶部滑动图片,应设置与本地对比或增加一特定链接，图片未更新时应使用本地缓存",
+                                photoList=photo_list,
+                                modelList=model_list_all,
+                                )
+                                retdata.append(data)
+                                self.retjson['code'] = 10101
+                                self.retjson['contents'] = retdata
+                            except Exception,e:
+                                print e
+                                self.retjson['contents'] = r"摄影师约拍列表导入失败！"
 
                         else:
                             self.retjson['contents'] = u'密码错误'
