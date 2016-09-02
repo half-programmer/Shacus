@@ -8,7 +8,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from tornado.options import define, options
 
 from ACHandler import ActivityCreate
-from ACHandler import ActivityCreate,ActivityRegister
+from ACHandler import ActivityCreate, ActivityRegister
 from ACentryHandler import AskEntry
 from ACaskHandler import AskActivity
 from Appointment.APHandler import APcreateHandler, APaskHandler, APregistHandler
@@ -28,25 +28,13 @@ class Application(tornado.web.Application):
              (r"/appointment/create", APcreateHandler),
              (r"/appointment/ask", APaskHandler),
              (r"/appointment/register",APregistHandler),
-             # (r"/appointment/ask", AskAppointment),
-             # (r"/appointment/register", RegistAppointment),
              (r"/login", LoginHandler),
              (r"/regist", RegisterHandler),
-
-            (r"/userlike/mylike", FindUlike),
-
-             # (r"/Activity/create", ActivityCommit),
+             (r"/userlike/mylike", FindUlike),
              (r"/Activity/ask", AskActivity),
              (r"/Activity/entry",AskEntry),
-
-
-
              (r"/activity/create", ActivityCreate),
              (r"/activity/register",ActivityRegister),
-
-             # (r"/Activity/ask", AskActivity),
-
-             # (r"/Activity/register", ActivityJoin),
              (r"/ImageCallback",ImageCallback),
 
         ]

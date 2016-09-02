@@ -87,6 +87,7 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                 self.retjson['contents'] = "该用户名不存在"
         elif ap_type == '10205':  # 开始传输数据
             print "进入10205"
+            # todo ：如果完成约拍发起第一步没有完成第二步，在返回时应该过滤掉这些活动
             ap_id = self.get_argument('apid')
             auth_key = self.get_argument('auth_key')
             # todo: auth_key经常使用，可以优化
