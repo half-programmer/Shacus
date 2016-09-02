@@ -47,6 +47,7 @@ class LoginHandler(BaseHandler):
                                 headImage=u"用户头像url",
                                 auth_key=u_auth_key
                             )
+                            
                             print 'authkey:::::', u_auth_key
                             data = dict(
                             userModel=user_model,
