@@ -17,6 +17,7 @@ from ImageCallback import ImageCallback
 from RegisterHandler import RegisterHandler
 from Userinfo.UserLike import FindUlike
 from loginHandler import LoginHandler
+from Settings import PaswChange
 
 define("port", default=800, help="run on the given port", type=int)
 
@@ -48,7 +49,7 @@ class Application(tornado.web.Application):
 
              # (r"/Activity/register", ActivityJoin),
              (r"/ImageCallback",ImageCallback),
-
+            (r"/PaswChange",PaswChange)
         ]
         tornado.web.Application.__init__(self, handlers)
         self.db = scoped_session(sessionmaker(bind=engine,
