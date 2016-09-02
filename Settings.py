@@ -1,4 +1,7 @@
 # -*- coding:utf-8 -*-
+'''
+__author__=wjl
+'''
 from BaseHandlerh import BaseHandler
 from Database.tables import User
 import  json
@@ -9,9 +12,10 @@ class PaswChange(BaseHandler):
         type=self.get_argument("type",default="null")
         if type=='10501':
             Userid=self.get_argument("Userid","noone")
+            p_password=self.get_argument("oldpassword")
             m_password=self.get_argument("newpassword")
             try:
-                data=self.db.query(User).filter(Userid==User.Uid).one()
+                data=self.db.query(User).filter(Userid==User.Uid,p_password==User.Upassword).one()
                 data.Upassword=m_password
                 self.db.commit()
                 self.retjson ['code']='10501'
@@ -28,7 +32,7 @@ class PaswChange(BaseHandler):
                     data.Ualais = Usernickname
                     self.db.commit()
                     self.retjson['code'] = '10503'
-                    self.retjson['contents'] = '修改昵称成功'
+                    self.retjson['contentsuy'] = '修改昵称成功'
                 except Exception, e:
                     print e
                     self.retjson['code'] = '10504'

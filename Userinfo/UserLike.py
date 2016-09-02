@@ -165,3 +165,27 @@ class FindUlike(BaseHandler):
             print e
             self.retjson['contents'] = '未关注该用户'
             self.retjson['code'] = '10421'
+
+    def find_my_follow(self,uid):
+        try:
+            my_likes = self.db.query(UserLike).filter(UserLike.ULlikedid == uid).all()
+            print '进入10404查询'
+            if my_likes:
+
+                for my_like in my_likes:
+
+                    my_like_id = my_like.ULlikeid
+                    userinfo = self.db.query(User).filter(User.Uid == my_like_id).one()
+                    user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign, 'uimgurl': ''}
+                    self.retdata.append(user_json)
+                    print '成功返回粉丝'
+                    self.retjson['code'] = '10430'
+                    self.retjson['contents'] = self.retdata
+            else:
+                print ""
+                self.retjson['code'] = '10431'
+                self.retjson['contents'] = r'该用户没有关注任何人'
+        except Exception,e:
+            self.retjson['code'] = '10431'
+            self.retjson['contents'] = r'该用户没有关注任何人'
+
