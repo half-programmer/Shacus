@@ -79,9 +79,12 @@ class UserIndent(BaseHandler):
            ap_e_entrys = self.db.query(AppointEntry).filter(AppointEntry.AEregisterID == u_id,
                                                          AppointEntry.AEvalid == True).all()
         else :
-            ap_e_entrys = self.db.query(AppointEntry).filter(AppointEntry.AEregisterID == u_id,
-                                                             AppointEntry.AEvalid == True,
-                                                             AppointEntry.AEchoosed ==True).all()
+            try:
+                ap_e_entrys = self.db.query(AppointEntry).filter(AppointEntry.AEregisterID == u_id,
+                                                                 AppointEntry.AEvalid == True,
+                                                                 AppointEntry.AEchoosed ==True).all()
+            except Exception,e:
+                print e
         for ap_e_entry in ap_e_entrys:
             ap_id = ap_e_entry.AEapid
             ap_e_info = self.db.query(Appointment).filter(Appointment.APid == ap_id,
@@ -92,9 +95,11 @@ class UserIndent(BaseHandler):
 
     def get_my_appointment(self,u_id,number):
         ret_my_appointment =[]
-        ap_my_entrys = self.db.query(Appointment).filter(Appointment.APsponsorid == u_id,
+        try:
+            ap_my_entrys = self.db.query(Appointment).filter(Appointment.APsponsorid == u_id,
                                                          Appointment.APstatus == number).all()
-
+        except Exception,e:
+            print  e
         ret_my_appointment = APmodelHandler.ap_Model_simply(ap_my_entrys, ret_my_appointment)
         return ret_my_appointment
 
