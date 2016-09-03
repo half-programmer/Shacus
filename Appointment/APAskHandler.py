@@ -4,10 +4,11 @@
   2016.08.29   2016.09.03
 '''
 import json
-import APinfoFuncion
+
+import Userinfo
 from APmodel import APmodelHandler
 from BaseHandlerh import BaseHandler
-from Database.tables import Appointment, User, AppointEntry, UserImage
+from Database.tables import Appointment, User
 from Userinfo import Ufuncs
 
 
@@ -15,12 +16,12 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
 
     # todo:返回特定条件下的约拍
     retjson = {'code': '', 'contents': ''}
-    retdata = []
+
 
     def no_result_found(self, e):
         print e
-        self.retjson['code'] = 400
-        self.retjson['contents'] = '没有'
+        self.retjson['code'] = '10251'
+        self.retjson['contents'] = '未查询到约拍记录'
 
     def ap_ask_user(self, user):  # 查询指定用户的所有约拍
         '''
@@ -40,6 +41,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         u_auth_key = self.get_argument('authkey')
         request_type = self.get_argument('type')
         u_id = self.get_argument('uid')
+
         # if Ufuncs.judge_user_valid(u_id,u_auth_key): # 授权码正确
         #     ppointments = self.db.query(Appointment). \
         #         #             filter(Appointment.APtype == 1, Appointment.APclosed == 0).all()
@@ -77,6 +79,45 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         #     except Exception, e:
         #         self.retjson['contents'] = '授权码不存在或已过期'
         #         self.retjson['code'] = '10214'
+
+        ufuncs = Userinfo.Ufuncs.Ufuncs()
+        if ufuncs.judge_user_valid(u_id, u_auth_key):
+
+            if request_type == '10231':  # 请求所有设定地点的摄影师发布的约拍中未关闭的
+                retdata = []
+                try:
+                    appointments = self.db.query(Appointment). \
+                        filter(Appointment.APtype == 1, Appointment.APclosed == 0, Appointment.APvalid == 1).all()
+                    APmodelHandler.ap_Model_simply(appointments, retdata)
+                    self.retjson['code'] = '10250'
+                    self.retjson['contents'] = retdata
+                except Exception, e: # 没有找到约拍
+                    self.no_result_found(e)
+            elif request_type == '10235':  # 请求所有设定地点的模特发布的约拍中未关闭的
+                retdata = []
+                try:
+                    appointments = self.db.query(Appointment). \
+                        filter(Appointment.APtype == 0, Appointment.APclosed == 0, Appointment.APvalid == 1).all()
+                    APmodelHandler.ap_Model_simply(appointments, retdata)
+                    self.retjson['contents'] = retdata
+                except Exception, e:
+                    self.no_result_found(e)
+            elif request_type == '10241':  # 请求指定用户发布的所有约拍
+                find_uid = self.get_argument('finduid')  # 指定用户的id
+                try:
+                    user = self.db.query(User).filter(User.Uid == find_uid).one()
+                    self.ap_ask_user(user)
+                except Exception, e:
+                    self.retjson['contents'] = '授权码不存在或已过期'
+                    self.retjson['code'] = '10214'
+        else:
+            self.retjson['contents'] = '授权码不存在或已过期'
+            self.retjson['code'] = '10214'
+
+        #
+        #
+        #
+
         #
         # elif request_type == '10270':#在报名约拍中的人里选择约拍对象
         #    # uid = self.get_argument("uid",default="none")
@@ -125,5 +166,5 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         #         self.retjson['code'] = '10262'
         #         self.retjson['contents'] = '用户未参加此约拍的报名'
 
-        #self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
+        self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 

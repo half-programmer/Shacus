@@ -9,3 +9,7 @@ def userinfo_smply(u_info, u_change_info):
                      'uphotoN': u_change_info.UCphotoN, 'ucourseN': u_change_info.UCcourseN,
                      'umomentN': u_change_info.UCmomentN}
     return ret_info
+
+def Model_daohanglan(imgurl,weburl):
+    dh_json = {'imgurl':imgurl, 'weburl':weburl}
+    return dh_json
