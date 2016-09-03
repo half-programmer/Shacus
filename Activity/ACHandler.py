@@ -8,6 +8,7 @@ __author__='兰威'
 import json
 
 from BaseHandlerh import BaseHandler
+from FileHandler.ImageHandler import ImageHandler
 
 class ActivityCreate(BaseHandler):   #创建活动
     retjson={'code':'10300','contents':'None'}
