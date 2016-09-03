@@ -63,14 +63,25 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                     self.retjson['contents'] = retdata
                 except Exception, e:
                     self.no_result_found(e)
-            elif request_type == '10241':  # 请求指定用户发布的所有约拍
-                find_uid = self.get_argument('finduid')  # 指定用户的id
+            elif request_type == '10251':  # 返回约拍详情
+                retdata = []
+                ap_id = self.get_argument('apid')
                 try:
-                    user = self.db.query(User).filter(User.Uid == find_uid).one()
-                    self.ap_ask_user(user)
+                    appointment = self.db.query(Appointment).filter(Appointment.APid) == ap_id.one()
+                    if appointment:
+
                 except Exception, e:
-                    self.retjson['contents'] = '授权码不存在或已过期'
-                    self.retjson['code'] = '10214'
+                    print e
+                    self.no_result_found(e)
+
+            # elif request_type == '10241':  # 请求指定用户发布的所有约拍
+            #     find_uid = self.get_argument('finduid')  # 指定用户的id
+            #     try:
+            #         user = self.db.query(User).filter(User.Uid == find_uid).one()
+            #         self.ap_ask_user(user)
+            #     except Exception, e:
+            #         self.retjson['contents'] = '授权码不存在或已过期'
+            #         self.retjson['code'] = '10214'
         else:
             self.retjson['contents'] = '授权码不存在或已过期'
             self.retjson['code'] = '10214'
