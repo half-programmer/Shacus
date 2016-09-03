@@ -72,6 +72,7 @@ class Activity(Base):#活动表
     AClikenumber = Column(Integer,nullable=False,default=0)
     ACvalid = Column(Boolean,nullable=False,default=1) # 活动是否已经删除
     ACregistN = Column(Integer,nullable=False,default=0)
+    ACstatus =Column(Integer,nullable=False,default=0)
 
 
 class ActivityEntry(Base):  #活动报名表
@@ -161,6 +162,7 @@ class Appointment(Base):  #摄影师-模特约拍
     APlikeN = Column(Integer, default=0, nullable=False)
     APvalid = Column(Boolean, default=1, nullable=False)
     APregistN = Column(Integer, nullable=False, default=0)
+    APstatus = Column(Integer, nullable=False, default=0)
 
 
 class AppointmentInfo(Base):

@@ -78,7 +78,30 @@ class APmodelHandler(object):
                 Userimg="http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg",
                 APimgurl=[r"http://img9.jiwu.com/jiwu_news_pics/20151225/1450854576571_000.jpg", "http://p1.gexing.com/G1/M00/57/8B/rBACFFPcOFOiwBGVAACdMkF5UnM383.jpg","http://p1.gexing.com/G1/M00/57/8B/rBACFFPcOFOiwBGVAACdMkF5UnM383.jpg"],
             )
+
             return m_response
+
+
+    @classmethod
+    def ap_Model_simply_one(clas, appointment):
+        '''得到简单约拍模型，用于登录首页
+        :param appointment: 传入一个appointment对象
+        :return: retjson
+        '''
+        # todo:查找待变更为最新10个
+        try:
+            ret_ap = dict(
+                APid=appointment.APid,
+                APtitle=appointment.APtitle,
+                APimgurl=r"http://img9.jiwu.com/jiwu_news_pics/20151225/1450854576571_000.jpg",
+                APstartT=appointment.APstartT.strftime('%Y-%m-%dT%H:%M:%S'),
+                APlikeN=appointment.APlikeN,
+                APregistN=appointment.APregistN,
+                Userimg=r"http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg"
+            )
+        except Exception,e:
+            print e
+        return ret_ap
 
     # @classmethod
     # def ApInforesponse(appointment, retdata):
