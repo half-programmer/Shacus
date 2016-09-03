@@ -85,10 +85,16 @@ class FindUlike(BaseHandler):
     def follow_user(self,u_id,follower_id):
             try:
                 exist = self.db.query(UserLike).filter(UserLike.ULlikeid == u_id,
-                                                           UserLike.ULlikedid == follower_id).one()
-                if exist:
+                                                           UserLike.ULlikedid == follower_id,
+                                                       ).one()
+                if exist.ULvalid == True:
                         self.retjson['code'] = '10410'
                         self.retjson['contents'] = '您已经关注过该用户'
+                else :
+                    exist.ULvalid =True
+                    self.db.commit()
+                    self.retjson['code'] = '10412'
+                    self.retjson['contents'] = '关注成功'
             except Exception, e:
                     print '开始关注该用户'
                     new_userlike = UserLike(
@@ -110,7 +116,8 @@ class FindUlike(BaseHandler):
     def not_follow_user(self,u_id,follower_id):
         try:
             exist = self.db.query(UserLike).filter(UserLike.ULlikeid == u_id,
-                                                   UserLike.ULlikedid == follower_id).one()
+                                                   UserLike.ULlikedid == follower_id,
+                                                   UserLike.ULvalid == True).one()
             if exist:
                 exist.ULvalid = 0
                 try:
