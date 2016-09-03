@@ -41,6 +41,9 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         u_auth_key = self.get_argument('authkey')
         request_type = self.get_argument('type')
         u_id = self.get_argument('uid')
+        self.retjson['contents'] = '授权码不存在或已过期'
+        self.retjson['code'] = '10214'
+
         ufuncs = Userinfo.Ufuncs.Ufuncs()
         if ufuncs.judge_user_valid(u_id, u_auth_key):
 
@@ -67,8 +70,11 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 retdata = []
                 ap_id = self.get_argument('apid')
                 try:
-                    appointment = self.db.query(Appointment).filter(Appointment.APid) == ap_id.one()
+                    appointment = self.db.query(Appointment).filter(Appointment.APid == ap_id).one()
                     if appointment:
+                        self.retjson['code'] = '10250'
+                        self.retjson['contents'] = APmodelHandler.ap_Model_multiple(appointment)
+
 
                 except Exception, e:
                     print e
@@ -89,6 +95,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         #
         #
         #
+
         #
         # elif request_type == '10270':#在报名约拍中的人里选择约拍对象
         #    # uid = self.get_argument("uid",default="none")
@@ -136,6 +143,21 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         #         print e
         #         self.retjson['code'] = '10262'
         #         self.retjson['contents'] = '用户未参加此约拍的报名'
+        # elif request_type == '10240':  # 请求用户自己发布的所有约拍
+        #     try:
+        #         user = self.db.query(User).filter(User.Uauthkey == auth_key).one()
+        #         self.ap_ask_user(user)
+        #     except Exception, e:
+        #         self.retjson['contents'] = '授权码不存在或已过期'
+        #         self.retjson['code'] = '10214'
+        # elif request_type == '10241':  # 请求指定用户发布的所有约拍
+        #     uid = self.get_argument('uid')  # 指定用户的id
+        #     try:
+        #         user = self.db.query(User).filter(User.Uid == uid).one()
+        #         self.ap_ask_user(user)
+        #     except Exception, e:
+        #         self.retjson['contents'] = '授权码不存在或已过期'
+        #         self.retjson['code'] = '10214'
 
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 

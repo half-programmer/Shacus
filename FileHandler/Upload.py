@@ -28,4 +28,14 @@ class AuthKeyHandler:
         return self.Auth_key
     def get_token(self):
         return self.auth_tokens
+    def download_url(self,name):
+        url=[]
+        auth = self.get_auth_key()
+        bucket_domain = 'oci8c6557.bkt.clouddn.com'
+        for title in name:
+           base_url  = 'http://%s/%s' % (bucket_domain,title )
+           private_url =auth.private_download_url(base_url,expires=3600)
+        url.append(private_url)
+        return url
+
 
