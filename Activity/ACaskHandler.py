@@ -16,7 +16,7 @@ from Database.tables import Activity
 
 
 class AskActivity(BaseHandler): #关于用户的一系列活动
-    retjson = {'code': 200, 'contents': 'none'}
+    retjson = {'code': '', 'contents': 'none'}
     retdata = []  # list array
     def post(self):
         type = self.get_argument('type', default='unsolved')
@@ -31,15 +31,17 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
 
                         #dataimage = self.db.query(ActivityImage).filter(data[i].ACid == ActivityImage.ACLacid).one()
                         ACFunction.Acresponse(data[i],self.retdata)
+                        self.retjson['code']=10303
                         self.retjson['contents']=self.retdata
                 else:
                     for item in range(0,10):
                             #dataimage = self.db.query(ActivityImage).filter(data[item].ACid == ActivityImage.ACLacid).one()
                             ACFunction.Acresponse(data[item],self.retdata)
+                            self.retjson['code'] = 10303
                             self.retjson['contents'] = self.retdata
             except Exception, e:
                     print e
-                    self.retjson['code'] = 10303
+                    self.retjson['code'] = 200
                     self.retjson['contents'] = 'there is no activity'
         elif type =='10304':
             try:
@@ -54,16 +56,18 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                     for i in range(Acsended,length):
                         #dataimage = self.db.query(ActivityImage).filter(data[i].ACid == ActivityImage.ACLacid).one()
                         ACFunction.Acresponse(data[i], self.retdata)
+                        self.retjson['code'] = 10304
                         self.retjson['contents'] = self.retdata
                 else:
                     for item in range(Acsended,acsended+6):
                         #dataimage = self.db.query(ActivityImage).filter(data[item].ACid == ActivityImage.ACLacid).one()
                         ACFunction.Acresponse(data[item],self.retdata)
+                        self.retjson['code'] = 10304
                         self.retjson['contents'] = self.retdata
 
             except Exception,e:
                 print e
-                self.retjson['code'] = 10304
+                self.retjson['code'] = 200
                 self.retjson['contents'] = 'there is no activity'
 
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))  # 返回中文
