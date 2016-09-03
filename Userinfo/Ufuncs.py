@@ -7,7 +7,6 @@ from BaseHandlerh import BaseHandler
 from Database.tables import User
 from Database.models import get_db
 
-
 class Ufuncs(object):
     #@staticmethod
     def get_user_id(self,u_auth_key):
