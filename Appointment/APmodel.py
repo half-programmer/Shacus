@@ -22,7 +22,8 @@ class APmodelHandler:
         APimgurl=r'http://image.baidu.com/search/detail?ct=503316480&z=&tn=baiduimagedetail&ipn=d&word=%E5%8D%95%E8%BA%AB%E7%8B%97&step_word=&ie=utf-8&in=&cl=2&lm=-1&st=-1&cs=2150404125,3211995021&os=1615331675,3944367252&simid=0,0&pn=8&rn=1&di=39492073940&ln=1989&fr=&fmq=1472862566666_R&ic=0&s=undefined&se=&sme=&tab=0&width=&height=&face=undefined&is=&istype=2&ist=&jit=&bdtype=0&adpicid=0&pi=0&gsm=0&objurl=http%3A%2F%2Fimg9.jiwu.com%2Fjiwu_news_pics%2F20151225%2F1450854576571_000.jpg&rpstart=0&rpnum=0&adpicid=0',
         APstartT=appointment.APstartT.strftime('%Y-%m-%dT%H:%M:%S'),
         APlikeN=appointment.APlikeN,
-        APregistN=appointment.APregistN
+        APregistN=appointment.APregistN,
+        Userimg = r"http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg"
         )
         except Exception,e:
             print e
