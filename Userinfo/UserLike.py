@@ -141,7 +141,8 @@ class FindUlike(BaseHandler):
                     #接来下测试是否我也关注了我的粉丝
                     try:
                        exist = self.db.query(UserLike).filter(UserLike.ULlikedid == my_like_id,
-                                                           UserLike.ULlikeid == uid ).one()
+                                                           UserLike.ULlikeid == uid,
+                                                              UserLike.ULvalid == True).one()
                        if exist :
                         text =True
                     except Exception,e:
