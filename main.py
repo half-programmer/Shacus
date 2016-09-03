@@ -21,6 +21,8 @@ from Userhomepager import Userhomepager
 from Userinfo.UserFavorite import UserFavorite
 from Userinfo.UserLike import FindUlike
 from loginHandler import LoginHandler
+from Settings import PaswChange
+from Userinfo.UserInfo import UserInfo
 
 define("port", default=800, help="run on the given port", type=int)
 
@@ -36,6 +38,7 @@ class Application(tornado.web.Application):
              (r"/user/homepager",Userhomepager),
              (r"/user/mylike", FindUlike),
              (r"/user/favorite", UserFavorite),
+             (r"/user/info",UserInfo),
              (r"/Activity/ask", AskActivity),
              (r"/Activity/entry",AskEntry),
              (r"/activity/create", ActivityCreate),
