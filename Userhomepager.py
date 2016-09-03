@@ -51,7 +51,7 @@ class Userhomepager(BaseHandler):
                     ap_id = u_appointment_info.AEapid
                     try:
                         ap_info = self.db.query(Appointment).filter(Appointment.APid == ap_id,
-                                                                    Appointment.APvalid == 1).one()
+                                                                    Appointment.APvalid == True).one()
                         ret_ap = ap.ap_Model_simply(u_info)
                         retdata_ap.append(ret_ap)
                     except Exception,e:
@@ -59,7 +59,7 @@ class Userhomepager(BaseHandler):
                         retjson['code'] = '10602'
                         retjson['contents']='该约拍不存在'
                 u_spap_infos = self.db.query(Appointment).filter(Appointment.APsponsorid == u_other_id,
-                                                                 Appointment.APvalid == 1).all()
+                                                                 Appointment.APvalid == True).all()
                 for u_spap_info in u_spap_infos:
                     ret_ap = ap.ap_Model_simply(u_spap_info)
                     retdata_ap.append(ret_ap)

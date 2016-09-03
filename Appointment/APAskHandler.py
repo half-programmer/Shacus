@@ -41,6 +41,45 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         u_auth_key = self.get_argument('authkey')
         request_type = self.get_argument('type')
         u_id = self.get_argument('uid')
+
+        # if Ufuncs.judge_user_valid(u_id,u_auth_key): # 授权码正确
+        #     ppointments = self.db.query(Appointment). \
+        #         #             filter(Appointment.APtype == 1, Appointment.APclosed == 0).all()
+        # else:
+        self.retjson['contents'] = '授权码不存在或已过期'
+        self.retjson['code'] = '10214'
+        # if request_type == '10231':  # 请求所有设定地点的摄影师发布的约拍中未关闭的
+        #     try:
+        #         appointments = self.db.query(Appointment). \
+        #             filter(Appointment.APtype == 1, Appointment.APclosed == 0).all()
+        #         APmodelHandler.ap_Model_simply(appointments, self.retdata)
+        #         self.retjson['contents'] = self.retdata
+        #     except Exception, e:
+        #         self.no_result_found(e)
+        # elif request_type == '10235':  # 请求所有设定地点的模特发布的约拍中未关闭的
+        #     try:
+        #         appointments = self.db.query(Appointment). \
+        #             filter(Appointment.APtype == 0, Appointment.APclosed == 0).all()
+        #         APmodelHandler.ap_Model_simply(appointments, self.retdata)
+        #         self.retjson['contents'] = self.retdata
+        #     except Exception, e:
+        #         self.no_result_found(e)
+        # elif request_type == '10240':  # 请求用户自己发布的所有约拍
+        #     try:
+        #         user = self.db.query(User).filter(User.Uauthkey == auth_key).one()
+        #         self.ap_ask_user(user)
+        #     except Exception, e:
+        #         self.retjson['contents'] = '授权码不存在或已过期'
+        #         self.retjson['code'] = '10214'
+        # elif request_type == '10241':  # 请求指定用户发布的所有约拍
+        #     uid = self.get_argument('uid')  # 指定用户的id
+        #     try:
+        #         user = self.db.query(User).filter(User.Uid == uid).one()
+        #         self.ap_ask_user(user)
+        #     except Exception, e:
+        #         self.retjson['contents'] = '授权码不存在或已过期'
+        #         self.retjson['code'] = '10214'
+
         ufuncs = Userinfo.Ufuncs.Ufuncs()
         if ufuncs.judge_user_valid(u_id, u_auth_key):
 
@@ -78,6 +117,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         #
         #
         #
+
         #
         # elif request_type == '10270':#在报名约拍中的人里选择约拍对象
         #    # uid = self.get_argument("uid",default="none")

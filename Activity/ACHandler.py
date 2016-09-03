@@ -8,6 +8,7 @@ __author__='兰威'
 import json
 
 from BaseHandlerh import BaseHandler
+from FileHandler.ImageHandler import ImageHandler
 
 class ActivityCreate(BaseHandler):   #创建活动
     retjson={'code':'10300','contents':'None'}
@@ -63,6 +64,8 @@ class ActivityCreate(BaseHandler):   #创建活动
                                 Activity.ACtitle == m_title and Activity.ACsponsorid == m_sponsorid
                             ).one()
                             retjson_body['acID'] = ac_id[0];
+                            Image = ImageHandler()
+                            Image.insert_activity_image(m_image,ac_id[0])
                             self.retjson['code'] = '10313'
                             self.retjson['contents'] = retjson_body
                         except Exception,e:
