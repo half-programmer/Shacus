@@ -137,14 +137,14 @@ class AppointmentImage(Base):
 class UserImage(Base):
     __tablename__ = 'UserImage'
 
-    UIuid = Column(Integer,ForeignKey("User.Uid",onupdate="CASCADE"))
-    UIimid = Column(Integer,ForeignKey("Image.IMid",onupdate="CASCADE"),primary_key=True)
+    UIuid = Column(Integer,ForeignKey("User.Uid", onupdate="CASCADE"))
+    UIimid = Column(Integer,ForeignKey("Image.IMid", onupdate="CASCADE"), primary_key=True)
     UIurl = Column(VARCHAR(128))
 
 class Appointment(Base):  #摄影师-模特约拍
     __tablename__ = 'Appointment'
 
-    APid = Column(Integer, primary_key=True,nullable=False)
+    APid = Column(Integer, primary_key=True, nullable=False)
     APsponsorid = Column(Integer, ForeignKey('User.Uid', ondelete='CASCADE'), nullable=False)  # 发起者
     APtitle=Column(VARCHAR(24),nullable=False)
     APlocation = Column(VARCHAR(128), nullable=False)
