@@ -8,6 +8,8 @@ from Appointment.APmodel import user_ap_simply
 from ACmodel import user_ac_simply
 from Userinfo.Usermodel import userinfo_smply
 class Userhomepager(BaseHandler):
+
+
     def get_user_id(self, u_auth_key):
         '''
         通过用户auth_key获得id
