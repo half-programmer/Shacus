@@ -10,7 +10,9 @@ from tornado.options import define, options
 
 from Activity.ACHandler import ActivityCreate, ActivityRegister
 from Activity.ACaskHandler import AskActivity
-from Appointment.APHandler import APcreateHandler, APaskHandler, APregistHandler
+from Appointment.APAskHandler import APaskHandler
+from Appointment.APCreateHandler import APcreateHandler
+from Appointment.APRegistHandler import APregistHandler
 from Database.models import engine
 from ImageCallback import ImageCallback
 from RegisterHandler import RegisterHandler
