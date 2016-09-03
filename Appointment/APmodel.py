@@ -9,7 +9,7 @@ from Database.tables import Appointment
 class APmodelHandler:
 
     @classmethod
-    def ap_Model_simply(appointment):
+    def ap_Model_simply(self,appointment):
         '''得到简单约拍模型，用于登录首页
         :param appointment: 传入一个appointment对象
         :return: retjson
