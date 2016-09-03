@@ -52,8 +52,8 @@ class ActivityCreate(BaseHandler):   #创建活动
                             ACmaxp = 0,
                             ACminp = 0,
                             AClikenumber = 0,
-                            ACvalid = 1,
-                            ACregistN =1
+                            ACvalid = 0,
+                            ACregistN =0
 
                         )
                         self.db.merge(my_activity)
@@ -109,7 +109,16 @@ class ActivityCreate(BaseHandler):   #创建活动
                                     Activity.ACstartT: ac_startT,Activity.ACendT:ac_entT,
                                     Activity.ACjoinT: ac_joinT,Activity.ACcontent: ac_content,
                                     Activity.ACfree: ac_free,Activity.ACprice: ac_price,
-                                    Activity.ACmaxp: ac_maxp,Activity.ACminp: ac_minp},synchronize_session = False)
+                                    Activity.ACmaxp: ac_maxp,Activity.ACminp: ac_minp,
+                                    Activity.ACregistN:1,Activity.ACvalid: 1},synchronize_session = False)
+                        activity_entry = ActivityEntry(
+                            ACEacid = ac_id,
+                            ACEregisterid = ac_sponsorid,
+                            ACEregisttvilid = 1,
+                            ACEscore = 0,
+                            ACEcomment = ''
+                        )
+                        self.db.merge(activity_entry)
                         try :
                            self.db.commit()
                            self.retjson['code'] = '10323'

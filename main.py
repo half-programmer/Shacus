@@ -4,21 +4,25 @@ import tornado.httpserver
 import  tornado.ioloop
 import  tornado.options
 import tornado.web
+from Activity.ACentryHandler import AskEntry
 from sqlalchemy.orm import scoped_session, sessionmaker
 from tornado.options import define, options
 
-from Userhomepager import Userhomepager
-from ACHandler import ActivityCreate, ActivityRegister
-from ACentryHandler import AskEntry
-from ACaskHandler import AskActivity
-from Appointment.APHandler import APcreateHandler, APaskHandler, APregistHandler
+from Activity.ACHandler import ActivityCreate, ActivityRegister
+from Activity.ACaskHandler import AskActivity
+from Appointment.APAskHandler import APaskHandler
+from Appointment.APCreateHandler import APcreateHandler
+from Appointment.APRegistHandler import APregistHandler
 from Database.models import engine
 from ImageCallback import ImageCallback
 from RegisterHandler import RegisterHandler
+from Settings import PaswChange
+from Userhomepager import Userhomepager
 from Userinfo.UserFavorite import UserFavorite
 from Userinfo.UserLike import FindUlike
 from loginHandler import LoginHandler
 from Settings import PaswChange
+from Userinfo.UserInfo import UserInfo
 
 define("port", default=800, help="run on the given port", type=int)
 
@@ -28,12 +32,13 @@ class Application(tornado.web.Application):
         handlers = [
              (r"/appointment/create", APcreateHandler),
              (r"/appointment/ask", APaskHandler),
-             (r"/appointment/register",APregistHandler),
+             (r"/appointment/regist",APregistHandler),
              (r"/login", LoginHandler),
              (r"/regist", RegisterHandler),
-             (r"/userhomepager",Userhomepager),
+             (r"/user/homepager",Userhomepager),
              (r"/user/mylike", FindUlike),
              (r"/user/favorite", UserFavorite),
+             (r"/user/info",UserInfo),
              (r"/Activity/ask", AskActivity),
              (r"/Activity/entry",AskEntry),
              (r"/activity/create", ActivityCreate),

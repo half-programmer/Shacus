@@ -1,4 +1,5 @@
 #-*- coding:utf-8 -*-
+
 '''
 @王佳镭
 @2016.9.3
@@ -8,8 +9,11 @@ from sqlalchemy import desc
 from BaseHandlerh import  BaseHandler
 from Database.tables import Activity,User,ActivityImage
 import json
-from datetime import date, datetime
+
 import ACFunction
+from BaseHandlerh import  BaseHandler
+from Database.tables import Activity
+
 
 class AskActivity(BaseHandler): #关于用户的一系列活动
     retjson = {'code': 200, 'contents': 'none'}
@@ -24,6 +28,7 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                 print length
                 if length < 10:
                     for i in range(length):
+
                         #dataimage = self.db.query(ActivityImage).filter(data[i].ACid == ActivityImage.ACLacid).one()
                         ACFunction.Acresponse(data[i],self.retdata)
                         self.retjson['contents']=self.retdata
