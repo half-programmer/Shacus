@@ -44,7 +44,7 @@ class LoginHandler(BaseHandler):
                                 birthday=Ubirthday,
                                 registTime=user.UregistT.strftime('%Y-%m-%d %H:%M:%S'),
                                 mailBox=user.Umailbox,
-                                headImage=u"用户头像url",
+                                headImage=r"http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg",
                                 auth_key=u_auth_key
                             )
                             photo_list = []  # 摄影师发布的约拍

@@ -214,10 +214,10 @@ class APregistHandler(BaseHandler):  # 报名约拍
                 ap_user_id = ap_user.Uid
                 try:
                     exist = self.db.query(AppointEntry).filter(
-                        AppointEntry.AEregisterID == ap_user_id and AppointEntry.AEapid == ap_id).one()  # 应该再加上和ap_id的验证
+                        AppointEntry.AEregisterID == ap_user_id and AppointEntry.AEapid == ap_id).one()  # todo应该再加上和ap_id的验证
                     if exist.AEvalid:
                         self.db.query(AppointEntry).filter(AppointEntry.AEregisterID == ap_user_id).\
-                            updata({AppointEntry.AEvalid == 0})
+                            update({AppointEntry.AEvalid == 0})
                         try :
                             self.db.commit()
                             self.retjson['contents'] = '取消报名成功'

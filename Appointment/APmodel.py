@@ -8,9 +8,11 @@ from Database.tables import Appointment
 
 class APmodelHandler:
 
-    def ap_Model_simply(self,appointment):
+    @classmethod
+    def ap_Model_simply(appointment):
         '''得到简单约拍模型，用于登录首页
-        :return:  retjson
+        :param appointment: 传入一个appointment对象
+        :return: retjson
         '''
         #todo:查找待变更为最新10个
 
