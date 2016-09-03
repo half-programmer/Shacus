@@ -148,11 +148,11 @@ class FindUlike(BaseHandler):
                     user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign, 'uimgurl': '','fansback':text}
                     retdata.append(user_json)
                     print '成功返回粉丝'
-                    self.retjson['code'] = '10430'
+                    self.retjson['code'] = '10440'
                     self.retjson['contents'] = retdata
             else:
                 print '886'
-                self.retjson['code'] = '10431'
+                self.retjson['code'] = '10441'
                 self.retjson['contents'] = r'你是没有人关注的'
         except Exception,e:
             print 'gdfgdfgdfg',e

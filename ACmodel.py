@@ -1,6 +1,19 @@
 # coding=utf-8
+class ACmodelHandler:
 
-def user_ac_simply(ac_info):
-    ret_ac = {'acid': ac_info.ACid, 'acsponsorid': ac_info.ACsponsorid, 'actitle': ac_info.ACtitle,
-              'aclocation': ac_info.AClocation, 'acvalid': ac_info.ACvalid,}
-    return ret_ac
+    def ac_Model_simply(self,activity):
+        '''得到简单活动模型
+        :return:  retjson
+        '''
+        #todo:查找待变更为最新10个
+
+        ac_simply_info = dict(
+        ACid=activity.ACid,
+        ACtitle=activity.ACtitle,
+        ACimgurl='暂无',
+        ACstartT=activity.ACstartT.strftime('%Y-%m-%d %H:%M:%S'),
+        AClikeN=activity.AClikenumber,
+        ACregistN=activity.ACregistN
+        )
+        return ac_simply_info
+
