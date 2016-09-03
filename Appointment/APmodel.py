@@ -75,11 +75,12 @@ class APmodelHandler(object):
                 APlikeN=appointment.APlikeN,
                 APvalid=appointment.APvalid,
                 APregistN=appointment.APregistN,
-                Userimg=r"http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg",
-                APimgurl=r"http://img9.jiwu.com/jiwu_news_pics/20151225/1450854576571_000.jpg",
+                Userimg="http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg",
+                APimgurl=[r"http://img9.jiwu.com/jiwu_news_pics/20151225/1450854576571_000.jpg", "http://p1.gexing.com/G1/M00/57/8B/rBACFFPcOFOiwBGVAACdMkF5UnM383.jpg","http://p1.gexing.com/G1/M00/57/8B/rBACFFPcOFOiwBGVAACdMkF5UnM383.jpg"],
             )
 
             return m_response
+
 
     @classmethod
     def ap_Model_simply_one(clas, appointment):
@@ -101,7 +102,6 @@ class APmodelHandler(object):
         except Exception,e:
             print e
         return ret_ap
-
 
     # @classmethod
     # def ApInforesponse(appointment, retdata):

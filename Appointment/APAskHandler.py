@@ -72,8 +72,20 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 try:
                     appointment = self.db.query(Appointment).filter(Appointment.APid == ap_id).one()
                     if appointment:
+                        response = APmodelHandler.ap_Model_multiple(appointment)
+                        print 'before equal'
+                        try:
+                            # todo: fanhuibuzhenshi
+                            if appointment.APsponsorid == u_id:
+                                print 'appointment.APsponsorid:', appointment.APsponsorid
+                                print 'uid:',u_id
+                                response['AP_issponsor'] = 1
+                            else:
+                                response['AP_issponsor'] = 0
+                        except Exception, e:
+                            print e
                         self.retjson['code'] = '10250'
-                        self.retjson['contents'] = APmodelHandler.ap_Model_multiple(appointment)
+                        self.retjson['contents'] = response
 
 
                 except Exception, e:
