@@ -18,7 +18,7 @@ class APmodelHandler:
         APid=appointment.APid,
         APtitle=appointment.APtitle,
         APimgurl='暂无',
-        APstartT=appointment.APstartT.strftime('%Y-%m-%dT%H:%M:%S'),
+        APstartT=appointment.APstartT.strftime('%Y-%m-%d %H:%M:%S'),
         APlikeN=appointment.APlikeN,
         APregistN=appointment.APregistN
         )
@@ -27,8 +27,4 @@ class APmodelHandler:
 
 
 
-def user_ap_simply(ap_info):
-    ret_ap = {'apid': ap_info.APid, 'apsponsorid': ap_info.APsponsorid, 'aptitle': ap_info.APtitle,
-              'aplocation': ap_info.APlocation, 'apvalid': ap_info.APvalid,'aptype':ap_info.APtype,
-              }
-    return ret_ap
+

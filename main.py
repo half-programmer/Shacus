@@ -31,7 +31,7 @@ class Application(tornado.web.Application):
              (r"/appointment/register",APregistHandler),
              (r"/login", LoginHandler),
              (r"/regist", RegisterHandler),
-             (r"/userhomepager",Userhomepager),
+             (r"/user/homepager",Userhomepager),
              (r"/user/mylike", FindUlike),
              (r"/user/favorite", UserFavorite),
              (r"/Activity/ask", AskActivity),
