@@ -139,17 +139,18 @@ class FindUlike(BaseHandler):
                     my_like_id = my_like.ULlikeid
                     userinfo = self.db.query(User).filter(User.Uid == my_like_id,).one()
                     #接来下测试是否我也关注了我的粉丝
-                    exist = self.db.query(UserLike).filter(UserLike.ULlikeid == my_like_id,
-                                                           UserLike.ULlikedid == uid ).one()
-                    if exist :
+                    try:
+                       exist = self.db.query(UserLike).filter(UserLike.ULlikedid == my_like_id,
+                                                           UserLike.ULlikeid == uid ).one()
+                       if exist :
                         text =True
-                    else:
+                    except Exception,e:
                         text=False
-                    user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign, 'uimgurl': '','fansback':text}
-                    retdata.append(user_json)
-                    print '成功返回粉丝'
-                    self.retjson['code'] = '10440'
-                    self.retjson['contents'] = retdata
+                        user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign, 'uimgurl': '','fansback':text}
+                        retdata.append(user_json)
+                print '成功返回粉丝'
+                self.retjson['code'] = '10440'
+                self.retjson['contents'] = retdata
             else:
                 print '886'
                 self.retjson['code'] = '10441'
@@ -157,5 +158,5 @@ class FindUlike(BaseHandler):
         except Exception,e:
             print 'gdfgdfgdfg',e
             self.retjson['code'] = '10441'
-            self.retjson['contents'] = r'该用户没有关注任何人'
+            self.retjson['contents'] = r'你是没有人关注的'
 
