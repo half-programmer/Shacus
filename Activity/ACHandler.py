@@ -64,6 +64,8 @@ class ActivityCreate(BaseHandler):   #创建活动
                                 Activity.ACtitle == m_title and Activity.ACsponsorid == m_sponsorid
                             ).one()
                             retjson_body['acID'] = ac_id[0];
+                            Image = ImageHandler()
+                            Image.insert_activity_image(m_image,ac_id[0])
                             self.retjson['code'] = '10313'
                             self.retjson['contents'] = retjson_body
                         except Exception,e:

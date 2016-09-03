@@ -4,11 +4,12 @@ import time
 
 from BaseHandlerh import BaseHandler
 from Database.tables import UserImage,Image,AppointmentImage,ActivityImage
+from Database.models import get_db
 '''
  创建者：黄鑫晨
  创建时间：2016-08-30 18:05
 '''
-class ImageHandler(BaseHandler):
+class ImageHandler(object):
     #def __init__(self):
     def insert(self,list):
         '''
@@ -24,9 +25,9 @@ class ImageHandler(BaseHandler):
                 IMT=time.strftime('%Y-%m-%d %H:%M:%S'),
                 IMname = img_name
             )
-            self.db.merge(image)
-            self.db.commit()
-            new_img = self.db.query(Image).filter(Image.IMname == img_name).one()
+            get_db().merge(image)
+            get_db().commit()
+            new_img = get_db().query(Image).filter(Image.IMname == img_name).one()
             imid = new_img.IMid
             new_imids.append(imid)
             return new_imids
@@ -49,8 +50,8 @@ class ImageHandler(BaseHandler):
                 UIimid=imids[i],
                 UIurl=list[i]
             )
-        self.db.merge(image)
-        self.db.commit()
+        get_db().merge(image)
+        get_db().commit()
 
     def insert_activity_image(self,list,ac_id):
         '''
@@ -69,8 +70,8 @@ class ImageHandler(BaseHandler):
                 ACIimid=imids[i],
                 ACIurl=list[i]
             )
-        self.db.merge(image)
-        self.db.commit()
+        get_db().merge(image)
+        get_db().commit()
 
     def insert_appointment_image(self,list,ap_id):
         '''
@@ -90,8 +91,8 @@ class ImageHandler(BaseHandler):
                 APIimid=imids[i],
                 APIurl=list[i]
             )
-        self.db.merge(image)
-        self.db.commit()
+        get_db().merge(image)
+        get_db().commit()
 
 
 

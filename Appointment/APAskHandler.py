@@ -44,8 +44,8 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         #     ppointments = self.db.query(Appointment). \
         #         #             filter(Appointment.APtype == 1, Appointment.APclosed == 0).all()
         # else:
-            self.retjson['contents'] = '授权码不存在或已过期'
-            self.retjson['code'] = '10214'
+        self.retjson['contents'] = '授权码不存在或已过期'
+        self.retjson['code'] = '10214'
         # if request_type == '10231':  # 请求所有设定地点的摄影师发布的约拍中未关闭的
         #     try:
         #         appointments = self.db.query(Appointment). \
