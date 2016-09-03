@@ -52,17 +52,20 @@ class Userhomepager(BaseHandler):
                     try:
                         ap_info = self.db.query(Appointment).filter(Appointment.APid == ap_id,
                                                                     Appointment.APvalid == True).one()
-                        ret_ap = ap.ap_Model_simply(u_info)
-                        retdata_ap.append(ret_ap)
+                        retdata_ap = ap.ap_Model_simply(u_info,retdata_ap)
                     except Exception,e:
                         print e
                         retjson['code'] = '10602'
                         retjson['contents']='该约拍不存在'
-                u_spap_infos = self.db.query(Appointment).filter(Appointment.APsponsorid == u_other_id,
+                try :
+                    u_spap_infos = self.db.query(Appointment).filter(Appointment.APsponsorid == u_other_id,
                                                                  Appointment.APvalid == True).all()
-                for u_spap_info in u_spap_infos:
-                    ret_ap = ap.ap_Model_simply(u_spap_info)
-                    retdata_ap.append(ret_ap)
+
+                    for u_spap_info in u_spap_infos:
+                       retdata_ap = ap.ap_Model_simply(u_spap_info,retdata_ap)
+                except Exception, e:
+                    print e
+
                 ret_json_contents['ap_info'] =retdata_ap
 
                 #筛选有效的活动信息
