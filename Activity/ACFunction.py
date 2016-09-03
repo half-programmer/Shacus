@@ -27,8 +27,8 @@ def response(item,retdata):#查看活动更多详情
     retdata.append(m_response)
 
 
-def Acresponse(item,retdata):
-    url="http://img4.imgtn.bdimg.com/it/u=1293975569,236516549&fm=21&gp=0.jpg#token"
+def Acresponse(item,item2,retdata):
+
     m_Acresponse=dict(
         ACid=item.ACid,
         ACsponsorid=item.ACsponsorid,#username
@@ -37,7 +37,8 @@ def Acresponse(item,retdata):
         ACstartT=item.ACstartT.strftime('%Y-%m-%dT%H:%M:%S'),#settime
         AClikenumber=item.AClikenumber,#praisenum
         ACregistN=item.ACregistN,#joinnum
-        AClurl="http://img4.imgtn.bdimg.com/it/u=1293975569,236516549&fm=21&gp=0.jpg#token"
+        AClurl="http://img4.imgtn.bdimg.com/it/u=1293975569,236516549&fm=21&gp=0.jpg#token",
+        Ualais=item2.Ualais,
     )
     retdata.append(m_Acresponse)
 
