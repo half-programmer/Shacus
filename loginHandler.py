@@ -63,10 +63,10 @@ class LoginHandler(BaseHandler):
                                 from Appointment.APmodel import APmodelHandler
                                 ap_model_handler = APmodelHandler()  # 创建对象
                                 print 'chuangjianchengg'
-                                for photo_list_each in photo_list_all:
-                                    photo_list.append(ap_model_handler.ap_Model_simply(photo_list_each))
-                                for model_list__each in model_list_all:
-                                    model_list.append(ap_model_handler.ap_Model_simply(model_list__each))
+
+                                ap_model_handler.ap_Model_simply(photo_list_all,photo_list)
+
+                                ap_model_handler.ap_Model_simply(model_list_all,model_list)
                                 print 'shaixuanchengg'
                                 data = dict(
                                 userModel=user_model,

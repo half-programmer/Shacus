@@ -32,7 +32,7 @@ class Application(tornado.web.Application):
         handlers = [
              (r"/appointment/create", APcreateHandler),
              (r"/appointment/ask", APaskHandler),
-             (r"/appointment/register",APregistHandler),
+             (r"/appointment/regist",APregistHandler),
              (r"/login", LoginHandler),
              (r"/regist", RegisterHandler),
              (r"/user/homepager",Userhomepager),
