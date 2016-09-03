@@ -18,6 +18,7 @@ from ImageCallback import ImageCallback
 from RegisterHandler import RegisterHandler
 from Settings import PaswChange
 from Userhomepager import Userhomepager
+from Userinfo.UserIndent import UserIndent
 from Userinfo.UserFavorite import UserFavorite
 from Userinfo.UserLike import FindUlike
 from loginHandler import LoginHandler
@@ -39,6 +40,7 @@ class Application(tornado.web.Application):
              (r"/user/mylike", FindUlike),
              (r"/user/favorite", UserFavorite),
              (r"/user/info",UserInfo),
+             (r"/user/indent",UserIndent),
              (r"/Activity/ask", AskActivity),
              (r"/Activity/entry",AskEntry),
              (r"/activity/create", ActivityCreate),

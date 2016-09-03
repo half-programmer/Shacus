@@ -1,7 +1,7 @@
 # coding=utf-8
 class ACmodelHandler:
-
-    def ac_Model_simply(self,activity):
+    @classmethod
+    def ac_Model_simply(clas,activity):
         '''得到简单活动模型
         :return:  retjson
         '''

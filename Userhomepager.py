@@ -52,7 +52,7 @@ class Userhomepager(BaseHandler):
                     try:
                         ap_info = self.db.query(Appointment).filter(Appointment.APid == ap_id,
                                                                     Appointment.APvalid == True).one()
-                        retdata_ap = ap.ap_Model_simply(u_info,retdata_ap)
+                        retdata_ap = ap.ap_Model_simply(ap_info,retdata_ap)
                     except Exception,e:
                         print e
                         retjson['code'] = '10602'
