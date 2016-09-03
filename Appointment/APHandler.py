@@ -16,7 +16,7 @@ from  BaseHandlerh import BaseHandler
 
 from Database.tables import Appointment, User, Verification,AppointmentInfo,AppointEntry,UserImage
 
-from AppFuncs import response
+from APFuncs import response
 
 
 from Database.tables import Appointment, User, Verification,AppointmentInfo,AppointEntry
@@ -71,7 +71,7 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                             APcontent='',  # 活动介绍
                             APclosed=0,
                             APlikeN=0,
-                            APvalid=1,
+                            APvalid=0,
                             APaddallowed=0
                         )
                         self.db.merge(new_appointment)
@@ -119,7 +119,8 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                     print '判断该活动是否已经存在'
                     exist = self.db.query(Appointment).filter(Appointment.APtype == ap_type,
                                                               Appointment.APtitle == ap_title,
-                                                              Appointment.APsponsorid == uid
+                                                              Appointment.APsponsorid == uid,
+                                                              Appointment.APcontent == ap_content
                                                               ).one()  # 判断该活动是否已经存在
                     if exist:
                         print '活动存在'
@@ -142,7 +143,8 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                                             Appointment.APlocation: ap_location, Appointment.APfree: ap_free,
                                             Appointment.APcontent: ap_content,
                                             Appointment.APaddallowed: ap_addallowed,
-                                            Appointment.APtype: ap_type
+                                            Appointment.APtype: ap_type,
+                                            Appointment.APvalid:1
                                             }, synchronize_session=False)
                                 self.db.commit()
                                 self.retjson['code'] = '10214'

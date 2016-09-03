@@ -195,7 +195,15 @@ class AppointLike(Base):
     ALvalid = Column(Boolean,nullable=False, default=1)
     ALT = Column(DateTime(timezone=True), default=func.now())
 
+class Favorite(Base):
+    __tablename__ = 'Favorite'
 
+    Fid = Column(Integer, primary_key=True)
+    Fuid = Column(Integer, ForeignKey('User.Uid', onupdate='CASCADE'), nullable=False)
+    Ftype = Column(Integer, nullable=False, default=0)
+    Ftypeid = Column(Integer, nullable=False, default=0)
+    FT = Column(DateTime(timezone=True), default=func.now())
+    Fvalid = Column(Boolean, nullable=False, default=1)
 
 
 

@@ -2,6 +2,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 import sys
+
+from sqlalchemy.orm import scoped_session, sessionmaker
+
 reload(sys)
 sys.setdefaultencoding('utf8')  # python的str默认是ascii编码，和unicode编码冲突,需处理
 
@@ -22,5 +25,13 @@ if(engine!=None):
 else:
     print "未找到数据库"
 
+db2 = None
+def get_db():
+    global db2
+    #if not db:
+    db2 = scoped_session(sessionmaker(bind=engine,
+                                         autocommit=False, autoflush=True,
+                                         expire_on_commit=False))
+    return db2
 
 
