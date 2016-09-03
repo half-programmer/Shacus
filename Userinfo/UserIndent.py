@@ -79,27 +79,21 @@ class UserIndent(BaseHandler):
            ap_e_entrys = self.db.query(AppointEntry).filter(AppointEntry.AEregisterID == u_id,
                                                          AppointEntry.AEvalid == True).all()
         else :
-            try:
-                ap_e_entrys = self.db.query(AppointEntry).filter(AppointEntry.AEregisterID == u_id,
+
+            ap_e_entrys = self.db.query(AppointEntry).filter(AppointEntry.AEregisterID == u_id,
                                                                  AppointEntry.AEvalid == True,
                                                                  AppointEntry.AEchoosed ==True).all()
-            except Exception,e:
-                print e
+
         for ap_e_entry in ap_e_entrys:
             ap_id = ap_e_entry.AEapid
-            ap_e_info = self.db.query(Appointment).filter(Appointment.APid == ap_id,
-                                                          Appointment.APstatus == number).all()
+            ap_e_info = self.db.query(Appointment).filter(Appointment.APid == ap_id,int(Appointment.APstatus) == int(number)).all()
             if ap_e_info:
                 ret_e_appointment.append(APmodelHandler.ap_Model_simply_one(ap_e_info[0]))
         return ret_e_appointment
 
     def get_my_appointment(self,u_id,number):
         ret_my_appointment =[]
-        try:
-            ap_my_entrys = self.db.query(Appointment).filter(Appointment.APsponsorid == u_id,
-                                                         Appointment.APstatus == number).all()
-        except Exception,e:
-            print  e
+        ap_my_entrys = self.db.query(Appointment).filter(Appointment.APsponsorid == u_id,int(Appointment.APstatus) == int(number)).all()
         ret_my_appointment = APmodelHandler.ap_Model_simply(ap_my_entrys, ret_my_appointment)
         return ret_my_appointment
 
