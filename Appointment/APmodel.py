@@ -25,10 +25,10 @@ class APmodelHandler:
         APregistN=appointment.APregistN,
         Userimg = r"http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg"
         )
-        except Exception,e:
+            return ap_simply_info
+        except Exception, e:
             print e
-        print '进入methodffffff'
-        return ap_simply_info
+
 
 
 
