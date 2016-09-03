@@ -75,6 +75,7 @@ class UserIndent(BaseHandler):
 
     def get_e_appointment(self,u_id,number):
         ret_e_appointment = []
+        ap_e_info = []
         if number == 0:
            ap_e_entrys = self.db.query(AppointEntry).filter(AppointEntry.AEregisterID == u_id,
                                                          AppointEntry.AEvalid == True).all()
@@ -95,6 +96,7 @@ class UserIndent(BaseHandler):
         return ret_e_appointment
 
     def get_my_appointment(self,u_id,number):
+        ap_my_entrys = []
         ret_my_appointment =[]
         try:
             ap_my_entrys = self.db.query(Appointment).filter(Appointment.APsponsorid == u_id,Appointment.APstatus == number).all()
