@@ -1,10 +1,11 @@
 #-*- coding:utf-8 -*-
 __anthor__="wjl"
-from BaseHandlerh import  BaseHandler
-from Database.tables import Activity,User
 import json
-from datetime import date, datetime
+
 import ACFunction
+from BaseHandlerh import  BaseHandler
+from Database.tables import Activity
+
 
 class AskActivity(BaseHandler): #关于用户的一系列活动
     retjson = {'code': 200, 'contents': 'none'}
@@ -18,7 +19,7 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                 length=len(data)
                 if length < 10:
                     for i in range(length):
-                        ACFunction.response(data[i],self.retdata)
+                        ACFunction.response(data[i], self.retdata)
                         self.retjson['contents']=self.retdata
                 else:
                     for item in range(0,10):
