@@ -99,9 +99,10 @@ class APmodelHandler(object):
                 APregistN=appointment.APregistN,
                 Userimg=r"http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg"
             )
+            return ret_ap
         except Exception,e:
             print e
-        return ret_ap
+
 
     # @classmethod
     # def ApInforesponse(appointment, retdata):
