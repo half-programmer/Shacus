@@ -7,7 +7,6 @@ import tornado.web
 from Activity.ACentryHandler import AskEntry
 from sqlalchemy.orm import scoped_session, sessionmaker
 from tornado.options import define, options
-
 from Activity.ACHandler import ActivityCreate, ActivityRegister
 from Activity.ACaskHandler import AskActivity
 from Appointment.APAskHandler import APaskHandler
@@ -16,7 +15,6 @@ from Appointment.APRegistHandler import APregistHandler
 from Database.models import engine
 from ImageCallback import ImageCallback
 from RegisterHandler import RegisterHandler
-from Settings import PaswChange
 from Userhomepager import Userhomepager
 from Userinfo.UserIndent import UserIndent
 from Userinfo.UserFavorite import UserFavorite
