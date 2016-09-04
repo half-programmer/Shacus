@@ -65,7 +65,7 @@ class UserFavorite(BaseHandler):
                         else:
                             self.retjson['code'] = '10525'
                             self.retjson['contents'] = r'该约拍已过期'
-                except Exception,e:
+                except Exception, e:
                     print e
                     self.retjson['code'] = '10524'
                     self.retjson['contents'] = r'该约拍不存在！'
@@ -76,7 +76,7 @@ class UserFavorite(BaseHandler):
                     #用户收藏了该约拍，可以取消
                     try:
                         once_favorite = self.db.query(Favorite).filter(Favorite.Ftype == 1, Favorite.Ftypeid == typeid, Favorite.Fuid == user_id).one()
-                        if once_favorite.Fvalid == 1: #目前还在收藏夹中
+                        if once_favorite.Fvalid == 1:  #目前还在收藏夹中
                             try:
                                 self.db.query(Favorite).filter(Favorite.Fuid == user_id, Favorite.Ftypeid == typeid). \
                                     update({Favorite.Fvalid: 0}, synchronize_session=False)
@@ -86,7 +86,7 @@ class UserFavorite(BaseHandler):
                             except Exception, e:
                                 print e
                                 self.retjson['contents'] = r'数据库提交失败'
-                        else:# 曾经收藏过，但是已经取消了
+                        else:  # 曾经收藏过，但是已经取消了
                             self.not_in_fav_list()
                     except Exception,e:
                         self.not_in_fav_list()
@@ -98,14 +98,16 @@ class UserFavorite(BaseHandler):
                 retdata = []
                 try:
                     favorites = self.db.query(Favorite).filter(Favorite.Fuid == user_id, Favorite.Fvalid == 1).all()  # 返回收藏列表
+                    ap_favorates = []
                     for each_favorite in favorites:
                         ap_favorite_id = each_favorite.Ftypeid  # 即约拍Id
                         ap_favorite = self.db.query(Appointment).filter(Appointment.APid == ap_favorite_id).one()
-                        print 'before append'
-                        retdata.append(APmodelHandler.ap_Model_simply(ap_favorite))
+                        ap_favorates.append(ap_favorite)
+                    #     print 'before append'
+                    APmodelHandler.ap_Model_simply(ap_favorates, retdata)
                     self.retjson['code'] = '10550'
                     self.retjson['contents'] = retdata
-                except Exception,e:
+                except Exception, e:
                     print e
                     self.retjson['code'] = '10526'
                     self.retjson['contents'] = r'用户未收藏任何约拍'
