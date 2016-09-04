@@ -76,10 +76,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                         print 'before equal'
                         try:
                             print "in try"
-                            # todo: fanhuibuzhenshi
-                            if appointment.APsponsorid == u_id:
-                                print 'appointment.APsponsorid:', appointment.APsponsorid
-                                print 'uid:',u_id
+                            if appointment.APsponsorid == int(u_id):
                                 response['AP_issponsor'] = 1
                             else:
                                 response['AP_issponsor'] = 0
