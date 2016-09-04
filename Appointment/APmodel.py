@@ -77,6 +77,7 @@ class APmodelHandler(object):
                 APregistN=appointment.APregistN,
                 Userimg="http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg",
                 APimgurl=[r"http://img9.jiwu.com/jiwu_news_pics/20151225/1450854576571_000.jpg", "http://p1.gexing.com/G1/M00/57/8B/rBACFFPcOFOiwBGVAACdMkF5UnM383.jpg","http://p1.gexing.com/G1/M00/57/8B/rBACFFPcOFOiwBGVAACdMkF5UnM383.jpg"],
+                APstatus=appointment.APstatus
             )
 
             return m_response

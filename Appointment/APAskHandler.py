@@ -41,8 +41,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         u_auth_key = self.get_argument('authkey')
         request_type = self.get_argument('type')
         u_id = self.get_argument('uid')
-        self.retjson['contents'] = '授权码不存在或已过期'
-        self.retjson['code'] = '10214'
+
 
         ufuncs = Userinfo.Ufuncs.Ufuncs()
         if ufuncs.judge_user_valid(u_id, u_auth_key):
@@ -56,6 +55,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                     self.retjson['code'] = '10250'
                     self.retjson['contents'] = retdata
                 except Exception, e: # 没有找到约拍
+                    print e
                     self.no_result_found(e)
             elif request_type == '10235':  # 请求所有设定地点的模特发布的约拍中未关闭的
                 retdata = []
@@ -75,6 +75,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                         response = APmodelHandler.ap_Model_multiple(appointment)
                         print 'before equal'
                         try:
+                            print "in try"
                             # todo: fanhuibuzhenshi
                             if appointment.APsponsorid == u_id:
                                 print 'appointment.APsponsorid:', appointment.APsponsorid
@@ -89,7 +90,8 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
 
 
                 except Exception, e:
-                    print e
+
+                    print e,"meiyoumeiyou"
                     self.no_result_found(e)
 
             # elif request_type == '10241':  # 请求指定用户发布的所有约拍
