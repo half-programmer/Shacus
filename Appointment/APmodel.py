@@ -83,7 +83,7 @@ class APmodelHandler(object):
     def ApInforesponse(appointment, retdata):
         '''
         Returns:返回选择约拍的人关于约拍的详细信息
-
+        #todo:查找待变更为最新10个
         '''
         m_ApInforesponse = dict(
                 AIid=appointment.AIid,
