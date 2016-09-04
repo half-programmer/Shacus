@@ -78,13 +78,12 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
         elif type=='10304':#查看活动详情
              m_ACid=self.get_argument("ACid",default="unknown")
              try:
-                data=self.db.query(Activity).filter(m_ACid == Activity.ACid).all()
-                for item in data:
-                    ACFunction.response(item,retdata)
+                data=self.db.query(Activity).filter(m_ACid == Activity.ACid).one()
+                ACFunction.response(data,retdata)
                 self.retjson['contents'] = retdata
              except Exception,e:
                  print e
-                 self.retjson['code']=10304
+                 self.retjson['code']=10305
                  self.retjson['contents']='null information'
 
 

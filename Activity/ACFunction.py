@@ -23,6 +23,7 @@ def response(item,retdata):#查看活动更多详情
         ACscore=item.ACscore,
         AClikenumber=item.AClikenumber,
         ACvalid=item.ACvalid,
+        ACstatus = item.ACstatus
     )
     retdata.append(m_response)
 

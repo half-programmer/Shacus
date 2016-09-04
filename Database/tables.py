@@ -72,6 +72,7 @@ class Activity(Base):#活动表
     AClikenumber = Column(Integer,nullable=False,default=0)
     ACvalid = Column(Boolean,nullable=False,default=1) # 活动是否已经删除
     ACregistN = Column(Integer,nullable=False,default=0)
+    ACstatus =Column(Integer,nullable=False,default=0)
 
 
 class ActivityEntry(Base):  #活动报名表
@@ -136,14 +137,14 @@ class AppointmentImage(Base):
 class UserImage(Base):
     __tablename__ = 'UserImage'
 
-    UIuid = Column(Integer,ForeignKey("User.Uid",onupdate="CASCADE"))
-    UIimid = Column(Integer,ForeignKey("Image.IMid",onupdate="CASCADE"),primary_key=True)
+    UIuid = Column(Integer,ForeignKey("User.Uid", onupdate="CASCADE"))
+    UIimid = Column(Integer,ForeignKey("Image.IMid", onupdate="CASCADE"), primary_key=True)
     UIurl = Column(VARCHAR(128))
 
 class Appointment(Base):  #摄影师-模特约拍
     __tablename__ = 'Appointment'
 
-    APid = Column(Integer, primary_key=True,nullable=False)
+    APid = Column(Integer, primary_key=True, nullable=False)
     APsponsorid = Column(Integer, ForeignKey('User.Uid', ondelete='CASCADE'), nullable=False)  # 发起者
     APtitle=Column(VARCHAR(24),nullable=False)
     APlocation = Column(VARCHAR(128), nullable=False)
@@ -161,6 +162,7 @@ class Appointment(Base):  #摄影师-模特约拍
     APlikeN = Column(Integer, default=0, nullable=False)
     APvalid = Column(Boolean, default=1, nullable=False)
     APregistN = Column(Integer, nullable=False, default=0)
+    APstatus = Column(Integer, nullable=False, default=0)
 
 
 class AppointmentInfo(Base):
