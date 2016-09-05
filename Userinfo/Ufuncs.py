@@ -75,15 +75,15 @@ class Ufuncs(object):
 
         '''
         users = []
-        user = {'uid': '', 'uimgurl': ''}
+        user = {'id': '', 'headImage': ''}
         try:
             registers = get_db().query(AppointEntry).filter(AppointEntry.AEapid == apid,
                                                             AppointEntry.AEvalid == 1).all()  # 返回的是报名项
             for register in registers:
-                user['uid'] = register.AEregisterID
+                user['id'] = register.AEregisterID
                 # todo: 待变为真图片
                 #user['uimgurl'] = get_db().query(UserImage.UIurl).filter(UserImage.UIuid == user['uid'])
-                user['uimgurl'] = 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2413410606,339859400&fm=21&gp=0.jpg '
+                user['headImage'] = 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2413410606,339859400&fm=21&gp=0.jpg '
                 users.append(user)
             return users
         except Exception, e:
