@@ -13,15 +13,17 @@ from Userinfo.Ufuncs import Ufuncs
 class APprase(BaseHandler):
     retjson = {'code': '', 'content': ''}
 
-    def db_commit(self):
+    def db_commit(self, name):
         try:
-            self.prase_success()
+            self.prase_success(name)
         except Exception, e:
             self.db_commit_fail(e)
-    def prase_success(self):
+
+    def prase_success(self, name):
         self.db.commit()
         self.retjson['code'] = '10600'
-        self.retjson['content'] = r'点赞成功'
+        self.retjson['content'] = name
+
     def db_commit_fail(self,e):
         print e
         self.retjson['code'] = '10606'
@@ -49,6 +51,7 @@ class APprase(BaseHandler):
                                     elif type == '10611':  # 取消赞
                                         once_liked.ALvalid = 0
                                         try:
+                                            appointment.APlikeN -= 1
                                             self.db.commit()
                                             self.retjson['content'] = r'取消赞成功'
                                         except Exception, e:
@@ -56,7 +59,8 @@ class APprase(BaseHandler):
                                 else:  # 曾经点过赞，但是已经取消
                                     if type == '10601':
                                         once_liked.ALvalid = 1
-                                        self.db_commit()
+                                        appointment.APlikeN += 1
+                                        self.db_commit(r'点赞成功')
                                     elif type == '10611':
                                         self.retjson['code'] = '10613'
                                         self.retjson['content'] = r'用户已取消赞！'
@@ -71,9 +75,10 @@ class APprase(BaseHandler):
                                 ALuid=uid,
                                 ALvalid=1
                             )
+                            appointment.APlikeN += 1
                             self.db.merge(new_Aplike)
-                            self.db_commit()
-            except Exception,e:
+                            self.db_commit(r'点赞成功')
+            except Exception, e:
                     print e
                     self.retjson['code'] = '10607'
                     self.retjson['content'] = '该约拍不存在'
