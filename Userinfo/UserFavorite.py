@@ -61,6 +61,7 @@ class UserFavorite(BaseHandler):
                                         self.retjson['contents'] = r'收藏成功'
                                     except Exception, e:
                                         # todo 基本码待定
+                                        print e
                                         self.retjson['contents'] = r'数据库操作失败，请重试'
                         else:
                             self.retjson['code'] = '10525'
