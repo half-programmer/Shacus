@@ -5,6 +5,7 @@ from Database.tables import User, UCinfo
 from Database.tables import Verification
 import random
 from messsage import message
+from Userinfo.Usermodel import user_login_fail_model
 
 def generate_verification_code(len=6):
  ''' 随机生成6位的验证码 '''
@@ -79,6 +80,8 @@ class RegisterHandler(BaseHandler):
             m_nick_name=self.get_argument('nickName')  # 昵称
             m_phone=self.get_argument('phone')
             m_auth_key=generate_auth_key()
+            retdata = []
+            retdata_body = {}
             new_user=User(
                     Upassword=m_password,
                     Ualais=m_nick_name,
@@ -95,8 +98,11 @@ class RegisterHandler(BaseHandler):
             try:
                 same_nickname_user = self.db.query(User).filter(User.Ualais == m_nick_name).one()
                 if same_nickname_user:  # 该昵称已被使用
-                    self.retjson['code'] = 10008  # Request Timeout
-                    self.retjson['contents'] =u'该昵称已被使用，请更换昵称'
+                    data = user_login_fail_model()
+                    retdata_body['userModel'] = data
+                    retdata.append(retdata_body)
+                    self.retjson['code'] = '10008'  # Request Timeout
+                    self.retjson['contents'] =retdata
             except: # 手机号和昵称皆没有被注册过
                     self.db.merge(new_user)
                     try:
@@ -104,8 +110,7 @@ class RegisterHandler(BaseHandler):
                         self.retjson['code'] = 10004  # success
                         m_time = self.db.query(User.UregistT).filter(User.Uauthkey == m_auth_key).one()
                         m_id = self.db.query(User.Uid).filter(User.Uauthkey == m_auth_key).one()
-                        retdata = []
-                        retdata_body = {}
+
                         data=dict(
                             phone = m_phone,
                             authkey  = m_auth_key,

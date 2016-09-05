@@ -22,3 +22,21 @@ def userinfo_smply(u_info, u_change_info):
 def Model_daohanglan(imgurl,weburl):
     dh_json = {'imgurl':imgurl, 'weburl':weburl}
     return dh_json
+
+def user_login_fail_model():
+    user_model = dict(
+        id='0',
+        phone='wu',
+        nickName='wu',
+        realName='wu',
+        sign='wu',
+        sex='wu',
+        score='wu',
+        location='wu',
+        birthday='wu',
+        registTime='wu',
+        mailBox='wu',
+        headImage='wu',
+        auth_key='wu'
+    )
+    return user_model
