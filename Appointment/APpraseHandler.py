@@ -5,8 +5,8 @@
 '''
 from BaseHandlerh import BaseHandler
 from Database.tables import Appointment, AppointLike
-from Ufuncs import Ufuncs
-class Uprase(BaseHandler):
+from Userinfo.Ufuncs import Ufuncs
+class APprase(BaseHandler):
     retjson = {'code':'','content':''}
     def post(self):
         type = self.get_argument('type')
@@ -23,9 +23,11 @@ class Uprase(BaseHandler):
                         try:
                             once_liked = self.db.query(AppointLike).filter(AppointLike.ALapid == type_id, AppointLike.ALuid == uid).one()
                             if once_liked:
-                                if once_liked.ALvalid == 1: #
+                                if once_liked.ALvalid == 1:
+                                    self.retjson['code'] = '10605'
                                     self.retjson['content'] = r'已点过赞'
                                 else:  # 曾经点过赞，但是已经取消
+                                    self.retjson['code'] = '10600'
                                     self.retjson['content'] = r'点赞成功'
                         except Exception, e:
                             print e
@@ -34,12 +36,18 @@ class Uprase(BaseHandler):
                                 ALuid=uid,
                                 ALvalid=1
                             )
+                            self.db.merge(new_Aplike)
+                            try:
+                                self.db.commit()
+                                self.retjson['code'] = '10600'
+                                self.retjson['content'] = r'点赞成功!'
+                            except Exception, e:
+                                self.retjson['code'] = '10606'
+                                self.retjson['content'] = r'数据库提交出错'
                 except Exception, e:
                     print e
+                    self.retjson['code'] = '10607'
                     self.retjson['content'] = '该约拍不存在或已过期'
-
-
-
-
         else:
+            self.retjson['code'] = '10608'
             self.retjson['content'] = '用户认证失败'

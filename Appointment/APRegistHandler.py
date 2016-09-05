@@ -55,7 +55,7 @@ class APregistHandler(BaseHandler):  # 报名约拍
                     print e
                     self.retjson['contents'] = '授权码不存在或已过期'
                     self.retjson['code'] = '10279'
-            elif ap_type == '10252':  # 用户取消报名
+            elif ap_type == '10275':  # 用户取消报名
                 try:
                     ap_user = self.db.query(User).filter(User.Uauthkey == u_auth_key).one()
                     ap_user_id = ap_user.Uid
