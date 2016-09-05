@@ -46,10 +46,6 @@ class FindUlike(BaseHandler):
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))  # 在当前目录下生成retjson文件输出中文
 
 
-
-
-
-
     def find_my_like(self, uid):
         '''
         查询所有我关注的人
@@ -146,7 +142,7 @@ class FindUlike(BaseHandler):
             self.retjson['contents'] = '未关注该用户'
             self.retjson['code'] = '10421'
 
-    def find_my_follow(self,uid):
+    def find_my_follow(self, uid):
         retdata = []
         try:
             my_likes = self.db.query(UserLike).filter(UserLike.ULlikedid == uid,UserLike.ULvalid,UserLike.ULvalid == 1).all()
