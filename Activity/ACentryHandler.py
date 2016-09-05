@@ -55,7 +55,7 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
             m_ACLacid=self.get_argument("ACLacid",default="null")
             m_ACLudi=self.get_argument("ACLuid",default='null')
             try:
-                data=self.db.query(ActivityLike).filter(Activity.ACLacid==m_ACLacid,ActivityLike.ACLuid==m_ACLudi).one()
+                data=self.db.query(ActivityLike).filter(Activity.ACLacid==m_ACLacid,ActivityLike.ACLuid==m_ACLudi,ActivityLike.ACLvalid==False).one()
             # if data:
             #     self.retdata['contents']='你已经点赞过此'
                 new_ACLide=ActivityLike(
@@ -65,12 +65,25 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
                     )
                 self.db.merge(new_ACLide)
                 self.db.commit()
-                self.retjson['code'] = 10311
+                self.retjson['code'] = '10311'
                 self.retjson['contents'] = '点赞成功'
             except Exception,e:
                 print e
                 self.retjson['code']=10312
                 self.retjson['contents']='点赞未成功'
+        elif type=='10313':
+            m_ACLacid = self.get_argument("ACLacid", default="null")
+            m_ACLudi = self.get_argument("ACLuid", default='null')
+            try:
+                data = self.db.query(ActivityLike).filter(Activity.ACLacid == m_ACLacid, ActivityLike.ACLuid == m_ACLudi,ActivityLike.ACLvalid == True).one()
+                data.ACLvalid = False
+                self.retjson['code'] = '10313'
+                self.retjson['contents'] = '取消点赞成功'
+            except Exception,e:
+                print e
+                self.retjson['code']='10314'
+                self.retjson['contents']='取消点赞失败'
+
 
 
 

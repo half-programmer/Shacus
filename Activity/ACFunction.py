@@ -2,7 +2,8 @@
 from tokenize import String
 
 
-def response(item,retdata,url):#查看活动更多详情
+def response(item,retdata,url,Usermodel,issponsor):#查看活动更多详情
+    ACregister = []
     m_response=dict(
         ACid=item.ACid,
         ACsponsorid=item.ACsponsorid,
@@ -24,7 +25,9 @@ def response(item,retdata,url):#查看活动更多详情
         AClikenumber=item.AClikenumber,
         ACvalid=int(item.ACvalid),
         ACstatus = item.ACstatus,
-        ACimageurl = url
+        ACimageurl = url,
+        ACregister=Usermodel,
+        AC_issponsor=issponsor
     )
     retdata.append(m_response)
 
@@ -45,3 +48,11 @@ def Acresponse(item,item2,retdata):
     )
     retdata.append(m_Acresponse)
 
+# def ACregister(item,item2):
+#     m_ACregisterlist= []
+#     m_ACregisterdict={'Uid':'','Userurl':''}
+#
+#     entryid=item
+#     Userurl=item2
+#
+#     m_ACregisterlist.append(m_ACregisterdict)
