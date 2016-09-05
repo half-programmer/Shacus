@@ -23,12 +23,11 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         self.retjson['code'] = '10251'
         self.retjson['contents'] = '未查询到约拍记录'
 
-    def ap_ask_user(self, user):  # 查询指定用户的所有约拍
+    def ap_ask_user(self, uid):  # 查询指定用户的所有约拍
         '''
         :param user: 传入一个User对象
         :return: 无返回，直接修改retjson
         '''
-        uid = user.Uid
         try:
             appointments = self.db.query(Appointment).filter(Appointment.APsponsorid == uid).all()
             APmodelHandler.ap_Model_simply(appointments, self.retdata)
@@ -84,12 +83,11 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                             print e
                         self.retjson['code'] = '10250'
                         self.retjson['contents'] = response
-
-
                 except Exception, e:
-
-                    print e,"meiyoumeiyou"
+                    print e
                     self.no_result_found(e)
+            elif request_type == '10240':
+                self.ap_ask_user(u_id)
 
         else:
             self.retjson['contents'] = '授权码不存在或已过期'
