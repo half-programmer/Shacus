@@ -17,7 +17,7 @@ from ImageCallback import ImageCallback
 from RegisterHandler import RegisterHandler
 from Userhomepager import Userhomepager
 from Userinfo.UserIndent import UserIndent
-from Userinfo.UserFavorite import UserFavorite
+from Userinfo.UserFavoriteHandler import UserFavorite
 from Userinfo.UserLike import FindUlike
 from loginHandler import LoginHandler
 from Settings import PaswChange
