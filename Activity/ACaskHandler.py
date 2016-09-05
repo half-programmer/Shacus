@@ -7,14 +7,14 @@
 from sqlalchemy import desc
 
 from BaseHandlerh import  BaseHandler
-from Database.tables import Activity,User,ActivityImage
+from Database.tables import Activity,User,ActivityImage,ActivityEntry,UserImage
 import json
 
 import ACFunction
 from BaseHandlerh import  BaseHandler
 from Database.tables import Activity
 from FileHandler.Upload import AuthKeyHandler
-
+from Userinfo.Ufuncs import Ufuncs
 
 class AskActivity(BaseHandler): #关于用户的一系列活动
     retjson = {'code': '', 'contents': 'none'}
@@ -78,21 +78,51 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
 
 
         elif type=='10307':#查看活动详情
-             m_ACid=self.get_argument("ACid",default="unknown")
+             m_uid=self.get_argument("Uid","null")
+             auth_key=self.get_argument("authkey","null")
              a_auth = AuthKeyHandler()
              image_urls = []
-             try:
-                data=self.db.query(Activity).filter(m_ACid == Activity.ACid).one()
-                images = self.db.query(ActivityImage).filter(m_ACid == ActivityImage.ACIacid).all()
-                for image in images:
-                   image_url = a_auth.download_url(image.ACIurl)
-                   image_urls.append(image_url)
-                ACFunction.response(data,retdata,image_urls)
-                self.retjson['contents'] = retdata
-             except Exception,e:
-                 print e
-                 self.retjson['code']=10307
-                 self.retjson['contents']='null information'
+             ufuncs = Ufuncs() #判断用户权限
+
+             m_ACid=self.get_argument("ACid",default="unknown")
+             Usermodel = []
+
+             if ufuncs.judge_user_valid(m_uid,auth_key):  # 用户认证成功
+                 try:
+                    print '认证成功'
+                    data=self.db.query(Activity).filter(m_ACid == Activity.ACid).one() #活动的基本详情
+                    #下面是返回用户的信息
+                    entryid=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACid).all()
+                    print '哈哈哈'
+                    for item in entryid:
+                        Userjson = {'Userid': '', 'UserImage': ''}
+                        Userurl=self.db.query(UserImage).filter(item.ACEregisterid==UserImage.UIuid).one()
+                        Userjson['Userid'] = item.ACEregisterid
+                       # print
+                        Userjson['UserImage'] = Userurl.UIurl
+                        Usermodel.append(Userjson)
+                        print Userjson
+                        #print Usermodel
+
+                    test=Usermodel
+                    for each in test:
+                        print 'dfdfdfdf',each['Userid']
+
+
+                    images = self.db.query(ActivityImage).filter(m_ACid == ActivityImage.ACIacid).all()
+                    for image in images:
+                       image_url = a_auth.download_url(image.ACIurl)
+                       image_urls.append(image_url)
+
+                    ACFunction.response(data,retdata,image_urls,Usermodel)
+                    self.retjson['contents'] = retdata
+                 except Exception,e:
+                     print e
+                     self.retjson['code']=10307
+                     self.retjson['contents']='null information'
+             else:
+                 self.retjson['code']='10317'
+                 self.retjson['contents']='认证未通过'
 
 
 
