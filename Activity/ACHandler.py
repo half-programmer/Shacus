@@ -54,7 +54,8 @@ class ActivityCreate(BaseHandler):   #创建活动
                             ACminp = 0,
                             AClikenumber = 0,
                             ACvalid = 0,
-                            ACregistN =0
+                            ACregistN =0,
+                            ACstatus =0,
 
                         )
                         self.db.merge(my_activity)
@@ -65,7 +66,7 @@ class ActivityCreate(BaseHandler):   #创建活动
                             ).one()
                             retjson_body['acID'] = ac_id[0];
                             Image = ImageHandler()
-                            Image.insert_activity_image(m_image,ac_id[0])
+                            Image.insert_activity_image(m_image_json,ac_id[0])
                             self.retjson['code'] = '10313'
                             self.retjson['contents'] = retjson_body
                         except Exception,e:

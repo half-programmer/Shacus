@@ -28,7 +28,7 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
                 print e
                 self.retjson['code']=10309
                 self.retjson['contents']='page failed'
-        elif type=='10308':
+        elif type=='10308':      #评价活动
                 m_ACEacid=self.get_argument("ACEacid",default="null")
                 m_ACEregisterid=self.get_argument("ACEregisterid",default="null")
                 m_comments=self.get_argument("ACEcomment",default="null")
