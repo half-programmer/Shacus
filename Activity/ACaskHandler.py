@@ -95,11 +95,11 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                     entryid=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACid).all()
                     print '哈哈哈'
                     for item in entryid:
-                        Userjson = {'Userid': '', 'UserImage': ''}
+                        Userjson = {'id': '', 'headimage': ''}
                         Userurl=self.db.query(UserImage).filter(item.ACEregisterid==UserImage.UIuid).one()
-                        Userjson['Userid'] = item.ACEregisterid
+                        Userjson['id'] = item.ACEregisterid
                        # print
-                        Userjson['UserImage'] = Userurl.UIurl
+                        Userjson['headImage'] = Userurl.UIurl
                         Usermodel.append(Userjson)
                         print Userjson
                         #print Usermodel
