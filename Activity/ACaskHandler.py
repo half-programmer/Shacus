@@ -17,7 +17,7 @@ from FileHandler.Upload import AuthKeyHandler
 from Userinfo.Ufuncs import Ufuncs
 
 class AskActivity(BaseHandler): #关于用户的一系列活动
-    retjson = {'code': '', 'contents': 'none'}
+    retjson = {'code': '200', 'contents': 'none'}
     def post(self):
         retdata = []  # list array
         type = self.get_argument('type', default='unsolved')
@@ -116,9 +116,11 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
 
                     ACFunction.response(data,retdata,image_urls,Usermodel)
                     self.retjson['contents'] = retdata
+
+
                  except Exception,e:
                      print e
-                     self.retjson['code']=10307
+                     self.retjson['code']='10307'
                      self.retjson['contents']='null information'
              else:
                  self.retjson['code']='10317'
