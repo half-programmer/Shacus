@@ -116,14 +116,14 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
 
                     ACFunction.response(data,retdata,image_urls,Usermodel)
                     self.retjson['contents'] = retdata
-
+                    self.retjson['code']='10371'
 
                  except Exception,e:
                      print e
-                     self.retjson['code']='10307'
+                     self.retjson['code']='10372'
                      self.retjson['contents']='null information'
              else:
-                 self.retjson['code']='10317'
+                 self.retjson['code']='10373'
                  self.retjson['contents']='认证未通过'
 
 
