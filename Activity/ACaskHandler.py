@@ -86,11 +86,12 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
 
              m_ACid=self.get_argument("ACid",default="unknown")
              Usermodel = []
-             data=self.db.query(Activity.ACsponsorid).filter(Activity.ACid==m_ACid).one()
-             if(data==m_uid):
-                 issponsor=1
-             else:
-                 issponsor=0
+             # try:
+             #     data=self.db.query(Activity.ACsponsorid).filter(Activity.ACid==m_ACid).one()
+             #     if(data==m_uid):
+             #        issponsor=1
+             #    else:
+             issponsor=1
              if ufuncs.judge_user_valid(m_uid,auth_key):  # 用户认证成功
                  try:
                     print '认证成功'
