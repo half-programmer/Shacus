@@ -4,7 +4,7 @@
 #create_time:2016-09-01
 '''
 from BaseHandlerh import BaseHandler
-from Database.tables import User
+from Database.tables import User, AppointEntry, UserImage
 from Database.models import get_db
 
 class Ufuncs(object):
@@ -65,9 +65,32 @@ class Ufuncs(object):
             print e
             return 0
 
-#ufuncs = Ufuncs()
-# print ufuncs.get_user_authkey(3)
-# print ufuncs.get_user_id('rxDRMPCO9LEe1Uw0JnvaBWHiNcuKjGkY')
-#print ufuncs.judge_user_valid(3,'rxDRMPCO9LEe1Uw0JnvaBWHiNcuKjGkY')
+
+    @staticmethod
+    def get_userlist_from_ap(apid):
+        '''
+        Args:
+            apid: 约拍id
+        Returns:返回所有用户的用户模型
+
+        '''
+        users = []
+        user = {'id': '', 'headImage': ''}
+        try:
+            registers = get_db().query(AppointEntry).filter(AppointEntry.AEapid == apid,
+                                                            AppointEntry.AEvalid == 1).all()  # 返回的是报名项
+            for register in registers:
+                user['id'] = register.AEregisterID
+                # todo: 待变为真图片
+                #user['uimgurl'] = get_db().query(UserImage.UIurl).filter(UserImage.UIuid == user['uid'])
+                user['headImage'] = 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2413410606,339859400&fm=21&gp=0.jpg '
+                users.append(user)
+            return users
+        except Exception, e:
+            print e
+
+
+
+
 
 

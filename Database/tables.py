@@ -182,7 +182,7 @@ class AppointEntry(Base):
 
     AEapid=Column(Integer,ForeignKey('Appointment.APid' ,onupdate="CASCADE") )
     AEid = Column(Integer,primary_key=True)
-    AEapid = Column(Integer,ForeignKey('Appointment.APid',onupdate='CASCADE'))
+    AEapid = Column(Integer, ForeignKey('Appointment.APid',onupdate='CASCADE'))
     AEregisterID = Column(Integer,ForeignKey('User.Uid', onupdate='CASCADE'))
     AEvalid = Column(Boolean,nullable=False,default=1)
     AEchoosed = Column(Boolean,nullable=False,default=0)
