@@ -11,6 +11,7 @@ from Database.models import get_db
 '''
 class ImageHandler(object):
     #def __init__(self):
+    # @staticmethod
     def insert(self,list):
         '''
         向数据库插入图片链接
@@ -25,13 +26,15 @@ class ImageHandler(object):
                 IMT=time.strftime('%Y-%m-%d %H:%M:%S'),
                 IMname = img_name
             )
-            get_db().merge(image)
-            get_db().commit()
+            db=get_db()
+            db.merge(image)
+            db.commit()
             new_img = get_db().query(Image).filter(Image.IMname == img_name).one()
             imid = new_img.IMid
             new_imids.append(imid)
-            return new_imids
+        return new_imids
 
+    # @staticmethod
     def insert_user_image(self, list, uid):
         '''
 
@@ -50,9 +53,11 @@ class ImageHandler(object):
                 UIimid=imids[i],
                 UIurl=list[i]
             )
-        get_db().merge(image)
-        get_db().commit()
+            db = get_db()
+            db.merge(image)
+            db.commit()
 
+    # @staticmethod
     def insert_activity_image(self,list,ac_id):
         '''
 
@@ -70,9 +75,11 @@ class ImageHandler(object):
                 ACIimid=imids[i],
                 ACIurl=list[i]
             )
-        get_db().merge(image)
-        get_db().commit()
+            db = get_db()
+            db.merge(image)
+            db.commit()
 
+    # @staticmethod
     def insert_appointment_image(self,list,ap_id):
         '''
 
@@ -91,8 +98,9 @@ class ImageHandler(object):
                 APIimid=imids[i],
                 APIurl=list[i]
             )
-        get_db().merge(image)
-        get_db().commit()
+            db = get_db()
+            db.merge(image)
+            db.commit()
 
 
 
