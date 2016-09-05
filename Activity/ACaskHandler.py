@@ -13,6 +13,7 @@ import json
 import ACFunction
 from BaseHandlerh import  BaseHandler
 from Database.tables import Activity
+from FileHandler.Upload import AuthKeyHandler
 
 
 class AskActivity(BaseHandler): #关于用户的一系列活动
@@ -45,7 +46,7 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                     print e
                     self.retjson['code'] = 200
                     self.retjson['contents'] = 'there is no activity'
-        elif type =='10304':
+        elif type =='10304':    #后来的5个
             try:
                 acsended=self.get_argument('acsended')
                 Acsended=int(acsended)
@@ -75,11 +76,17 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                 self.retjson['contents'] = 'there is no activity'
 
 
-        elif type=='10304':#查看活动详情
+        elif type=='10305':#查看活动详情
              m_ACid=self.get_argument("ACid",default="unknown")
+             a_auth = AuthKeyHandler()
+             image_urls = []
              try:
                 data=self.db.query(Activity).filter(m_ACid == Activity.ACid).one()
-                ACFunction.response(data,retdata)
+                images = self.db.query(ActivityImage).filter(m_ACid == ActivityImage.ACIacid).all()
+                for image in images:
+                   image_url = a_auth.download_url(image.ACIurl)
+                   image_urls.append(image_url)
+                ACFunction.response(data,retdata,image_urls)
                 self.retjson['contents'] = retdata
              except Exception,e:
                  print e
