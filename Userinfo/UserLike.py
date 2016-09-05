@@ -5,7 +5,7 @@
 '''
 import json
 import Ufuncs
-from  Database.tables import UserLike, User
+from  Database.tables import UserLike, User, UCinfo
 from BaseHandlerh import BaseHandler
 class FindUlike(BaseHandler):
 
@@ -92,6 +92,10 @@ class FindUlike(BaseHandler):
                         self.retjson['contents'] = '您已经关注过该用户'
                 else :
                     exist.ULvalid =True
+                    my = self.db.query(UCinfo).filter(UCinfo.UCuid == u_id).one()
+                    my.UClikeN += 1
+                    follower = self.db.query(UCinfo).filter(UCinfo.UCuid == follower_id).one()
+                    follower.UClikedN += 1
                     self.db.commit()
                     self.retjson['code'] = '10412'
                     self.retjson['contents'] = '关注成功'
@@ -103,13 +107,17 @@ class FindUlike(BaseHandler):
                         ULvalid=1
                          )
                     self.db.merge(new_userlike)
+                    my = self.db.query(UCinfo).filter(UCinfo.UCuid == u_id).one()
+                    my.UClikeN += 1
+                    follower = self.db.query(UCinfo).filter(UCinfo.UCuid == follower_id).one()
+                    follower.UClikedN += 1
                     try:
                         self.db.commit()
                         self.retjson['code'] = '10411'
                         self.retjson['contents'] = '关注成功'
                     except Exception, e:
                         print e
-                        self.rollback()
+                        self.db.rollback()
                         self.retjson['code'] = '10419'
                         self.retjson['contents'] = '服务器错误'
 
@@ -120,6 +128,10 @@ class FindUlike(BaseHandler):
                                                    UserLike.ULvalid == True).one()
             if exist:
                 exist.ULvalid = 0
+                my = self.db.query(UCinfo).filter(UCinfo.UCuid == u_id).one()
+                my.UClikeN -= 1
+                follower = self.db.query(UCinfo).filter(UCinfo.UCuid == follower_id).one()
+                follower.UClikedN -= 1
                 try:
                     self.db.commit()
                     self.retjson['contents'] = '取消关注成功'
