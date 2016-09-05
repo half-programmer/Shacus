@@ -5,6 +5,8 @@
 '''
 from BaseHandlerh import BaseHandler
 from Database.tables import Appointment
+from Userinfo.Ufuncs import Ufuncs
+
 
 class APmodelHandler(object):
 
@@ -44,10 +46,10 @@ class APmodelHandler(object):
                 APid=appointment.APid,
                 APtitle=appointment.APtitle,
                 APimgurl=r"http://img9.jiwu.com/jiwu_news_pics/20151225/1450854576571_000.jpg",
-                        APstartT=appointment.APstartT.strftime('%Y-%m-%dT%H:%M:%S'),
-                        APlikeN=appointment.APlikeN,
-                        APregistN=appointment.APregistN,
-                        Userimg=r"http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg"
+                APstartT=appointment.APstartT.strftime('%Y-%m-%dT%H:%M:%S'),
+                APlikeN=appointment.APlikeN,
+                APregistN=appointment.APregistN,
+                Userimg=r"http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg"
                 )
             return ret_ap
         except Exception, e:
@@ -55,6 +57,9 @@ class APmodelHandler(object):
 
     @classmethod
     def ap_Model_multiple(clas, appointment):
+        ap_regist_users = []
+        try:
+            ap_regist_users = Ufuncs.get_userlist_from_ap(appointment.APid)
             m_response = dict(
                 APid=appointment.APid,
                 APtitle=appointment.APtitle,
@@ -73,12 +78,15 @@ class APmodelHandler(object):
                 APlikeN=appointment.APlikeN,
                 APvalid=int(appointment.APvalid),
                 APregistN=appointment.APregistN,
-                Userimg="http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg",
+                APregisters=ap_regist_users,  # 返回所有报名人用户模型
                 APimgurl=[r"http://img9.jiwu.com/jiwu_news_pics/20151225/1450854576571_000.jpg", "http://p1.gexing.com/G1/M00/57/8B/rBACFFPcOFOiwBGVAACdMkF5UnM383.jpg","http://p1.gexing.com/G1/M00/57/8B/rBACFFPcOFOiwBGVAACdMkF5UnM383.jpg"],
                 APstatus=appointment.APstatus
             )
+            return  m_response
+        except Exception,e:
+            print e
 
-            return m_response
+
 
 
     @classmethod
