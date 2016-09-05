@@ -14,8 +14,7 @@ from Userinfo import Ufuncs
 
 class APaskHandler(BaseHandler):  # 请求约拍相关信息
 
-    # todo:返回特定条件下的约拍
-    retjson = {'code': '', 'contents': ''}
+    # todo:返回特定条件下的约拍    retjson = {'code': '', 'contents': ''}
 
 
     def no_result_found(self, e):
