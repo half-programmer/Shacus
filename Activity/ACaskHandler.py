@@ -86,7 +86,11 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
 
              m_ACid=self.get_argument("ACid",default="unknown")
              Usermodel = []
-
+             data=self.db.query(Activity.ACsponsorid).filter(Activity.ACid==m_ACid).one()
+             if(data==m_uid):
+                 issponsor=1
+             else:
+                 issponsor=0
              if ufuncs.judge_user_valid(m_uid,auth_key):  # 用户认证成功
                  try:
                     print '认证成功'
@@ -104,17 +108,12 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                         print Userjson
                         #print Usermodel
 
-                    test=Usermodel
-                    for each in test:
-                        print 'dfdfdfdf',each['Userid']
-
-
                     images = self.db.query(ActivityImage).filter(m_ACid == ActivityImage.ACIacid).all()
                     for image in images:
                        image_url = a_auth.download_url(image.ACIurl)
                        image_urls.append(image_url)
 
-                    ACFunction.response(data,retdata,image_urls,Usermodel)
+                    ACFunction.response(data,retdata,image_urls,Usermodel,issponsor)
                     self.retjson['contents'] = retdata
                     self.retjson['code']='10371'
 
