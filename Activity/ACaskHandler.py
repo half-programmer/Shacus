@@ -76,7 +76,8 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                 self.retjson['contents'] = 'there is no activity'
 
 
-        elif type=='10305':#查看活动详情
+
+        elif type=='10307':#查看活动详情
              m_ACid=self.get_argument("ACid",default="unknown")
              a_auth = AuthKeyHandler()
              image_urls = []
@@ -90,7 +91,7 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                 self.retjson['contents'] = retdata
              except Exception,e:
                  print e
-                 self.retjson['code']=10305
+                 self.retjson['code']=10307
                  self.retjson['contents']='null information'
 
 

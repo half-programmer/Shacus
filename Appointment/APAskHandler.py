@@ -8,7 +8,7 @@ import json
 import Userinfo
 from APmodel import APmodelHandler
 from BaseHandlerh import BaseHandler
-from Database.tables import Appointment, User
+from Database.tables import Appointment, User, AppointEntry
 from Userinfo import Ufuncs
 
 
@@ -23,15 +23,34 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         self.retjson['code'] = '10251'
         self.retjson['contents'] = '未查询到约拍记录'
 
-    def ap_ask_user(self, uid):  # 查询指定用户的所有约拍
+    def get_ap_Model_from_aeids(self,appoint_entrys):
+         ap_ids = []
+         for ap_entry in appoint_entrys:
+            ap_id = ap_entry.AEapid
+            ap_ids.append(ap_id)
+         return self.get_ap_Model_from_apids(ap_ids)
+
+
+    def get_ap_Model_from_apids(self, apids):
+        appointments = []
+        for apid in apids:
+            appointment = self.db.query(Appointment).filter(Appointment.APid == apid).one()
+            appointments.append(appointment)
+        return appointments
+
+    def ap_ask_user(self, uid, retdata):  # 查询指定用户的所有约拍
         '''
         :param user: 传入一个User对象
         :return: 无返回，直接修改retjson
         '''
+        #todo:需判断该用户是否存在
         try:
-            appointments = self.db.query(Appointment).filter(Appointment.APsponsorid == uid).all()
-            APmodelHandler.ap_Model_simply(appointments, self.retdata)
-            self.retjson['contents'] = self.retdata
+            appointments1 = self.db.query(Appointment).filter(Appointment.APsponsorid == uid,Appointment.APvalid == 1).all()  # 用户自己发起的
+            appointentrys = self.db.query(AppointEntry).filter(AppointEntry.AEregisterID == uid, AppointEntry.AEvalid == 1).all()  # 用户报名的
+
+            APmodelHandler.ap_Model_simply(appointments1, retdata)
+            APmodelHandler.ap_Model_simply(self.get_ap_Model_from_aeids(appointentrys), retdata)
+            self.retjson['contents'] = retdata
         except Exception, e:
             print e
             self.no_result_found(e)
@@ -86,8 +105,13 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 except Exception, e:
                     print e
                     self.no_result_found(e)
-            elif request_type == '10240':
-                self.ap_ask_user(u_id)
+            elif request_type == '10240':  # 请求自己参与（包括发布）的所有约拍
+                retdata = []
+                self.ap_ask_user(u_id, retdata)
+            elif request_type == '10241':  # 请求指定用户参与的所有约拍
+                find_u_id = self.get_argument('finduid')
+                retdata = []
+                self.ap_ask_user(find_u_id, retdata)
 
         else:
             self.retjson['contents'] = '授权码不存在或已过期'

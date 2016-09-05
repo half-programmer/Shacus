@@ -85,15 +85,15 @@ class LoginHandler(BaseHandler):
 
                         else:
                             self.retjson['contents'] = u'密码错误'
-                            self.retjson['code'] = 10104  # 密码错误
+                            self.retjson['code'] = '10104'  # 密码错误
                     else:  # 用户不存在
                         self.retjson['contents'] = u'该用户不存在'
-                        self.retjson['code'] = 10103
+                        self.retjson['code'] = '10103'
                 except Exception, e:  # 还没有注册
                     print "异常："
                     print e
                     self.retjson['contents'] = u'该用户名不存在'
-                    self.retjson['code'] = 10103 # '该用户名不存在'
+                    self.retjson['code'] = '10103' # '该用户名不存在'
         elif askcode == '10105':  # 自动登录
             authcode = self.get_argument("authcode")  # 授权码
         else:
