@@ -27,7 +27,7 @@ class UserFavorite(BaseHandler):
         u_auth_key = self.get_argument('authkey')
         ufuncs = Userinfo.Ufuncs.Ufuncs()
         if ufuncs.judge_user_valid(user_id, u_auth_key):
-            if type == '10501': # 收藏约拍
+            if type == '10501':  # 收藏约拍
                 typeid = self.get_argument('typeid')
                 try:
                     exist = self.db.query(Appointment).filter(Appointment.APid == typeid).one()  # 约拍是否存在

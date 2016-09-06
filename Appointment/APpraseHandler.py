@@ -53,6 +53,7 @@ class APprase(BaseHandler):
                                         try:
                                             appointment.APlikeN -= 1
                                             self.db.commit()
+                                            self.retjson['code'] = '10615'
                                             self.retjson['content'] = r'取消赞成功'
                                         except Exception, e:
                                             self.db_commit_fail(e)
