@@ -64,9 +64,9 @@ class LoginHandler(BaseHandler):
                                 ap_model_handler = APmodelHandler()  # 创建对象
                                 print 'chuangjianchengg'
 
-                                ap_model_handler.ap_Model_simply(photo_list_all,photo_list)
+                                ap_model_handler.ap_Model_simply(photo_list_all, photo_list, user.Uid)
 
-                                ap_model_handler.ap_Model_simply(model_list_all,model_list)
+                                ap_model_handler.ap_Model_simply(model_list_all, model_list, user.Uid)
                                 print 'shaixuanchengg'
                                 data = dict(
                                 userModel=user_model,

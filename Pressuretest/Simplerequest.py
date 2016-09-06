@@ -94,6 +94,7 @@ class Simplerequest(BaseHandler):
                         self.retjson['code'] = '10103'  # '该用户名不存在'
 
                     self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
+                    self.finish()
 
 
 
