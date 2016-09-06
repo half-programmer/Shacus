@@ -155,7 +155,7 @@ class ActivityCreate(BaseHandler):   #创建活动
 
                     else:
                         self.retjson['contents'] = '你不是发起者'
-                        self.retjson['code'] = '10326'
+                        self.retjson['code'] = '10327'
                 except Exception,e:
                     print e
                     self.retjson['contents'] = '该活动不存在'
