@@ -29,28 +29,38 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
                 self.retjson['code']=10309
                 self.retjson['contents']='page failed'
         elif type=='10308':      #评价活动
-                m_ACEacid=self.get_argument("aceacid",default="null")
-                m_ACEregisterid=self.get_argument("aceregisterid",default="null")
-                m_comments=self.get_argument("acecomment",default="null")
-                try:
+            m_ACEacid=self.get_argument("aceacid",default="null")
+            m_ACEregisterid=self.get_argument("aceregisterid",default="null")
+            m_comments=self.get_argument("acecomment",default="null")
+            try:
+                ifend=self.db.query(Activity).filter(m_ACEacid==Activity.ACid).one()
+                print '哈哈哈'
+                print ifend.ACstatus
+                if ifend.ACstatus== 2:
+                    try:
+                        data=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACEacid, ActivityEntry.ACEregisterid==m_ACEregisterid).one()
+                        if not data.ACEcomment:
+                            data.ACEcomment=m_comments
+                            self.db.commit()
+                            ACentryFunction.response(data, self.retdata)
+                            self.retjson['code'] = '10381'
+                            self.retjson['contents'] = "评论成功"
+                        else:
+                            self.retjson['contents']='评论已经存在'
+                            self.retjson['code']='10383'
 
-                    data=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACEacid, ActivityEntry.ACEregisterid==m_ACEregisterid).one()
-                    if not data.ACEcomment:
-                        data.ACEcomment=m_comments
-                        self.db.commit()
-                        ACentryFunction.response(data, self.retdata)
-                        self.retjson['code'] = '10381'
-                        self.retjson['contents'] = "评论成功"
-                    else:
-                        self.retjson['contents']='评论已经存在'
-                        self.retjson['code']='10383'
-
-                except Exception,e:
-
+                    except Exception,e:
+                        print e
+                        self.retjson["code"]='10382'
+                        self.retjson["contents"]="你没有报名此活动！"
+                else:
+                    self.retjson['code']='10384'
+                    self.retjson['contents']='活动尚未结束不能评论！'
+            except Exception,e:
                     print e
-                    self.retjson["code"]='10382'
 
-                    self.retjson["contents"]="你没有报名此活动！"
+
+
         elif type=='10311':#活动点赞
             m_ACLacid=self.get_argument("ACLacid",default="null")
             m_ACLudi=self.get_argument("ACLuid",default='null')
