@@ -13,6 +13,9 @@ from Appointment.APpraseHandler import APprase
 from Appointment.APAskHandler import APaskHandler
 from Appointment.APCreateHandler import APcreateHandler
 from Appointment.APRegistHandler import APregistHandler
+from Course.CourseLike import Courselike
+from Course.CourseAsk import CourseAsk
+from Course.Chomepage import Chomepage
 from Database.models import engine
 from ImageCallback import ImageCallback
 from RegisterHandler import RegisterHandler
@@ -46,7 +49,10 @@ class Application(tornado.web.Application):
              (r"/activity/create", ActivityCreate),
              (r"/activity/register",ActivityRegister),
              (r"/ImageCallback",ImageCallback),
-            (r"/PaswChange",PaswChange)
+             (r"/PaswChange",PaswChange),
+             (r"/course/homepage",Chomepage),
+             (r"/course/ask",CourseAsk),
+             (r"/course/like",Courselike)
         ]
         tornado.web.Application.__init__(self, handlers)
         self.db = scoped_session(sessionmaker(bind=engine,

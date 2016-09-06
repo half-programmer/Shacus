@@ -222,6 +222,7 @@ class  Course(Base):   #教程数据库
     Cvalid =Column(Integer,nullable= False,default= 0)
     Csponsorid = Column(Integer,nullable=False)
     Cimagerul = Column(VARCHAR(128),nullable= False)
+    Ctitle = Column(VARCHAR(32),nullable= False)
 
 class CourseTag(Base): #教程标签类型
     __tablename__ = 'CourseTag'

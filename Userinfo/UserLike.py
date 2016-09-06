@@ -93,7 +93,7 @@ class FindUlike(BaseHandler):
                     follower = self.db.query(UCinfo).filter(UCinfo.UCuid == follower_id).one()
                     follower.UClikedN += 1
                     self.db.commit()
-                    self.retjson['code'] = '10412'
+                    self.retjson['code'] = '10411'
                     self.retjson['contents'] = '关注成功'
             except Exception, e:
                     print '开始关注该用户'
