@@ -5,6 +5,9 @@
 '''
 import json
 
+from tornado import gen
+from tornado.web import asynchronous
+
 from BaseHandlerh import BaseHandler
 from Database.tables import Appointment, AppointLike
 from Userinfo.Ufuncs import Ufuncs
@@ -29,6 +32,8 @@ class APprase(BaseHandler):
         self.retjson['code'] = '10606'
         self.retjson['content'] = r'数据库提交失败'
 
+    @asynchronous
+    @gen.coroutine
     def post(self):
         type = self.get_argument('type')
         type_id = self.get_argument('typeid')
@@ -53,6 +58,7 @@ class APprase(BaseHandler):
                                         try:
                                             appointment.APlikeN -= 1
                                             self.db.commit()
+                                            self.retjson['code'] = '10615'
                                             self.retjson['content'] = r'取消赞成功'
                                         except Exception, e:
                                             self.db_commit_fail(e)
@@ -86,3 +92,4 @@ class APprase(BaseHandler):
             self.retjson['code'] = '10608'
             self.retjson['content'] = '用户认证失败'
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
+        self.finish()

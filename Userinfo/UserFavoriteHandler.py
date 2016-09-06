@@ -27,7 +27,7 @@ class UserFavorite(BaseHandler):
         u_auth_key = self.get_argument('authkey')
         ufuncs = Userinfo.Ufuncs.Ufuncs()
         if ufuncs.judge_user_valid(user_id, u_auth_key):
-            if type == '10501': # 收藏约拍
+            if type == '10501':  # 收藏约拍
                 typeid = self.get_argument('typeid')
                 try:
                     exist = self.db.query(Appointment).filter(Appointment.APid == typeid).one()  # 约拍是否存在
@@ -104,8 +104,7 @@ class UserFavorite(BaseHandler):
                         ap_favorite_id = each_favorite.Ftypeid  # 即约拍Id
                         ap_favorite = self.db.query(Appointment).filter(Appointment.APid == ap_favorite_id).one()
                         ap_favorates.append(ap_favorite)
-                    #     print 'before append'
-                    APmodelHandler.ap_Model_simply(ap_favorates, retdata)
+                    APmodelHandler.ap_Model_simply(ap_favorates, retdata, user_id)
                     self.retjson['code'] = '10550'
                     self.retjson['contents'] = retdata
                 except Exception, e:

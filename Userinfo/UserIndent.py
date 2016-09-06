@@ -92,7 +92,7 @@ class UserIndent(BaseHandler):
             except Exception,e:
                 print e
             if ap_e_info:
-                ret_e_appointment.append(APmodelHandler.ap_Model_simply_one(ap_e_info[0]))
+                ret_e_appointment.append(APmodelHandler.ap_Model_simply_one(ap_e_info[0],u_id))
         return ret_e_appointment
 
     def get_my_appointment(self,u_id,number):
@@ -102,6 +102,6 @@ class UserIndent(BaseHandler):
             ap_my_entrys = self.db.query(Appointment).filter(Appointment.APsponsorid == u_id,Appointment.APstatus == number).all()
         except Exception,e:
             print e
-        ret_my_appointment = APmodelHandler.ap_Model_simply(ap_my_entrys, ret_my_appointment)
+        ret_my_appointment = APmodelHandler.ap_Model_simply(ap_my_entrys, ret_my_appointment,u_id)
         return ret_my_appointment
 
