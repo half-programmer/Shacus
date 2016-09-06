@@ -237,7 +237,7 @@ class CourseTagEntry(Base):  #课程与标签联系的表
     __tablename__="CourseTagEntry"
 
     CTEcid = Column(Integer,ForeignKey('Course.Cid', onupdate='CASCADE'),nullable=False,primary_key=True)
-    CTEtid = Column(Integer,ForeignKey('CourseTag.CTid',onupdate='CASADE'),nullable=False,primary_key=True)
+    CTEtid = Column(Integer,ForeignKey('CourseTag.CTid',onupdate='CASCADE'),nullable=False,primary_key=True)
     CTEvalid = Column(Boolean,nullable=False,default= 0)
     CTEcreateT = Column(DateTime(timezone=True), default=func.now())
 
@@ -250,10 +250,10 @@ class CourseLike(Base):  #课程点赞表
     CLvalid = Column(Boolean,nullable=False,default=0)
 
 class Usercourse(Base):   #和用户有关的教程
-    __tablenmae__ = "Usercourse"
+    __tablename__ = "Usercourse"
 
-    UCuid = Column(Integer,ForeignKey('User.Uid',onupdate='CASADE'),primary_key=True)
-    UCcid = Column(Integer,ForeignKey('Course.Cid',onupdate='CASADE'),primary_key=True)
-    UCseen = Column(Boolean)
-    UCfav = Column(Boolean)
+    UCuid = Column(Integer, ForeignKey('User.Uid',onupdate='CASCADE'),primary_key=True)
+    UCcid = Column(Integer, ForeignKey('Course.Cid',onupdate='CASCADE'),primary_key=True)
+    UCseen = Column(Boolean,nullable=False,default=0)
+    UCfav = Column(Boolean,nullable=False,default=0)
 
