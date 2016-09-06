@@ -29,9 +29,9 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
                 self.retjson['code']=10309
                 self.retjson['contents']='page failed'
         elif type=='10308':      #评价活动
-                m_ACEacid=self.get_argument("ACEacid",default="null")
-                m_ACEregisterid=self.get_argument("ACEregisterid",default="null")
-                m_comments=self.get_argument("ACEcomment",default="null")
+                m_ACEacid=self.get_argument("aceacid",default="null")
+                m_ACEregisterid=self.get_argument("aceregisterid",default="null")
+                m_comments=self.get_argument("acecomment",default="null")
                 try:
 
                     data=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACEacid, ActivityEntry.ACEregisterid==m_ACEregisterid).one()
@@ -50,7 +50,7 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
                     print e
                     self.retjson["code"]='10382'
 
-                    self.retjson["contents"]="no comments"
+                    self.retjson["contents"]="你没有报名此活动！"
         elif type=='10311':#活动点赞
             m_ACLacid=self.get_argument("ACLacid",default="null")
             m_ACLudi=self.get_argument("ACLuid",default='null')
