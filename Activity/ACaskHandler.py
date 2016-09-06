@@ -94,9 +94,9 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
              except Exception,e:
                  print e
              if(data.ACsponsorid == int(m_uid)):
-                 issponsor=True
+                 issponsor= 1
              else:
-                 issponsor=False
+                 issponsor= 0
 
 
 
