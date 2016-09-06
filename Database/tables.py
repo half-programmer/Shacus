@@ -209,5 +209,51 @@ class Favorite(Base):
     FT = Column(DateTime(timezone=True), default=func.now())
     Fvalid = Column(Boolean, nullable=False, default=1)
 
+class  Course(Base):   #教程数据库
+    __tablename__ = "Course"
 
+    Cid = Column(Integer,primary_key=True)
+    Curl = Column(VARCHAR(128),nullable= False)
+    ClikeN = Column(Integer,nullable= False,default= 0)
+    CwatchN = Column(Integer,nullable= False,default=0)
+    CfavN = Column(Integer,nullable=False,default=0)
+    Cscore = Column(Integer,nullable= False,default=0)
+    Ctype = Column(Integer,nullable= False)
+    Cvalid =Column(Integer,nullable= False,default= 0)
+    Csponsorid = Column(Integer,nullable=False)
+    Cimagerul = Column(VARCHAR(128),nullable= False)
+
+class CourseTag(Base): #教程标签类型
+    __tablename__ = 'CourseTag'
+
+    CTid = Column(Integer,nullable= False,primary_key=True)
+    CTname = Column(VARCHAR(32),nullable=False)
+    CThint = Column(VARCHAR(128),nullable=False)
+    CTcourseN = Column(Integer,nullable=False,default= 0)
+    CTimageurl = Column(VARCHAR(128),nullable=False)
+    CTvalid = Column(Boolean ,nullable=False,default= 0)
+
+class CourseTagEntry(Base):  #课程与标签联系的表
+    __tablename__="CourseTagEntry"
+
+    CTEcid = Column(Integer,ForeignKey('Course.Cid', onupdate='CASCADE'),nullable=False,primary_key=True)
+    CTEtid = Column(Integer,ForeignKey('CourseTag.CTid',onupdate='CASCADE'),nullable=False,primary_key=True)
+    CTEvalid = Column(Boolean,nullable=False,default= 0)
+    CTEcreateT = Column(DateTime(timezone=True), default=func.now())
+
+class CourseLike(Base):  #课程点赞表
+    __tablename__ = "CourseLike"
+
+    CLcid = Column(Integer,ForeignKey('Course.Cid', onupdate='CASCADE'),primary_key=True)
+    CLuid = Column(Integer,ForeignKey('User.Uid', onupdate='CASCADE'),primary_key=True)
+    CLlikeT = Column(DateTime(timezone=True), default=func.now())
+    CLvalid = Column(Boolean,nullable=False,default=0)
+
+class Usercourse(Base):   #和用户有关的教程
+    __tablename__ = "Usercourse"
+
+    UCuid = Column(Integer, ForeignKey('User.Uid',onupdate='CASCADE'),primary_key=True)
+    UCcid = Column(Integer, ForeignKey('Course.Cid',onupdate='CASCADE'),primary_key=True)
+    UCseen = Column(Boolean,nullable=False,default=0)
+    UCfav = Column(Boolean,nullable=False,default=0)
 
