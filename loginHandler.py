@@ -1,6 +1,7 @@
 # coding=utf-8
 import json
 
+from sqlalchemy import desc
 from tornado import gen
 from tornado.web import asynchronous
 
@@ -63,9 +64,11 @@ class LoginHandler(BaseHandler):
                                 print 'shaixuanqian'
 
                                 photo_list_all = self.db.query(Appointment).filter(Appointment.APtype == 1,
-                                                                                   Appointment.APvalid == 1).all()
+                                                                                   Appointment.APvalid == 1).\
+                                    order_by(desc(Appointment.APcreateT)).limit(6).all()
                                 model_list_all = self.db.query(Appointment).filter(Appointment.APtype == 0,
-                                                                                   Appointment.APvalid == 1).all()
+                                                                                   Appointment.APvalid == 1). \
+                                    order_by(desc(Appointment.APcreateT)).limit(6).all()
                                 from Appointment.APmodel import APmodelHandler
                                 ap_model_handler = APmodelHandler()  # 创建对象
                                 print 'chuangjianchengg'
