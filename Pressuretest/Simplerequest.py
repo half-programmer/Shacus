@@ -10,21 +10,11 @@ class Simplerequest(BaseHandler):
         retjson = {'code': '', 'contents': u'未处理 '}
 
         def post(self):
-            askcode = self.get_argument('askCode')  # 请求码
-            m_phone = self.get_argument('phone')
-            if askcode == '10106':  # 手动登录
-                m_password = self.get_argument('password')
-                if not m_phone or not m_password:
-                    self.retjson['code'] = 400
-                    self.retjson['contents'] = 10105  # '用户名密码不能为空'
-                    # todo:登录返回json的retdata多一层[]，客户端多0.5秒处理时间
-                    # 防止重复注册
-                else:
                     try:
-                        user = self.db.query(User).filter(User.Utel == m_phone).one()
+                        user = self.db.query(User).filter(User.Utel == '17751030037').one()
                         if user:  # 用户存在
                             password = user.Upassword
-                            if m_password == password:  # 密码正确
+                            if '123456' == password:  # 密码正确
                                 print u'密码正确'
                                 self.retjson['code'] = 200
                                 if user.Ubirthday:
@@ -98,12 +88,8 @@ class Simplerequest(BaseHandler):
                         print e
                         self.retjson['contents'] = u'该用户名不存在'
                         self.retjson['code'] = '10103'  # '该用户名不存在'
-            elif askcode == '10105':  # 自动登录
-                authcode = self.get_argument("authcode")  # 授权码
-            else:
-                self.retjson['contents'] = u"登录类型不满足要求，请重新登录！"
-                self.retjson['data'] = u"登录类型不满足要求，请重新登录！"
-            self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
+
+                    self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
 
 
