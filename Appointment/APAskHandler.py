@@ -5,6 +5,8 @@
 '''
 import json
 
+from sqlalchemy import desc
+
 import Userinfo
 from APmodel import APmodelHandler
 from BaseHandlerh import BaseHandler
@@ -14,21 +16,52 @@ from Userinfo import Ufuncs
 
 class APaskHandler(BaseHandler):  # 请求约拍相关信息
 
-    # todo:返回特定条件下的约拍    retjson = {'code': '', 'contents': ''}
+    # todo:返回特定条件下的约拍
+    retjson = {'code': '', 'contents': ''}
 
+    def refresh_list(self, type, offset_apid, u_id):
+        retdata = []
+        try:
+            appointments = self.db.query(Appointment). \
+                filter(Appointment.APtype == type, Appointment.APclosed == 0, Appointment.APvalid == 1,
+                       Appointment.APid > offset_apid).from_self().order_by(desc(Appointment.APcreateT)). \
+                limit(6).all()
+            if appointments:
+                APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
+                self.retjson['code'] = '10261'
+                self.retjson['contents'] = retdata
+            else:
+                print appointments.first().APtype
+        except Exception, e:  # 剩余约拍不足6个，返回剩余全部约拍
+            print e
+            try:
+                appointments = self.db.query(Appointment). \
+                    filter(Appointment.APtype == type, Appointment.APclosed == 0, Appointment.APvalid == 1,
+                           Appointment.APid > offset_apid).order_by(desc(Appointment.APcreateT)). \
+                    all()
+                print appointments.first().APtype
+                if appointments:
+
+                    APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
+                    self.retjson['code'] = '10262'
+                    self.retjson['contents'] = retdata
+                else:
+                    self.retjson['contents'] = r"没有更多约拍"
+            except Exception, e:
+                self.retjson['code'] = '10263'
+                self.retjson['contents'] = r"没有更多约拍"
 
     def no_result_found(self, e):
         print e
         self.retjson['code'] = '10251'
         self.retjson['contents'] = '未查询到约拍记录'
 
-    def get_ap_Model_from_aeids(self,appoint_entrys):
+    def get_ap_Model_from_aeids(self, appoint_entrys):
          ap_ids = []
          for ap_entry in appoint_entrys:
             ap_id = ap_entry.AEapid
             ap_ids.append(ap_id)
          return self.get_ap_Model_from_apids(ap_ids)
-
 
     def get_ap_Model_from_apids(self, apids):
         appointments = []
@@ -44,7 +77,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         '''
         #todo:需判断该用户是否存在
         try:
-            appointments1 = self.db.query(Appointment).filter(Appointment.APsponsorid == uid,Appointment.APvalid == 1).all()  # 用户自己发起的
+            appointments1 = self.db.query(Appointment).filter(Appointment.APsponsorid == uid, Appointment.APvalid == 1).all()  # 用户自己发起的
             appointentrys = self.db.query(AppointEntry).filter(AppointEntry.AEregisterID == uid, AppointEntry.AEvalid == 1).all()  # 用户报名的
 
             APmodelHandler.ap_Model_simply(appointments1, retdata)
@@ -68,7 +101,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 try:
                     appointments = self.db.query(Appointment). \
                         filter(Appointment.APtype == 1, Appointment.APclosed == 0, Appointment.APvalid == 1).all()
-                    APmodelHandler.ap_Model_simply(appointments, retdata)
+                    APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
                     self.retjson['code'] = '10250'
                     self.retjson['contents'] = retdata
                 except Exception, e: # 没有找到约拍
@@ -78,8 +111,9 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 retdata = []
                 try:
                     appointments = self.db.query(Appointment). \
-                        filter(Appointment.APtype == 0, Appointment.APstatus == 1, Appointment.APvalid == 1).all()
-                    APmodelHandler.ap_Model_simply(appointments, retdata)
+                        filter(Appointment.APtype == 0, Appointment.APclosed == 0, Appointment.APvalid == 1).all()
+                    APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
+                    self.retjson['code'] = '10250'
                     self.retjson['contents'] = retdata
                 except Exception, e:
                     self.no_result_found(e)
@@ -111,6 +145,14 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 find_u_id = self.get_argument('finduid')
                 retdata = []
                 self.ap_ask_user(find_u_id, retdata)
+            elif request_type == '10260':  # 刷新并拿到指定Id后的6个摄影师约拍
+                offset_apid = self.get_argument('offsetapid')
+                self.refresh_list(1, offset_apid, u_id)
+            elif request_type == '10261':  # 刷新并拿到指定Id后的6个模特约拍
+                offset_apid = self.get_argument('offsetapid')
+                self.refresh_list(0, offset_apid,  u_id)
+
+
 
         else:
             self.retjson['contents'] = '授权码不存在或已过期'

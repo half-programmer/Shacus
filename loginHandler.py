@@ -1,6 +1,10 @@
 # coding=utf-8
 import json
 
+from sqlalchemy import desc
+from tornado import gen
+from tornado.web import asynchronous
+
 from BaseHandlerh import BaseHandler
 from Database.tables import Appointment, User
 from Userinfo.Usermodel import Model_daohanglan
@@ -8,6 +12,9 @@ from Userinfo.Usermodel import Model_daohanglan
 class LoginHandler(BaseHandler):
 
     retjson = {'code': '', 'contents': u'未处理 '}
+
+    @asynchronous
+    @gen.coroutine
     def post(self):
         askcode = self.get_argument('askCode')  # 请求码
         m_phone = self.get_argument('phone')
@@ -57,16 +64,18 @@ class LoginHandler(BaseHandler):
                                 print 'shaixuanqian'
 
                                 photo_list_all = self.db.query(Appointment).filter(Appointment.APtype == 1,
-                                                                                   Appointment.APvalid == 1).all()
+                                                                                   Appointment.APvalid == 1).\
+                                    order_by(desc(Appointment.APcreateT)).limit(6).all()
                                 model_list_all = self.db.query(Appointment).filter(Appointment.APtype == 0,
-                                                                                   Appointment.APvalid == 1).all()
+                                                                                   Appointment.APvalid == 1). \
+                                    order_by(desc(Appointment.APcreateT)).limit(6).all()
                                 from Appointment.APmodel import APmodelHandler
                                 ap_model_handler = APmodelHandler()  # 创建对象
                                 print 'chuangjianchengg'
 
-                                ap_model_handler.ap_Model_simply(photo_list_all,photo_list)
+                                ap_model_handler.ap_Model_simply(photo_list_all, photo_list, user.Uid)
 
-                                ap_model_handler.ap_Model_simply(model_list_all,model_list)
+                                ap_model_handler.ap_Model_simply(model_list_all, model_list, user.Uid)
                                 print 'shaixuanchengg'
                                 data = dict(
                                 userModel=user_model,
@@ -100,6 +109,6 @@ class LoginHandler(BaseHandler):
             self.retjson['contents'] = u"登录类型不满足要求，请重新登录！"
             self.retjson['data'] = u"登录类型不满足要求，请重新登录！"
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
-
+        self.finish()
 
 

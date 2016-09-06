@@ -78,27 +78,34 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
 
 
         elif type=='10307':#查看活动详情
-             m_uid=self.get_argument("Uid","null")
+             m_uid=self.get_argument("uid","null")
              auth_key=self.get_argument("authkey","null")
              a_auth = AuthKeyHandler()
              image_urls = []
              ufuncs = Ufuncs() #判断用户权限
 
-             m_ACid=self.get_argument("ACid",default="unknown")
+             m_ACid=self.get_argument("acid",default="unknown")
              Usermodel = []
-             # try:
-             #     data=self.db.query(Activity.ACsponsorid).filter(Activity.ACid==m_ACid).one()
-             #     if(data==m_uid):
-             #        issponsor=1
-             #    else:
-             issponsor=1
+             try:
+                data=self.db.query(Activity).filter(Activity.ACid==m_ACid).one()
+                print '你好'
+                print data.ACsponsorid
+                acint=data.ACsponsorid
+             except Exception,e:
+                 print e
+             if(data.ACsponsorid == int(m_uid)):
+                 issponsor= 1
+             else:
+                 issponsor= 0
+
+
+
              if ufuncs.judge_user_valid(m_uid,auth_key):  # 用户认证成功
                  try:
                     print '认证成功'
                     data=self.db.query(Activity).filter(m_ACid == Activity.ACid).one() #活动的基本详情
                     #下面是返回用户的信息
                     entryid=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACid).all()
-                    print '哈哈哈'
                     for item in entryid:
                         Userjson = {'id': '', 'headimage': ''}
                         Userurl=self.db.query(UserImage).filter(item.ACEregisterid==UserImage.UIuid).one()

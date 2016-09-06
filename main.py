@@ -26,7 +26,7 @@ from Userinfo.UserLike import FindUlike
 from loginHandler import LoginHandler
 from Settings import PaswChange
 from Userinfo.UserInfo import UserInfo
-
+from Pressuretest.Simplerequest import Simplerequest
 define("port", default=800, help="run on the given port", type=int)
 
 
@@ -34,6 +34,7 @@ class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
              (r"/appointment/create", APcreateHandler),
+             (r"/pressuretest",Simplerequest),
              (r"/appointment/ask", APaskHandler),
              (r"/appointment/prase", APprase),
              (r"/appointment/regist", APregistHandler),
