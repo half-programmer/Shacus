@@ -126,7 +126,7 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
                               print e
                               if type == '10362':
                                     self.retjson['code'] = '10390'
-                                    self.retjson['contents'] = r'用户未赞过此约拍！'
+                                    self.retjson['contents'] = r'用户未赞过此活动！'
                               elif type == '10361':
                                     new_Aclike = ActivityLike(
                                         ACLacid=m_ACLacid,
@@ -137,7 +137,7 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
                                     self.db.merge(new_Aclike)
                                     self.db_commit(r'点赞成功')
                                     self.retjson['code'] = '10387'
-                                    self.retjson['contents'] = '重新点赞成功'
+                                    self.retjson['contents'] = '点赞成功'
                 except Exception, e:
                     print e
                     self.retjson['code'] = '10391'

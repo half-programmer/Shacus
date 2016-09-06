@@ -78,13 +78,13 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
 
 
         elif type=='10307':#查看活动详情
-             m_uid=self.get_argument("Uid","null")
+             m_uid=self.get_argument("uid","null")
              auth_key=self.get_argument("authkey","null")
              a_auth = AuthKeyHandler()
              image_urls = []
              ufuncs = Ufuncs() #判断用户权限
 
-             m_ACid=self.get_argument("ACid",default="unknown")
+             m_ACid=self.get_argument("acid",default="unknown")
              Usermodel = []
              try:
                 data=self.db.query(Activity).filter(Activity.ACid==m_ACid).one()
