@@ -9,7 +9,7 @@ from Userinfo.Usermodel import Model_daohanglan
 class Simplerequest(BaseHandler):
         retjson = {'code': '', 'contents': u'未处理 '}
 
-        def post(self):
+        def get(self):
                     try:
                         user = self.db.query(User).filter(User.Utel == '17751030037').one()
                         if user:  # 用户存在
