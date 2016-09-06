@@ -1,6 +1,9 @@
 # coding=utf-8
 import json
 
+from tornado import gen
+from tornado.web import asynchronous
+
 from BaseHandlerh import BaseHandler
 from Database.tables import Appointment, User
 from Userinfo.Usermodel import Model_daohanglan
@@ -8,6 +11,9 @@ from Userinfo.Usermodel import Model_daohanglan
 class LoginHandler(BaseHandler):
 
     retjson = {'code': '', 'contents': u'未处理 '}
+
+    @asynchronous
+    @gen.coroutine
     def post(self):
         askcode = self.get_argument('askCode')  # 请求码
         m_phone = self.get_argument('phone')
@@ -100,6 +106,6 @@ class LoginHandler(BaseHandler):
             self.retjson['contents'] = u"登录类型不满足要求，请重新登录！"
             self.retjson['data'] = u"登录类型不满足要求，请重新登录！"
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
-
+        self.finish()
 
 

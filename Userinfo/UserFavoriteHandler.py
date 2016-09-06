@@ -104,8 +104,7 @@ class UserFavorite(BaseHandler):
                         ap_favorite_id = each_favorite.Ftypeid  # 即约拍Id
                         ap_favorite = self.db.query(Appointment).filter(Appointment.APid == ap_favorite_id).one()
                         ap_favorates.append(ap_favorite)
-                    #     print 'before append'
-                    APmodelHandler.ap_Model_simply(ap_favorates, retdata,user_id)
+                    APmodelHandler.ap_Model_simply(ap_favorates, retdata, user_id)
                     self.retjson['code'] = '10550'
                     self.retjson['contents'] = retdata
                 except Exception, e:
