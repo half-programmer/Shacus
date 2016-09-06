@@ -2,7 +2,7 @@
 from tokenize import String
 
 
-def response(item,retdata,url,Usermodel):#查看活动更多详情
+def response(item,retdata,url,Usermodel,issponsor):#查看活动更多详情
     ACregister = []
     m_response=dict(
         ACid=item.ACid,
@@ -27,6 +27,7 @@ def response(item,retdata,url,Usermodel):#查看活动更多详情
         ACstatus = item.ACstatus,
         ACimageurl = url,
         ACregister=Usermodel,
+        AC_issponsor=issponsor
     )
     retdata.append(m_response)
 

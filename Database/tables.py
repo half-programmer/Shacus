@@ -187,6 +187,8 @@ class AppointEntry(Base):
     AEvalid = Column(Boolean,nullable=False,default=1)
     AEchoosed = Column(Boolean,nullable=False,default=0)
     AEregistT = Column(DateTime(timezone=True), default=func.now())
+    AEcomment = Column(VARCHAR(128), nullable=False, default='')
+
 
 class AppointLike(Base):
     __tablename__ = 'AppointLike'

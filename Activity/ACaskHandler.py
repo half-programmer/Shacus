@@ -17,7 +17,7 @@ from FileHandler.Upload import AuthKeyHandler
 from Userinfo.Ufuncs import Ufuncs
 
 class AskActivity(BaseHandler): #关于用户的一系列活动
-    retjson = {'code': '', 'contents': 'none'}
+    retjson = {'code': '200', 'contents': 'none'}
     def post(self):
         retdata = []  # list array
         type = self.get_argument('type', default='unsolved')
@@ -86,7 +86,12 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
 
              m_ACid=self.get_argument("ACid",default="unknown")
              Usermodel = []
-
+             # try:
+             #     data=self.db.query(Activity.ACsponsorid).filter(Activity.ACid==m_ACid).one()
+             #     if(data==m_uid):
+             #        issponsor=1
+             #    else:
+             issponsor=1
              if ufuncs.judge_user_valid(m_uid,auth_key):  # 用户认证成功
                  try:
                     print '认证成功'
@@ -95,33 +100,30 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                     entryid=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACid).all()
                     print '哈哈哈'
                     for item in entryid:
-                        Userjson = {'Userid': '', 'UserImage': ''}
+                        Userjson = {'id': '', 'headimage': ''}
                         Userurl=self.db.query(UserImage).filter(item.ACEregisterid==UserImage.UIuid).one()
-                        Userjson['Userid'] = item.ACEregisterid
+                        Userjson['id'] = item.ACEregisterid
                        # print
-                        Userjson['UserImage'] = Userurl.UIurl
+                        Userjson['headImage'] = Userurl.UIurl
                         Usermodel.append(Userjson)
                         print Userjson
                         #print Usermodel
-
-                    test=Usermodel
-                    for each in test:
-                        print 'dfdfdfdf',each['Userid']
-
 
                     images = self.db.query(ActivityImage).filter(m_ACid == ActivityImage.ACIacid).all()
                     for image in images:
                        image_url = a_auth.download_url(image.ACIurl)
                        image_urls.append(image_url)
 
-                    ACFunction.response(data,retdata,image_urls,Usermodel)
+                    ACFunction.response(data,retdata,image_urls,Usermodel,issponsor)
                     self.retjson['contents'] = retdata
+                    self.retjson['code']='10371'
+
                  except Exception,e:
                      print e
-                     self.retjson['code']=10307
+                     self.retjson['code']='10372'
                      self.retjson['contents']='null information'
              else:
-                 self.retjson['code']='10317'
+                 self.retjson['code']='10373'
                  self.retjson['contents']='认证未通过'
 
 

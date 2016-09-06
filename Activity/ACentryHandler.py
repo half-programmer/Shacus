@@ -65,7 +65,7 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
                     )
                 self.db.merge(new_ACLide)
                 self.db.commit()
-                self.retjson['code'] = 10311
+                self.retjson['code'] = '10311'
                 self.retjson['contents'] = '点赞成功'
             except Exception,e:
                 print e
