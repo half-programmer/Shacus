@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
 
+from tornado import gen
+from tornado.web import asynchronous
+
 from BaseHandlerh import BaseHandler
 from Database.tables import User, Appointment
 from Userinfo.Usermodel import Model_daohanglan
@@ -8,8 +11,9 @@ from Userinfo.Usermodel import Model_daohanglan
 
 class Simplerequest(BaseHandler):
         retjson = {'code': '', 'contents': u'未处理 '}
-
-        def post(self):
+        @asynchronous
+        @gen.coroutine
+        def get(self):
                     try:
                         user = self.db.query(User).filter(User.Utel == '17751030037').one()
                         if user:  # 用户存在
