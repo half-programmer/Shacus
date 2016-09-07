@@ -28,7 +28,7 @@ class FindUlike(BaseHandler):
         if ufuncs.judge_user_valid(u_id, u_auth_key):
             if type == '10403':  #查询某人关注的人
                 print '进入10403'
-                see_id = self.get_argument('see_id')
+                see_id = self.get_argument('seeid')
                 self.find_my_like(see_id)
             if type =='10401':   #关注某一人
                 print '进入10401'
