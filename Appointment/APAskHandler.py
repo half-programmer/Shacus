@@ -41,7 +41,6 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                            Appointment.APid < offset_apid).order_by(desc(Appointment.APcreateT)). \
                     all()
                 if appointments:
-
                     APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
                     self.retjson['code'] = '10263'
                     self.retjson['contents'] = retdata
