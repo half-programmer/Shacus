@@ -158,23 +158,20 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                     #todo：利用join
                     appointment = self.db.query(Appointment).filter(Appointment.APid == ap_id).one()  # 查找是否有此约拍
                     if appointment:
-                        response = APmodelHandler.ap_Model_multiple(appointment, u_id)
+
                         print 'before equal'
                         try:
                             print "in try"
-                            if appointment.APsponsorid == int(u_id):
-                                response['AP_issponsor'] = 1
-                            else:
-                                response['AP_issponsor'] = 0
+                            userids = Ufuncs.Ufuncs.get_registids_from_appointment(appointment)
+                            registers = Ufuncs.Ufuncs.get_users_registlist_from_uids(userids)
                         except Exception, e:
                             print e
-                        self.retjson['code'] = '10255'
-                        self.retjson['contents'] = response
+                        self.retjson['code'] = '10257'
+                        self.retjson['contents'] = registers
                 except Exception, e:
                     print e
                     self.retjson['code'] = '10264'
                     self.retjson['contents'] = u'未查询到报名人'
-
 
         else:
             self.retjson['contents'] = '授权码不存在或已过期'

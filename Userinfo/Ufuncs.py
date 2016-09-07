@@ -101,16 +101,31 @@ class Ufuncs(object):
         users = []
         for userid in userids:
             try:
-                user = get_db().query(User.Uid, User.Ualais).filter(User.Uid == userid).one()
+                user = get_db().query(User.Uid, User.Ualais, User.Usign).filter(User.Uid == userid).one()
                 new_user = dict(
                     uid=user.Uid,
                     ualais=user.Ualais,
-                    uimage="http://img.pconline.com.cn/images/upload/upc/tx/wallpaper/1301/04/c1/17113515_1357280582181.jpg"
+                    uimage="http://img.pconline.com.cn/images/upload/upc/tx/wallpaper/1301/04/c1/17113515_1357280582181.jpg",
+                    usign=user.Usign
                 )
                 users.append(new_user)
             except Exception, e:
                 print e, "找用户出现错误"
         return users
+
+    @staticmethod
+    def get_registids_from_appointment(appointment):
+        userids = []
+        try:
+            #get_db().query(AppointEntry.AEregisterID).filter(appointment.APid == )
+            apid = appointment.APid
+            registids = get_db().query(AppointEntry.AEregisterID).filter(AppointEntry.AEapid == apid).all()
+            for user in registids:
+                userid = user.AEregisterID
+                userids.append(userid)
+        except Exception,e:
+            print e
+        return userids
 
 
 
