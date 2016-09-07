@@ -64,24 +64,34 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                 try:
                     acsended=self.get_argument('acsended')
                     Acsended=int(acsended)
-                    data= data=self.db.query(Activity).order_by(desc(Activity.ACcreateT)).all()
+                    data=self.db.query(Activity).order_by(desc(Activity.ACcreateT)).all()
                     length = len(data)
                     print length
                     m_length=length-Acsended
                     print m_length
+                    if(m_length==0):
+                        self.retjson['code']='10374'
+                        self.retjson['contents']='已经没有数据'
                     if (m_length<5):
+                        print '小于5个'
                         for i in range(Acsended,length):
+                            print i
+                            print data[i]
                             #dataimage = self.db.query(ActivityImage).filter(data[i].ACid == ActivityImage.ACLacid).one()
                             datauser = self.db.query(User).filter(data[i].ACsponsorid == User.Uid).one()
-                            ACFunction.Acresponse(data[i],retdata,u_id)
-                            self.retjson['code'] = 10304
+
+                            print '哈哈哈'
+                            print datauser.Ualais
+                            ACFunction.Acresponse(data[i],datauser,retdata,u_id)
+                            print '尼玛还'
+                            self.retjson['code'] = '10304'
                             self.retjson['contents'] =retdata
                     else:
                         for item in range(Acsended,acsended+6):
                             #dataimage = self.db.query(ActivityImage).filter(data[item].ACid == ActivityImage.ACLacid).one()
                             datauser = self.db.query(User).filter(data[item].ACsponsorid == User.Uid).one()
-                            ACFunction.Acresponse(data[item],retdata,u_id)
-                            self.retjson['code'] = 10304
+                            ACFunction.Acresponse(data[item],datauser,retdata,u_id)
+                            self.retjson['code'] = '10304'
                             self.retjson['contents'] = retdata
 
                 except Exception,e:

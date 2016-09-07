@@ -105,7 +105,7 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
                                     elif type == '10362':  # 取消赞
                                         once_liked.ACLvalid = 0
                                         try:
-                                            Activity.AClikenumber -= 1
+                                            data.AClikenumber -= 1
                                             self.db.commit()
                                             self.retjson['code'] = '10386'
                                             self.retjson['contents'] = r'取消赞成功'
@@ -114,10 +114,10 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
                                 else:  # 曾经点过赞，但是已经取消
                                     if type == '10361':
                                         once_liked.ACLvalid = 1
-                                        Activity.AClikenumber += 1
+                                        data.AClikenumber += 1
                                         self.db_commit(r'点赞成功')
                                         self.retjson['code'] = '10387'
-                                        self.retjson['contents'] = r'重新点赞成功'
+                                        self.retjson['contents'] = r'点赞成功'
                                     elif type == '10362':
                                         self.retjson['code'] = '10386'
                                         self.retjson['contents'] = r'用户已取消赞！'
