@@ -118,7 +118,6 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 except Exception, e:
                     self.no_result_found(e)
             elif request_type == '10251':  # 返回约拍详情
-                retdata = []
                 ap_id = self.get_argument('apid')
                 try:
                     appointment = self.db.query(Appointment).filter(Appointment.APid == ap_id).one()
@@ -151,8 +150,6 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
             elif request_type == '10261':  # 刷新并拿到指定Id后的6个模特约拍
                 offset_apid = self.get_argument('offsetapid')
                 self.refresh_list(0, offset_apid,  u_id)
-
-
 
         else:
             self.retjson['contents'] = '授权码不存在或已过期'

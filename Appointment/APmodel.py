@@ -33,19 +33,18 @@ class APmodelHandler(object):
         '''
         # todo:查找待变更为最新10个
 
-        global liked
-        print AppointLike.ALuid
-        print userid
+        liked = 0
         try:
             likedentry = get_db().query(AppointLike).filter(AppointLike.ALuid == userid,
                                                              AppointLike.ALapid == appointment.APid,
                                                              AppointLike.ALvalid == 1).one()  # 寻找是否点过赞
             if likedentry:
                 liked = 1
-                print "点过赞",liked
+                print "点过赞", liked
         except Exception, e:
               print e
               liked = 0
+
         #todo:userliked不对
         ret_ap = dict(
             APid=appointment.APid,
@@ -63,8 +62,19 @@ class APmodelHandler(object):
     @classmethod
     def ap_Model_multiple(clas, appointment):
         ap_regist_users = []
-        try:
 
+        liked = 0
+        try:
+            likedentry = get_db().query(AppointLike).filter(AppointLike.ALuid == userid,
+                                                            AppointLike.ALapid == appointment.APid,
+                                                            AppointLike.ALvalid == 1).one()  # 寻找是否点过赞
+            if likedentry:
+                liked = 1
+                print "点过赞", liked
+        except Exception, e:
+            print e
+            liked = 0
+        try:
             ap_regist_users = Ufuncs.get_userlist_from_ap(appointment.APid)
             m_response = dict(
                 APid=appointment.APid,
@@ -86,7 +96,8 @@ class APmodelHandler(object):
                 APregistN=appointment.APregistN,
                 APregisters=ap_regist_users,  # 返回所有报名人用户模型
                 APimgurl=[r"http://img9.jiwu.com/jiwu_news_pics/20151225/1450854576571_000.jpg", "http://p1.gexing.com/G1/M00/57/8B/rBACFFPcOFOiwBGVAACdMkF5UnM383.jpg","http://p1.gexing.com/G1/M00/57/8B/rBACFFPcOFOiwBGVAACdMkF5UnM383.jpg"],
-                APstatus=appointment.APstatus
+                APstatus=appointment.APstatus,
+                Userliked=liked
             )
             return m_response
         except Exception, e:
