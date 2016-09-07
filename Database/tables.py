@@ -7,7 +7,7 @@ TODO: 报名
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData,ForeignKey,DateTime,Boolean
 from sqlalchemy.types import CHAR, Integer, VARCHAR,Boolean,Float
 from sqlalchemy.sql.functions import func
-from models import Base
+from Database.models import Base
 import sys
 reload(sys)
 
@@ -180,14 +180,14 @@ class AppointmentInfo(Base):
 class AppointEntry(Base):
     __tablename__ = "AppointEntry"
 
-    AEapid=Column(Integer,ForeignKey('Appointment.APid' ,onupdate="CASCADE") )
-    AEid = Column(Integer,primary_key=True)
+    AEapid=Column(Integer, ForeignKey('Appointment.APid' ,onupdate="CASCADE") )
+    AEid = Column(Integer, primary_key=True)
     AEapid = Column(Integer, ForeignKey('Appointment.APid',onupdate='CASCADE'))
-    AEregisterID = Column(Integer,ForeignKey('User.Uid', onupdate='CASCADE'))
-    AEvalid = Column(Boolean,nullable=False,default=1)
-    AEchoosed = Column(Boolean,nullable=False,default=0)
+    AEregisterID = Column(Integer, ForeignKey('User.Uid', onupdate='CASCADE'))
+    AEvalid = Column(Boolean, nullable=False,default=1)
+    AEchoosed = Column(Boolean, nullable=False,default=0)
     AEregistT = Column(DateTime(timezone=True), default=func.now())
-    #AEcomment = Column(VARCHAR(128), nullable=False, default='')
+
 
 
 class AppointLike(Base):
@@ -222,13 +222,14 @@ class  Course(Base):   #教程数据库
     Cvalid =Column(Integer,nullable= False,default= 0)
     Csponsorid = Column(Integer,nullable=False)
     Cimagerul = Column(VARCHAR(128),nullable= False)
+    Ctitle = Column(VARCHAR(32),nullable= False)
 
 class CourseTag(Base): #教程标签类型
     __tablename__ = 'CourseTag'
 
     CTid = Column(Integer,nullable= False,primary_key=True)
-    CTname = Column(VARCHAR(32),nullable=False)
-    CThint = Column(VARCHAR(128),nullable=False)
+    CTname = Column(VARCHAR(32), nullable=False)
+    CThint = Column(VARCHAR(128), nullable=False)
     CTcourseN = Column(Integer,nullable=False,default= 0)
     CTimageurl = Column(VARCHAR(128),nullable=False)
     CTvalid = Column(Boolean ,nullable=False,default= 0)
@@ -257,3 +258,4 @@ class Usercourse(Base):   #和用户有关的教程
     UCseen = Column(Boolean,nullable=False,default=0)
     UCfav = Column(Boolean,nullable=False,default=0)
 
+0

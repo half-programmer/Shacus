@@ -10,7 +10,7 @@ from sqlalchemy import desc
 import Userinfo
 from APmodel import APmodelHandler
 from BaseHandlerh import BaseHandler
-from Database.tables import Appointment, User, AppointEntry
+from Database.tables import Appointment, AppointEntry
 from Userinfo import Ufuncs
 
 
@@ -22,13 +22,14 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
     def refresh_list(self, type, offset_apid, u_id):
         retdata = []
         try:
+            #attention:< ，因为返回新的
             appointments = self.db.query(Appointment). \
                 filter(Appointment.APtype == type, Appointment.APclosed == 0, Appointment.APvalid == 1,
-                       Appointment.APid > offset_apid).from_self().order_by(desc(Appointment.APcreateT)). \
+                       Appointment.APid < offset_apid).from_self().order_by(desc(Appointment.APcreateT)). \
                 limit(6).all()
             if appointments:
                 APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
-                self.retjson['code'] = '10261'
+                self.retjson['code'] = '10262'  # 刷新成功，返回6个
                 self.retjson['contents'] = retdata
             else:
                 print appointments.first().APtype
@@ -37,13 +38,12 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
             try:
                 appointments = self.db.query(Appointment). \
                     filter(Appointment.APtype == type, Appointment.APclosed == 0, Appointment.APvalid == 1,
-                           Appointment.APid > offset_apid).order_by(desc(Appointment.APcreateT)). \
+                           Appointment.APid < offset_apid).order_by(desc(Appointment.APcreateT)). \
                     all()
-                print appointments.first().APtype
                 if appointments:
 
                     APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
-                    self.retjson['code'] = '10262'
+                    self.retjson['code'] = '10263'
                     self.retjson['contents'] = retdata
                 else:
                     self.retjson['contents'] = r"没有更多约拍"
@@ -118,12 +118,11 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 except Exception, e:
                     self.no_result_found(e)
             elif request_type == '10251':  # 返回约拍详情
-                retdata = []
                 ap_id = self.get_argument('apid')
                 try:
                     appointment = self.db.query(Appointment).filter(Appointment.APid == ap_id).one()
                     if appointment:
-                        response = APmodelHandler.ap_Model_multiple(appointment)
+                        response = APmodelHandler.ap_Model_multiple(appointment, u_id)
                         print 'before equal'
                         try:
                             print "in try"
@@ -151,8 +150,6 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
             elif request_type == '10261':  # 刷新并拿到指定Id后的6个模特约拍
                 offset_apid = self.get_argument('offsetapid')
                 self.refresh_list(0, offset_apid,  u_id)
-
-
 
         else:
             self.retjson['contents'] = '授权码不存在或已过期'

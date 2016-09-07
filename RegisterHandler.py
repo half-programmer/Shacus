@@ -1,11 +1,13 @@
 # -*- coding:utf-8 -*-
 import json
+import random
+
 from  BaseHandlerh import BaseHandler
 from Database.tables import User, UCinfo
 from Database.tables import Verification
-import random
-from messsage import message
 from Userinfo.Usermodel import user_login_fail_model
+from messsage import message
+
 
 def generate_verification_code(len=6):
  ''' 随机生成6位的验证码 '''

@@ -3,9 +3,9 @@
 @author:黄鑫晨
 #create_time:2016-09-01
 '''
-from BaseHandlerh import BaseHandler
-from Database.tables import User, AppointEntry, UserImage
 from Database.models import get_db
+from Database.tables import User, AppointEntry
+
 
 class Ufuncs(object):
     #@staticmethod

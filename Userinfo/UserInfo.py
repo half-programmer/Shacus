@@ -1,9 +1,9 @@
 # coding=utf-8
 import json
 
-from BaseHandlerh import BaseHandler
 import Ufuncs
-from Database.tables import User, UCinfo, UserImage
+from BaseHandlerh import BaseHandler
+from Database.tables import User, UCinfo
 from Usermodel import userinfo_smply
 
 class UserInfo(BaseHandler):  #获取用户自己的ID

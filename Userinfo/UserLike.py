@@ -4,9 +4,12 @@
 #create_time:2016-09-01
 '''
 import json
+
 import Ufuncs
-from  Database.tables import UserLike, User, UCinfo
 from BaseHandlerh import BaseHandler
+from  Database.tables import UserLike, User, UCinfo
+
+
 class FindUlike(BaseHandler):
 
     #def __init__(self):
@@ -23,9 +26,10 @@ class FindUlike(BaseHandler):
         type = self.get_argument('type')
         ufuncs = Ufuncs.Ufuncs()
         if ufuncs.judge_user_valid(u_id, u_auth_key):
-            if type == '10403':  #查询所有我关注的人
+            if type == '10403':  #查询某人关注的人
                 print '进入10403'
-                self.find_my_like(u_id)
+                see_id = self.get_argument('see_id')
+                self.find_my_like(see_id)
             if type =='10401':   #关注某一人
                 print '进入10401'
                 followerID = self.get_argument("followerid")
@@ -34,11 +38,11 @@ class FindUlike(BaseHandler):
                 print '进入10402'
                 followerID = self.get_argument("followerid")
                 self.not_follow_user(u_id, followerID)
-            if type =='10404':#c查询我的粉丝
+            if type =='10404':#c查询某人的粉丝
                 print '进入10404'
-                myfans =self.get_argument("uid")
+                see_id =self.get_argument("seeid")
 
-                self.find_my_follow(myfans)
+                self.find_my_follow(see_id)
 
         else:
             self.retjson['code'] = '10412'
@@ -93,7 +97,7 @@ class FindUlike(BaseHandler):
                     follower = self.db.query(UCinfo).filter(UCinfo.UCuid == follower_id).one()
                     follower.UClikedN += 1
                     self.db.commit()
-                    self.retjson['code'] = '10412'
+                    self.retjson['code'] = '10411'
                     self.retjson['contents'] = '关注成功'
             except Exception, e:
                     print '开始关注该用户'
@@ -145,7 +149,7 @@ class FindUlike(BaseHandler):
     def find_my_follow(self, uid):
         retdata = []
         try:
-            my_likes = self.db.query(UserLike).filter(UserLike.ULlikedid == uid,UserLike.ULvalid,UserLike.ULvalid == 1).all()
+            my_likes = self.db.query(UserLike).filter(UserLike.ULlikedid == uid,UserLike.ULvalid == 1).all()
             print '进入10404查询'
             if my_likes:
 
