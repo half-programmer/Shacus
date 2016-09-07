@@ -39,7 +39,6 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                     filter(Appointment.APtype == type, Appointment.APclosed == 0, Appointment.APvalid == 1,
                            Appointment.APid > offset_apid).order_by(desc(Appointment.APcreateT)). \
                     all()
-                print appointments.first().APtype
                 if appointments:
 
                     APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
