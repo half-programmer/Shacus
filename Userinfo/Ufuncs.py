@@ -71,7 +71,7 @@ class Ufuncs(object):
         '''
         Args:
             apid: 约拍id
-        Returns:返回所有用户的用户模型
+        Returns:返回所有报名用户的用户简单模型
 
         '''
         users = []
@@ -82,12 +82,22 @@ class Ufuncs(object):
             for register in registers:
                 user['id'] = register.AEregisterID
                 # todo: 待变为真图片
-                #user['uimgurl'] = get_db().query(UserImage.UIurl).filter(UserImage.UIuid == user['uid'])
+                #  user['uimgurl'] = get_db().query(UserImage.UIurl).filter(UserImage.UIuid == user['uid'])
                 user['headImage'] = 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2413410606,339859400&fm=21&gp=0.jpg '
                 users.append(user)
             return users
         except Exception, e:
             print e
+
+
+    @staticmethod
+    def get_users_registlist_from_uids(userids):
+        users = []
+        for useid in userids:
+            try:
+                user = get_db().query(User).join(User.Uid)
+
+
 
 
 

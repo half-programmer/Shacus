@@ -21,18 +21,18 @@ class APprase(BaseHandler):
             self.prase_success(name)
         except Exception, e:
             self.db_commit_fail(e)
-        raise gen.Return
 
     def prase_success(self, name):
         self.db.commit()
         self.retjson['code'] = '10600'
         self.retjson['content'] = name
 
-    def db_commit_fail(self,e):
+    def db_commit_fail(self, e):
         print e
         self.retjson['code'] = '10606'
         self.retjson['content'] = r'数据库提交失败'
 
+    @asynchronous
     @gen.coroutine
     def post(self):
         type = self.get_argument('type')
@@ -43,14 +43,12 @@ class APprase(BaseHandler):
         if ufunc.judge_user_valid(uid, u_authkey):
             try:
                 appointment = self.db.query(Appointment).filter(Appointment.APid == type_id).one()
-                if appointment:
-                    if appointment.APvalid == 0:
-                        self.retjson['content'] = r"该约拍已失效"
-                    else:  # 查找是否已经点过赞
-                        try:
-                            once_liked = self.db.query(AppointLike).filter(AppointLike.ALapid == type_id, AppointLike.ALuid == uid).one()
-                            if once_liked:
-                                print "进入once_liked"
+                if appointment.APvalid == 0:
+                    self.retjson['content'] = r"该约拍已失效"
+                else:  # 查找是否已经点过赞
+                    try:
+                        once_liked = self.db.query(AppointLike).filter(AppointLike.ALapid == type_id, AppointLike.ALuid == uid).one()
+                        if once_liked:
                                 if once_liked.ALvalid == 1:  # 已经赞过
                                     if type == '10601':  # 对约拍进行点赞
                                         self.retjson['code'] = '10605'
@@ -72,20 +70,20 @@ class APprase(BaseHandler):
                                     elif type == '10611':
                                         self.retjson['code'] = '10613'
                                         self.retjson['content'] = r'用户已取消赞！'
-                        except Exception, e: # 未对这个操作过
-                            print e, "未操作过"
-                            if type == '10611':
-                                self.retjson['code'] = '10614'
-                                self.retjson['content'] = r'用户未赞过此约拍！'
-                            elif type == '10601':
-                                new_Aplike = AppointLike(
+                    except Exception, e: # 未对这个操作过
+                        print e
+                        if type == '10611':
+                            self.retjson['code'] = '10614'
+                            self.retjson['content'] = r'用户未赞过此约拍！'
+                        elif type == '10601':
+                            new_Aplike = AppointLike(
                                 ALapid=type_id,
                                 ALuid=uid,
                                 ALvalid=1
-                                )
-                                appointment.APlikeN += 1
-                                self.db.merge(new_Aplike)
-                                self.db_commit(r'点赞成功')
+                            )
+                            appointment.APlikeN += 1
+                            self.db.merge(new_Aplike)
+                            self.db_commit(r'点赞成功')
             except Exception, e:
                     print e
                     self.retjson['code'] = '10607'

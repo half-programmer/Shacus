@@ -34,13 +34,13 @@ class User(Base): # 用户表
 class UCinfo(Base):
     __tablename__ = 'UCinfo'
 
-    UCuid = Column(Integer,ForeignKey('User.Uid', onupdate='CASCADE'),nullable=False,primary_key=True)
-    UClikeN = Column(Integer,nullable=False,default=0)
-    UClikedN = Column(Integer,nullable=False,default=0)
-    UCapN = Column(Integer,nullable=False,default=0)
-    UCphotoN = Column(Integer,nullable=False,default=0)
-    UCcourseN = Column(Integer,nullable=False,default=0)
-    UCmomentN = Column(Integer,nullable=False,default=0)
+    UCuid = Column(Integer, ForeignKey('User.Uid', onupdate='CASCADE'),nullable=False,primary_key=True)
+    UClikeN = Column(Integer, nullable=False, default=0)
+    UClikedN = Column(Integer, nullable=False, default=0)
+    UCapN = Column(Integer, nullable=False, default=0)
+    UCphotoN = Column(Integer, nullable=False, default=0)
+    UCcourseN = Column(Integer, nullable=False, default=0)
+    UCmomentN = Column(Integer, nullable=False, default=0)
 
 class Verification(Base): # 短信验证码及生成用户auth_key时间
     __tablename__ = 'Verification'
@@ -79,8 +79,8 @@ class ActivityEntry(Base):  #活动报名表
     __tablename__ = 'Activityaentry'
 
     ACEid=Column(Integer,primary_key=True)
-    ACEacid = Column(Integer,ForeignKey('Activity.ACid',onupdate='CASCADE'))#活动ID
-    ACEregisterid = Column(Integer,ForeignKey('User.Uid',onupdate='CASCADE'))#报名人ID
+    ACEacid = Column(Integer,ForeignKey('Activity.ACid',onupdate='CASCADE'))  # 活动ID
+    ACEregisterid = Column(Integer,ForeignKey('User.Uid',onupdate='CASCADE'))  # 报名人ID
     ACEregisttvilid = Column(Boolean,default=1)
     ACEscore = Column(Integer,nullable=False,default=0)
     ACEcomment = Column(VARCHAR(128),nullable=False,default='')
@@ -258,4 +258,3 @@ class Usercourse(Base):   #和用户有关的教程
     UCseen = Column(Boolean,nullable=False,default=0)
     UCfav = Column(Boolean,nullable=False,default=0)
 
-0

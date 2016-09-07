@@ -99,9 +99,9 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 retdata = []
                 try:
                     appointments = self.db.query(Appointment). \
-                        filter(Appointment.APtype == 1, Appointment.APclosed == 0, Appointment.APvalid == 1).all()
+                        filter(Appointment.APtype == 1, Appointment.APclosed == 0, Appointment.APvalid == 1).limit(6).all()
                     APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
-                    self.retjson['code'] = '10250'
+                    self.retjson['code'] = '10251'
                     self.retjson['contents'] = retdata
                 except Exception, e: # 没有找到约拍
                     print e
@@ -110,9 +110,9 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 retdata = []
                 try:
                     appointments = self.db.query(Appointment). \
-                        filter(Appointment.APtype == 0, Appointment.APclosed == 0, Appointment.APvalid == 1).all()
+                        filter(Appointment.APtype == 0, Appointment.APclosed == 0, Appointment.APvalid == 1).limit(6).all()
                     APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
-                    self.retjson['code'] = '10250'
+                    self.retjson['code'] = '10252'
                     self.retjson['contents'] = retdata
                 except Exception, e:
                     self.no_result_found(e)
@@ -149,6 +149,28 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
             elif request_type == '10261':  # 刷新并拿到指定Id后的6个模特约拍
                 offset_apid = self.get_argument('offsetapid')
                 self.refresh_list(0, offset_apid,  u_id)
+            elif request_type == '10280':  # 返回报名某约拍的全部用户详情
+                ap_id = self.get_argument('apid')
+                try:
+                    #todo：利用join
+                    appointment = self.db.query(Appointment).filter(Appointment.APid == ap_id).one()  # 查找是否有此约拍
+                    if appointment:
+                        response = APmodelHandler.ap_Model_multiple(appointment, u_id)
+                        print 'before equal'
+                        try:
+                            print "in try"
+                            if appointment.APsponsorid == int(u_id):
+                                response['AP_issponsor'] = 1
+                            else:
+                                response['AP_issponsor'] = 0
+                        except Exception, e:
+                            print e
+                        self.retjson['code'] = '10250'
+                        self.retjson['contents'] = response
+                except Exception, e:
+                    print e
+                    self.no_result_found(e)
+
 
         else:
             self.retjson['contents'] = '授权码不存在或已过期'
