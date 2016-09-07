@@ -150,7 +150,7 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                        image_url = a_auth.download_url(image.ACIurl)
                        image_urls.append(image_url)
 
-                    ACFunction.response(data,retdata,image_urls,Usermodel,issponsor)
+                    ACFunction.response(data,retdata,image_urls,Usermodel,issponsor,m_uid)
                     self.retjson['contents'] = retdata
                     self.retjson['code']='10371'
 
