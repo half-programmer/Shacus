@@ -1,5 +1,5 @@
 # coding=utf-8
-from Database.tables import User, Activity,ActivityEntry
+from Documents.tables import User, Activity,ActivityEntry
 from FileHandler.Upload import AuthKeyHandler
 __author__='兰威'
 '''

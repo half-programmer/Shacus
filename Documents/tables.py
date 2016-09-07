@@ -7,7 +7,7 @@ TODO: 报名
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData,ForeignKey,DateTime,Boolean
 from sqlalchemy.types import CHAR, Integer, VARCHAR,Boolean,Float
 from sqlalchemy.sql.functions import func
-from models import Base
+from Database.models import Base
 import sys
 reload(sys)
 

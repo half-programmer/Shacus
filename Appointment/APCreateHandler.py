@@ -4,9 +4,11 @@
   2016.08.29   2016.09.03
 '''
 import json
+
 from BaseHandlerh import BaseHandler
-from Database.tables import Appointment, User
+from Documents.tables import Appointment, User
 from FileHandler.Upload import AuthKeyHandler
+
 
 class APcreateHandler(BaseHandler):  # 创建约拍
     retjson = {'code': '', 'contents': 'None'}

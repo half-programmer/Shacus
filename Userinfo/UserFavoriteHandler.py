@@ -4,7 +4,7 @@ import json
 import Userinfo.Ufuncs
 from Appointment.APmodel import APmodelHandler
 from BaseHandlerh import BaseHandler
-from Database.tables import Favorite, Appointment
+from Documents.tables import Favorite, Appointment
 
 '''
 @author:黄鑫晨

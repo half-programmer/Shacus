@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-import datetime
 
 from Userinfo.Ufuncs import Ufuncs
 
@@ -9,7 +8,7 @@ import json
 import ACFunction
 import ACentryFunction
 from BaseHandlerh import  BaseHandler
-from Database.tables import ActivityEntry, Activity,ActivityLike
+from Documents.tables import ActivityEntry, Activity,ActivityLike
 
 
 class AskEntry(BaseHandler): #活动报名点赞表相关操作

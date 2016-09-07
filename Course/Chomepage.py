@@ -9,9 +9,9 @@ import json
 from sqlalchemy import desc
 
 from BaseHandlerh import BaseHandler
-from Database.tables import Course, CourseTag
-from Userinfo import Ufuncs
 from Coursemodel import Coursemodel
+from Documents.tables import Course, CourseTag
+from Userinfo import Ufuncs
 
 class Chomepage(BaseHandler):# 教程首页
     retjson ={ "code": '','contents':''}

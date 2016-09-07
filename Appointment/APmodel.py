@@ -3,10 +3,10 @@
 @author：黄鑫晨
 @attention: Model为模型，model为模特
 '''
-from BaseHandlerh import BaseHandler
-from Database.tables import Appointment, AppointLike
-from Userinfo.Ufuncs import Ufuncs
 from Database.models import get_db
+from Documents.tables import AppointLike
+from Userinfo.Ufuncs import Ufuncs
+
 
 class APmodelHandler(object):
 

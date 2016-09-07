@@ -6,7 +6,7 @@ import json
 
 from BaseHandlerh import BaseHandler
 from Course import Coursemodel
-from Database.tables import Course, User, UserImage, Image, CourseTagEntry, CourseTag, CourseLike, Usercourse
+from Documents.tables import Course, CourseTagEntry, CourseTag, CourseLike, Usercourse
 from Userinfo import Ufuncs
 
 

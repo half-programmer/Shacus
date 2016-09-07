@@ -2,9 +2,12 @@
 '''
 __author__=wjl
 '''
-from BaseHandlerh import BaseHandler
-from Database.tables import User
 import  json
+
+from BaseHandlerh import BaseHandler
+from Documents.tables import User
+
+
 class PaswChange(BaseHandler):
     retjson={'code':200,'contents':'none'}
     retdata=[] #list array

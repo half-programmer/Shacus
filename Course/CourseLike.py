@@ -5,7 +5,7 @@
 import json
 
 from BaseHandlerh import BaseHandler
-from Database.tables import Course,CourseLike
+from Documents.tables import Course,CourseLike
 from Userinfo import Ufuncs
 
 

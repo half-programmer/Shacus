@@ -1,9 +1,10 @@
 # coding=utf-8
 import json
+
 from  BaseHandlerh import BaseHandler
-from Database.Dbfuncs import Dbfuncs
-from Database.tables import User, AppointEntry
+from Documents.tables import User, AppointEntry
 from Userinfo.Ufuncs import Ufuncs
+
 '''
 @author:王佳镭 黄鑫晨
 '''

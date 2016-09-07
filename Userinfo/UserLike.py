@@ -4,9 +4,12 @@
 #create_time:2016-09-01
 '''
 import json
+
 import Ufuncs
-from  Database.tables import UserLike, User, UCinfo
 from BaseHandlerh import BaseHandler
+from  Documents.tables import UserLike, User, UCinfo
+
+
 class FindUlike(BaseHandler):
 
     #def __init__(self):

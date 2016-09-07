@@ -10,7 +10,7 @@ from sqlalchemy import desc
 import Userinfo
 from APmodel import APmodelHandler
 from BaseHandlerh import BaseHandler
-from Database.tables import Appointment, User, AppointEntry
+from Documents.tables import Appointment, AppointEntry
 from Userinfo import Ufuncs
 
 
@@ -28,7 +28,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 limit(6).all()
             if appointments:
                 APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
-                self.retjson['code'] = '10261'
+                self.retjson['code'] = '10262'  # 刷新成功，返回6个
                 self.retjson['contents'] = retdata
             else:
                 print appointments.first().APtype
@@ -42,7 +42,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 if appointments:
 
                     APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
-                    self.retjson['code'] = '10262'
+                    self.retjson['code'] = '10263'
                     self.retjson['contents'] = retdata
                 else:
                     self.retjson['contents'] = r"没有更多约拍"

@@ -2,10 +2,12 @@
 __author__='lanwei'
 import hashlib
 import io
-from PIL import Image
 import  json
-from  Database.tables import User,Activity
+
+from PIL import Image
+
 from  BaseHandlerh import BaseHandler
+
 
 class UploadException(RuntimeError):
     def __init__(self,code,content):
