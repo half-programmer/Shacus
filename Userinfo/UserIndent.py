@@ -25,7 +25,7 @@ class UserIndent(BaseHandler):
         u_id = self.get_argument('uid')
         auth_key = self.get_argument('authkey')
         ufuncs = Ufuncs.Ufuncs()
-        if ufuncs.judge_user_valid(u_id,auth_key):
+        if ufuncs.judge_user_valid(u_id, auth_key):
             if type == '10901':  # 查看我的已报名的约拍活动
                 ret_activity =self.get_activity(u_id,0)
                 ret_contents['activity'] = ret_activity
