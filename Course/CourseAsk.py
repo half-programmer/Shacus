@@ -26,40 +26,45 @@ class CourseAsk(BaseHandler):
                 tags = []
                 ret_content ={}
                 try:
-                    exist = self.db.query(Usercourse).filter(Usercourse.UCcid == c_id,Usercourse.UCuid == u_id).one() #判断是否曾经看过此教程
-                    if exist.UCseen == 0 :
-                        exist.UCseen =1
+                    self.db.query(Course).filter(Course.Cid ==c_id , Course.Cvalid == 1).one()
+                    try:
+                        exist = self.db.query(Usercourse).filter(Usercourse.UCcid == c_id,Usercourse.UCuid == u_id).one() #判断是否曾经看过此教程
+                        if exist.UCseen == 0 :
+                            exist.UCseen =1
+                            self.db.commit()
+                    except Exception,e:
+                        entry = Usercourse(
+                            UCuid = u_id,
+                            UCcid = c_id,
+                            UCseen =1,
+                            UCfav =0
+                        )
+                        self.db.merge(entry)
                         self.db.commit()
-                except Exception,e:
-                    entry = Usercourse(
-                        UCuid = u_id,
-                        UCcid = c_id,
-                        UCseen =1,
-                        UCfav =0
-                    )
-                    self.db.merge(entry)
+
+
+                    course = self.db.query(Course).filter(Course.Cid == c_id).one()
+                    entrys = self.db.query(CourseTagEntry).filter(CourseTagEntry.CTEcid == c_id,
+                                                                CourseTagEntry.CTEvalid == 1).all()         #查询教程的标签
+                    for entry in entrys:
+                        tag_info = self.db.query(CourseTag).filter(CourseTag.CTid == entry.CTEtid).one()
+                        tags.append(tag_info.CTname)
+                    ret_content ['course']= Coursemodel.Coursemodel.Course_Model_Complete(course,tags)     #将浏览人数加一
+                    course.CwatchN+=1
                     self.db.commit()
+                    try:
+                        self.db.query(CourseLike).filter(CourseLike.CLcid ==c_id,
+                                                             CourseLike.CLuid == u_id,
+                                                             CourseLike.CLvalid == 1).one()                 #查询是否关注过该教程
+                        ret_content['isliked'] = 1
+                    except Exception,e:
+                        ret_content['isliked'] = 0
 
-
-                course = self.db.query(Course).filter(Course.Cid == c_id).one()
-                entrys = self.db.query(CourseTagEntry).filter(CourseTagEntry.CTEcid == c_id,
-                                                            CourseTagEntry.CTEvalid == 1).all()         #查询教程的标签
-                for entry in entrys:
-                    tag_info = self.db.query(CourseTag).filter(CourseTag.CTid == entry.CTEtid).one()
-                    tags.append(tag_info.CTname)
-                ret_content ['course']= Coursemodel.Coursemodel.Course_Model_Complete(course,tags)
-                course.CwatchN+=1
-                self.db.commit()
-                try:
-                    self.db.query(CourseLike).filter(CourseLike.CLcid ==c_id,
-                                                         CourseLike.CLuid == u_id,
-                                                         CourseLike.CLvalid == 1).one()
-                    ret_content['isliked'] = 1
+                    self.retjson['code'] = '11021'
+                    self.retjson['contents'] = ret_content
                 except Exception,e:
-                    ret_content['isliked'] = 0
-
-                self.retjson['code'] = '11021'
-                self.retjson['contents'] = ret_content
+                    self.retjson['code'] = '11022'
+                    self.retjson['contents'] = '该教程无效'
 
             if type == '11005':  # 返回我看过的所有教程
                 ret_course =[]
@@ -103,7 +108,7 @@ class CourseAsk(BaseHandler):
                 like = 0
                 ret_course = []
                 courses = self.db.query(CourseTagEntry).filter(CourseTagEntry.CTEtid == tag_id).\
-                    order_by(desc(CourseTagEntry.CTEcreateT)).offset(now_id).limit(3).all()
+                    order_by(desc(CourseTagEntry.CTEcreateT)).offset(now_id).limit(10).all()
                 for course in courses:
                     u_cid = course.CTEcid
                     course = self.db.query(Course).filter(Course.Cid == u_cid).one()
@@ -118,14 +123,12 @@ class CourseAsk(BaseHandler):
                         ret_course.append(Coursemodel.Coursemodel.Course_Model_Simply(course, like, int(u_ucourse.UCfav), int(u_ucourse.UCseen)))
                     except Exception,e:
                         ret_course.append(Coursemodel.Coursemodel.Course_Model_Simply(course, like, 0,0))
-
+                if courses :
                     self.retjson['contents'] = ret_course
                     self.retjson['code'] = '11071'
-
-
-
-
-
+                else :
+                    self.retjson['contents'] = '没有更多了'
+                    self.retjson['code'] = '11072'
         else :
             self.retjson['code']  ='11000'
             self.retjson['contents'] = '用户授权码不正确'

@@ -105,7 +105,7 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
                                     elif type == '10362':  # 取消赞
                                         once_liked.ACLvalid = 0
                                         try:
-                                            Activity.AClikenumber -= 1
+                                            data.AClikenumber -= 1
                                             self.db.commit()
                                             self.retjson['code'] = '10386'
                                             self.retjson['contents'] = r'取消赞成功'
@@ -113,11 +113,13 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
                                             self.db_commit_fail(e)
                                 else:  # 曾经点过赞，但是已经取消
                                     if type == '10361':
+                                        print '进来了啊啊啊啊'
                                         once_liked.ACLvalid = 1
-                                        Activity.AClikenumber += 1
+                                        data.AClikenumber =data.AClikenumber+ 1
+                                        print data.AClikenumber
                                         self.db_commit(r'点赞成功')
                                         self.retjson['code'] = '10387'
-                                        self.retjson['contents'] = r'重新点赞成功'
+                                        self.retjson['contents'] = r'点赞成功'
                                     elif type == '10362':
                                         self.retjson['code'] = '10386'
                                         self.retjson['contents'] = r'用户已取消赞！'
@@ -132,7 +134,10 @@ class AskEntry(BaseHandler): #活动报名点赞表相关操作
                                         ACLuid=uid,
                                         ACLvalid=1,
                                     )
-                                    Activity.AClikenumber += 1
+                                    print 'aaaa进来了哦哦哦'
+                                    print 'now number is',data.AClikenumber
+                                    data.AClikenumber += 1
+                                    print '+1num',data.AClikenumber
                                     self.db.merge(new_Aclike)
                                     self.db_commit(r'点赞成功')
                                     self.retjson['code'] = '10387'
