@@ -77,6 +77,7 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
 
 
         elif type=='10307':#查看活动详情
+             auth = AuthKeyHandler()
              m_uid=self.get_argument("uid","null")
              auth_key=self.get_argument("authkey","null")
              a_auth = AuthKeyHandler()
@@ -106,11 +107,11 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                     #下面是返回用户的信息
                     entryid=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACid).all()
                     for item in entryid:
-                        Userjson = {'id': '', 'headimage': ''}
-                        Userurl=self.db.query(UserImage).filter(item.ACEregisterid==UserImage.UIuid).one()
+                        Userjson = {'id': '', 'headImage': ''}
+                        Userurl=self.db.query(UserImage).filter(UserImage.UIuid==item.ACEregisterid).one()
                         Userjson['id'] = item.ACEregisterid
                        # print
-                        Userjson['headImage'] = Userurl.UIurl
+                        Userjson['headImage'] = auth.download_url(Userurl.UIurl)
                         Usermodel.append(Userjson)
                         print Userjson
                         #print Usermodel
