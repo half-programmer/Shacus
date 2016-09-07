@@ -8,7 +8,7 @@ import json
 import ACFunction
 import ACentryFunction
 from BaseHandlerh import  BaseHandler
-from Documents.tables import ActivityEntry, Activity,ActivityLike
+from Database.tables import ActivityEntry, Activity,ActivityLike
 
 
 class AskEntry(BaseHandler): #活动报名点赞表相关操作

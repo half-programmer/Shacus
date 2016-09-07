@@ -5,7 +5,7 @@ __author__=wjl
 import  json
 
 from BaseHandlerh import BaseHandler
-from Documents.tables import User
+from Database.tables import User
 
 
 class PaswChange(BaseHandler):

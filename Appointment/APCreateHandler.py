@@ -6,7 +6,7 @@
 import json
 
 from BaseHandlerh import BaseHandler
-from Documents.tables import Appointment, User
+from Database.tables import Appointment, User
 from FileHandler.Upload import AuthKeyHandler
 
 

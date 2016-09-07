@@ -10,7 +10,7 @@ from sqlalchemy import desc
 
 from BaseHandlerh import BaseHandler
 from Coursemodel import Coursemodel
-from Documents.tables import Course, CourseTag
+from Database.tables import Course, CourseTag
 from Userinfo import Ufuncs
 
 class Chomepage(BaseHandler):# 教程首页

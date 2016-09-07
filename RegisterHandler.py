@@ -3,8 +3,8 @@ import json
 import random
 
 from  BaseHandlerh import BaseHandler
-from Documents.tables import User, UCinfo
-from Documents.tables import Verification
+from Database.tables import User, UCinfo
+from Database.tables import Verification
 from Userinfo.Usermodel import user_login_fail_model
 from messsage import message
 

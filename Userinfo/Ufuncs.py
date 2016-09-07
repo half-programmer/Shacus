@@ -4,7 +4,7 @@
 #create_time:2016-09-01
 '''
 from Database.models import get_db
-from Documents.tables import User, AppointEntry
+from Database.tables import User, AppointEntry
 
 
 class Ufuncs(object):

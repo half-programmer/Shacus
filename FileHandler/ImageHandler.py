@@ -2,7 +2,7 @@
 import time
 
 from Database.models import get_db
-from Documents.tables import UserImage,Image,AppointmentImage,ActivityImage
+from Database.tables import UserImage,Image,AppointmentImage,ActivityImage
 '''
  创建者：黄鑫晨
  创建时间：2016-08-30 18:05

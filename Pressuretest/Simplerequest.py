@@ -6,7 +6,7 @@ from tornado import gen
 from tornado.web import asynchronous
 
 from BaseHandlerh import BaseHandler
-from Documents.tables import User, Appointment
+from Database.tables import User, Appointment
 from Userinfo.Usermodel import Model_daohanglan
 
 

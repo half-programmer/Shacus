@@ -10,7 +10,7 @@ from sqlalchemy import desc
 import Userinfo
 from APmodel import APmodelHandler
 from BaseHandlerh import BaseHandler
-from Documents.tables import Appointment, AppointEntry
+from Database.tables import Appointment, AppointEntry
 from Userinfo import Ufuncs
 
 
@@ -22,9 +22,10 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
     def refresh_list(self, type, offset_apid, u_id):
         retdata = []
         try:
+            #attention:< ，因为返回新的
             appointments = self.db.query(Appointment). \
                 filter(Appointment.APtype == type, Appointment.APclosed == 0, Appointment.APvalid == 1,
-                       Appointment.APid > offset_apid).from_self().order_by(desc(Appointment.APcreateT)). \
+                       Appointment.APid < offset_apid).from_self().order_by(desc(Appointment.APcreateT)). \
                 limit(6).all()
             if appointments:
                 APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
@@ -37,7 +38,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
             try:
                 appointments = self.db.query(Appointment). \
                     filter(Appointment.APtype == type, Appointment.APclosed == 0, Appointment.APvalid == 1,
-                           Appointment.APid > offset_apid).order_by(desc(Appointment.APcreateT)). \
+                           Appointment.APid < offset_apid).order_by(desc(Appointment.APcreateT)). \
                     all()
                 if appointments:
 

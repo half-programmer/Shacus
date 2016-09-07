@@ -4,7 +4,7 @@
 @attention: Model为模型，model为模特
 '''
 from Database.models import get_db
-from Documents.tables import AppointLike
+from Database.tables import AppointLike
 from Userinfo.Ufuncs import Ufuncs
 
 
@@ -33,19 +33,19 @@ class APmodelHandler(object):
         '''
         # todo:查找待变更为最新10个
 
-        liked = 0
+        global liked
         print AppointLike.ALuid
         print userid
         try:
             likedentry = get_db().query(AppointLike).filter(AppointLike.ALuid == userid,
                                                              AppointLike.ALapid == appointment.APid,
                                                              AppointLike.ALvalid == 1).one()  # 寻找是否点过赞
-
             if likedentry:
                 liked = 1
                 print "点过赞",liked
         except Exception, e:
-              print '.'
+              print e
+              liked = 0
         #todo:userliked不对
         ret_ap = dict(
             APid=appointment.APid,

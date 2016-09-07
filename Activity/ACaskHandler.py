@@ -10,8 +10,8 @@ from sqlalchemy import desc
 
 import ACFunction
 from BaseHandlerh import  BaseHandler
-from Documents.tables import Activity
-from Documents.tables import User,ActivityImage,ActivityEntry,UserImage
+from Database.tables import Activity
+from Database.tables import User,ActivityImage,ActivityEntry,UserImage
 from FileHandler.Upload import AuthKeyHandler
 from Userinfo.Ufuncs import Ufuncs
 

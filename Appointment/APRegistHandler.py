@@ -2,7 +2,7 @@
 import json
 
 from  BaseHandlerh import BaseHandler
-from Documents.tables import User, AppointEntry
+from Database.tables import User, AppointEntry
 from Userinfo.Ufuncs import Ufuncs
 
 '''

@@ -9,7 +9,7 @@ from tornado import gen
 from tornado.web import asynchronous
 
 from BaseHandlerh import BaseHandler
-from Documents.tables import Appointment, AppointLike
+from Database.tables import Appointment, AppointLike
 from Userinfo.Ufuncs import Ufuncs
 
 

@@ -7,7 +7,7 @@ import json
 
 import Ufuncs
 from BaseHandlerh import BaseHandler
-from  Documents.tables import UserLike, User, UCinfo
+from  Database.tables import UserLike, User, UCinfo
 
 
 class FindUlike(BaseHandler):

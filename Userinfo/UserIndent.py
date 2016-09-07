@@ -9,7 +9,7 @@ import json
 from Activity.ACmodel import ACmodelHandler
 from Appointment.APmodel import APmodelHandler
 from BaseHandlerh import BaseHandler
-from Documents.tables import ActivityEntry, Activity, AppointEntry, Appointment
+from Database.tables import ActivityEntry, Activity, AppointEntry, Appointment
 from Userinfo import Ufuncs
 
 class UserIndent(BaseHandler):

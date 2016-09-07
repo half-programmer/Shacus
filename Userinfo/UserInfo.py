@@ -3,7 +3,7 @@ import json
 
 import Ufuncs
 from BaseHandlerh import BaseHandler
-from Documents.tables import User, UCinfo
+from Database.tables import User, UCinfo
 from Usermodel import userinfo_smply
 
 class UserInfo(BaseHandler):  #获取用户自己的ID
