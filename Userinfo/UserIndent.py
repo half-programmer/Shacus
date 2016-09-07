@@ -35,7 +35,7 @@ class UserIndent(BaseHandler):
                 ret_contents['myappointment'] = ret_my_appointment
                 self.retjson['code'] = '10392'
                 self.retjson['contents'] =ret_contents
-            if type =='10902':    # 查看我的正在进行的约拍活动
+            elif type == '10902':    # 查看我的正在进行的约拍活动
                 ret_activity = self.get_activity(u_id,1)
                 ret_contents['activity'] =ret_activity
                 ret_e_appointment = self.get_e_appointment(u_id, 1)
@@ -44,7 +44,7 @@ class UserIndent(BaseHandler):
                 ret_contents['myappointment'] = ret_my_appointment
                 self.retjson['code'] = '10393'
                 self.retjson['contents'] = ret_contents
-            if type == '10903':    # 查看我的已经完成的约拍活动
+            elif type == '10903':    # 查看我的已经完成的约拍活动
                 ret_activity = self.get_activity(u_id,2)
                 ret_contents['activity'] =ret_activity
                 ret_e_appointment = self.get_e_appointment(u_id, 2)
@@ -53,6 +53,7 @@ class UserIndent(BaseHandler):
                 ret_contents['myappointment'] = ret_my_appointment
                 self.retjson['code'] = '10394'
                 self.retjson['contents'] = ret_contents
+
 
 
         else :
