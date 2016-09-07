@@ -3,7 +3,7 @@ from tokenize import String
 
 from Database.models import get_db
 from Database.tables import ActivityLike, Activity
-
+from FileHandler.Upload import AuthKeyHandler
 
 def response(item,retdata,url,Usermodel,issponsor,userid):#查看活动更多详情
     liked = 0
@@ -47,7 +47,8 @@ def response(item,retdata,url,Usermodel,issponsor,userid):#查看活动更多详
     retdata.append(m_response)
 
 
-def Acresponse(item,item2,retdata,userid):
+def Acresponse(item,item2,aclurl,userurl,retdata,userid):
+    auth = AuthKeyHandler()
     liked = 0
     try:
         likedentry = get_db().query(ActivityLike).filter(ActivityLike.ACLuid == userid,
@@ -68,8 +69,8 @@ def Acresponse(item,item2,retdata,userid):
         ACstartT=item.ACstartT.strftime('%Y-%m-%dT%H:%M:%S'),#settime
         AClikenumber=item.AClikenumber,#praisenum
         ACregistN=item.ACregistN,#joinnum
-        AClurl="http://img4.imgtn.bdimg.com/it/u=1293975569,236516549&fm=21&gp=0.jpg#token",
-        Userimageurl="http://img4.imgtn.bdimg.com/it/u=2898602429,470889281&fm=21&gp=0.jpg",
+        AClurl=auth.download_url(aclurl),
+        Userimageurl=auth.download_url(userurl),
         Ualais=item2.Ualais,
         Userliked=liked
     )
