@@ -135,7 +135,7 @@ class ActivityCreate(BaseHandler):   #创建活动
                 self.retjson['contents'] = '用户授权码错误'
 
 
-        elif ac_type ==  '10307':
+        elif ac_type ==  '10307':   #取消活动
             ac_id = self.get_argument('acid')
             u_id = self.get_argument('uid')
             u_auth_key = self.get_argument('authkey')
