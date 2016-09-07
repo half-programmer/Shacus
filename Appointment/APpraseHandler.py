@@ -27,7 +27,7 @@ class APprase(BaseHandler):
         self.retjson['code'] = '10600'
         self.retjson['content'] = name
 
-    def db_commit_fail(self,e):
+    def db_commit_fail(self, e):
         print e
         self.retjson['code'] = '10606'
         self.retjson['content'] = r'数据库提交失败'
