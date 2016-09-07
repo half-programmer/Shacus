@@ -60,7 +60,7 @@ class APmodelHandler(object):
 
 
     @classmethod
-    def ap_Model_multiple(clas, appointment):
+    def ap_Model_multiple(clas, appointment, userid):
         ap_regist_users = []
 
         liked = 0
