@@ -67,7 +67,7 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                             ap_id = ap.APid
                             retjson_body['apId'] = ap_id
                             self.retjson['contents'] = retjson_body
-                        except Exception,e:
+                        except Exception, e:
                             print '插入失败！！'
                             self.retjson['contents'] = r'服务器插入失败'
                 else:

@@ -29,14 +29,15 @@ class APregistHandler(BaseHandler):  # 报名约拍
                     ap_user_id = ap_user.Uid
                     try:
                         exist = self.db.query(AppointEntry). \
-                            filter(
-                            AppointEntry.AEregisterID == u_id, AppointEntry.AEapid == ap_id,
+                            filter(AppointEntry.AEregisterID == u_id, AppointEntry.AEapid == ap_id,
                             AppointEntry.AEvalid == 1).one()  # 应该再加上和ap_id的验证
+
                         if exist:
                             self.retjson['contents'] = '已报名过该约拍'
                             self.retjson['code'] = '10273'
                     except Exception, e:
                         print e
+                        print "插入之前"
                         new_appointmententry = AppointEntry(
                             AEapid=ap_id,
                             AEregisterID=ap_user_id,
