@@ -18,9 +18,9 @@ from Userinfo.Ufuncs import Ufuncs
 class AskActivity(BaseHandler): #关于用户的一系列活动
     retjson = {'code': '200', 'contents': 'none'}
     def post(self):
-        u_auth_key = self.get_argument('authkey')
-        request_type = self.get_argument('type')
-        u_id = self.get_argument('uid')
+        # u_auth_key = self.get_argument('authkey')
+        # request_type = self.get_argument('type')
+        # u_id = self.get_argument('uid')
         retdata = []  # list array
         type = self.get_argument('type', default='unsolved')
         if type == '10303':  # 1.查看所有活动

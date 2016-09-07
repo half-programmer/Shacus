@@ -8,9 +8,9 @@ from Database.tables import ActivityLike, Activity
 def response(item,retdata,url,Usermodel,issponsor,userid):#查看活动更多详情
     liked = 0
     try:
-        likedentry = get_db().query(ActivityLike).filter(ActivityLike.ALuid == userid,
-                                                        ActivityLike.ACLacid == Activity.ACid,
-                                                        ActivityLike.ALvalid == 1).one()  # 寻找是否点过赞
+        likedentry = get_db().query(ActivityLike).filter(ActivityLike.ACLuid == userid,
+                                                        ActivityLike.ACLacid == item.ACid,
+                                                        ActivityLike.ACLvalid == 1).one()  # 寻找是否点过赞
         if likedentry:
             liked = 1
             print "点过赞", liked
@@ -50,9 +50,9 @@ def response(item,retdata,url,Usermodel,issponsor,userid):#查看活动更多详
 def Acresponse(item,item2,retdata,userid):
     liked = 0
     try:
-        likedentry = get_db().query(ActivityLike).filter(ActivityLike.ALuid == userid,
-                                                         ActivityLike.ACLacid == Activity.ACid,
-                                                         ActivityLike.ALvalid == 1).one()  # 寻找是否点过赞
+        likedentry = get_db().query(ActivityLike).filter(ActivityLike.ACLuid == userid,
+                                                         ActivityLike.ACLacid == item.ACid,
+                                                         ActivityLike.ACLvalid == 1).one()  # 寻找是否点过赞
         if likedentry:
             liked = 1
             print "点过赞", liked
