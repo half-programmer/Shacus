@@ -45,15 +45,16 @@ class Coursemodel(object):
         return ret_course
 
     @classmethod
-    def Course_Model_Simply(cls,course,like,fav):
+    def Course_Model_Simply(cls,course,like,fav,see):
         auth = AuthKeyHandler()
         ret_course = dict(
             Cid=course.Cid,
             Ctitle=course.Ctitle,
             CimageUrl=auth.download_url(course.Cimagerul),
             CwatchN = course.CwatchN,
-            Cliked =like,
-            Cfav = fav
+            Cliked = like,
+            Cfav = fav,
+            Csee = see
         )
         return ret_course
 

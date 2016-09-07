@@ -4,6 +4,8 @@
 '''
 import json
 
+from sqlalchemy import desc
+
 from BaseHandlerh import BaseHandler
 from Course import Coursemodel
 from Database.tables import Course, User, UserImage, Image, CourseTagEntry, CourseTag, CourseLike, Usercourse
@@ -60,15 +62,67 @@ class CourseAsk(BaseHandler):
                 self.retjson['contents'] = ret_content
 
             if type == '11005':  # 返回我看过的所有教程
-                ret_content={}
                 ret_course =[]
+                like = 0
                 u_courses = self.db.query(Usercourse).filter(Usercourse.UCuid == u_id,Usercourse.UCseen == 1).all()
                 for u_course in u_courses:
                     u_cid = u_course.UCcid
                     course = self.db.query(Course).filter(Course.Cid == u_cid).one()
-                    ret_course.append(Coursemodel.Coursemodel.Course_Model_Simply_Homepage(course))
-                ret_content['course'] =ret_course
-                #self.db.query(CourseLike).filter(CourseLike.)
+                    fav = u_course.UCfav
+                    try:
+                        self.db.query(CourseLike).filter(CourseLike.CLcid == u_cid,CourseLike.CLuid == u_id,
+                                                     CourseLike.CLvalid == 1 ).one()
+                        like =1
+                    except Exception,e:
+                        print e
+                    ret_course.append(Coursemodel.Coursemodel.Course_Model_Simply(course,like,int(fav),1))
+                self.retjson['contents'] = ret_course
+                self.retjson['code'] = '11051'
+
+            if type =='11006':   #返回我收藏的所有教程
+                ret_course = []
+                like = 0
+                u_courses = self.db.query(Usercourse).filter(Usercourse.UCuid == u_id, Usercourse.UCfav == 1).all()
+                for u_course in u_courses:
+                    u_cid = u_course.UCcid
+                    course = self.db.query(Course).filter(Course.Cid == u_cid).one()
+                    see = u_course.UCseen
+                    try:
+                        self.db.query(CourseLike).filter(CourseLike.CLcid == u_cid, CourseLike.CLuid == u_id,
+                                                         CourseLike.CLvalid == 1).one()
+                        like = 1
+                    except Exception, e:
+                        print e
+                    ret_course.append(Coursemodel.Coursemodel.Course_Model_Simply(course, like, 1, int(see)))
+                self.retjson['contents'] = ret_course
+                self.retjson['code'] = '11061'
+
+            if type == '11007':   #根据标签返回相应课程
+                tag_id = self.get_argument('tid')
+                now_id =self.get_argument('nid')
+                like = 0
+                ret_course = []
+                courses = self.db.query(CourseTagEntry).filter(CourseTagEntry.CTEtid == tag_id).\
+                    order_by(desc(CourseTagEntry.CTEcreateT)).offset(now_id).limit(3).all()
+                for course in courses:
+                    u_cid = course.CTEcid
+                    course = self.db.query(Course).filter(Course.Cid == u_cid).one()
+                    try:
+                        self.db.query(CourseLike).filter(CourseLike.CLcid == u_cid, CourseLike.CLuid == u_id,
+                                                         CourseLike.CLvalid == 1).one()
+                        like = 1
+                    except Exception, e:
+                        print e
+                    try:
+                        u_ucourse = self.db.query(Usercourse).filter(Usercourse.UCuid == u_id,Usercourse.UCcid ==u_cid ).one()
+                        ret_course.append(Coursemodel.Coursemodel.Course_Model_Simply(course, like, int(u_ucourse.UCfav), int(u_ucourse.UCseen)))
+                    except Exception,e:
+                        ret_course.append(Coursemodel.Coursemodel.Course_Model_Simply(course, like, 0,0))
+
+                    self.retjson['contents'] = ret_course
+                    self.retjson['code'] = '11071'
+
+
 
 
 
