@@ -11,3 +11,15 @@ class Dbfuncs(object):
         '''
         retjson['contents'] = '数据库更新错误'
         retjson['code'] = '10274'
+
+# coding=utf-8
+__author__ = 'fang'
+
+def call_back(value):
+    print 'call back value:', value
+
+def caller(func, arg):
+    print 'caller'
+    func(arg)
+
+caller(call_back, 'hello,world')

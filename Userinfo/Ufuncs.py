@@ -4,7 +4,7 @@
 #create_time:2016-09-01
 '''
 from Database.models import get_db
-from Database.tables import User, AppointEntry
+from Database.tables import User, AppointEntry, UserImage
 
 
 class Ufuncs(object):
@@ -71,7 +71,7 @@ class Ufuncs(object):
         '''
         Args:
             apid: 约拍id
-        Returns:返回所有用户的用户模型
+        Returns:返回所有报名用户的用户简单模型
 
         '''
         users = []
@@ -82,12 +82,36 @@ class Ufuncs(object):
             for register in registers:
                 user['id'] = register.AEregisterID
                 # todo: 待变为真图片
-                #user['uimgurl'] = get_db().query(UserImage.UIurl).filter(UserImage.UIuid == user['uid'])
+                #  user['uimgurl'] = get_db().query(UserImage.UIurl).filter(UserImage.UIuid == user['uid'])
                 user['headImage'] = 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2413410606,339859400&fm=21&gp=0.jpg '
                 users.append(user)
             return users
         except Exception, e:
             print e
+
+
+    @staticmethod
+    def get_users_registlist_from_uids(userids):
+        '''
+        返回选择报名用户中用户详细模型
+        Args:
+            userids:
+        Returns:
+        '''
+        users = []
+        for userid in userids:
+            try:
+                user = get_db().query(User.Uid, User.Ualais).filter(User.Uid == userid).one()
+                new_user = dict(
+                    uid=user.Uid,
+                    ualais=user.Ualais,
+                    uimage="http://img.pconline.com.cn/images/upload/upc/tx/wallpaper/1301/04/c1/17113515_1357280582181.jpg"
+                )
+                users.append(new_user)
+            except Exception, e:
+                print e, "找用户出现错误"
+        return users
+
 
 
 
