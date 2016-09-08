@@ -38,19 +38,19 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
 
                             #dataimage = self.db.query(ActivityImage).filter(data[i].ACid == ActivityImage.ACLacid).one()
                                 datauser=self.db.query(User).filter(data[i].ACsponsorid==User.Uid).one()
-                                aclurl = self.db.query(ActivityImage).filter(ActivityImage.ACIacid == data[i].ACid ).one()
+                                aclurl = self.db.query(ActivityImage).filter(ActivityImage.ACIacid == data[i].ACid ).limit(1).all()
                                 userurl = self.db.query(UserImage).filter(UserImage.UIuid == datauser.Uid).one()
-                                ACFunction.Acresponse(data[i],datauser,aclurl.ACIurl,userurl.UIurl,retdata,u_id)
+                                ACFunction.Acresponse(data[i],datauser,aclurl[0].ACIurl,userurl.UIurl,retdata,u_id)
                                 self.retjson['code']='10303'
                                 self.retjson['contents']=retdata
                         else:
                             for item in range(0,10):
                              #dataimage = self.db.query(ActivityImage).filter(data[item].ACid == ActivityImage.ACLacid).one()
                              datauser = self.db.query(User).filter(User.Uid == data[item].ACsponsorid).one()
-                             aclurl = self.db.query(ActivityImage).filter(ActivityImage.ACIacid == data[item].ACid).one()
+                             aclurl = self.db.query(ActivityImage).filter(ActivityImage.ACIacid == data[item].ACid).limit(1).all()
                              print datauser.Uid
                              userurl = self.db.query(UserImage).filter(UserImage.UIuid == datauser.Uid).one()
-                             ACFunction.Acresponse(data[item],datauser,aclurl.ACIurl,userurl.UIurl,retdata,u_id)
+                             ACFunction.Acresponse(data[item],datauser,aclurl[0].ACIurl,userurl.UIurl,retdata,u_id)
                              self.retjson['code'] = '10303'
                              self.retjson['contents'] = retdata
                     except Exception, e:
@@ -84,12 +84,12 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                             print data[i]
                             #dataimage = self.db.query(ActivityImage).filter(data[i].ACid == ActivityImage.ACLacid).one()
                             datauser = self.db.query(User).filter(User.Uid == data[i].ACsponsorid).one()
-                            aclurl = self.db.query(ActivityImage).filter(ActivityImage.ACIacid == data[i].ACid).one()
+                            aclurl = self.db.query(ActivityImage).filter(ActivityImage.ACIacid == data[i].ACid).limit(1).all()
                             userurl = self.db.query(UserImage).filter(UserImage.UIuid == datauser.Uid).one()
 
                             print '哈哈哈'
                             print datauser.Ualais
-                            ACFunction.Acresponse(data[i],datauser,aclurl.ACIurl,userurl.UIurl,retdata,u_id)
+                            ACFunction.Acresponse(data[i],datauser,aclurl[0].ACIurl,userurl.UIurl,retdata,u_id)
                             print '尼玛还'
                             self.retjson['code'] = '10304'
                             self.retjson['contents'] =retdata
