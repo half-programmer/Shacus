@@ -47,10 +47,11 @@ class APmodelHandler(object):
             print '无图片'
         try:
             if img_tokens[0]:
-                return img_tokens
+                print '有图片'
         except Exception, e:
+            img_tokens.append(authkeyhandler.download_url('default13.jpg'))
             print e
-            return 0
+        return img_tokens
 
 
     @classmethod
@@ -82,7 +83,7 @@ class APmodelHandler(object):
                 apimgurl=''
         except Exception,e:
             print e
-            apimgurl=''
+            apimgurl=[]
         headimage = Ufuncs.get_user_headimage_intent_from_userid(userid)
         ret_ap = dict(
             APid=appointment.APid,
