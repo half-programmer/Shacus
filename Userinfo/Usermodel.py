@@ -1,4 +1,8 @@
 # coding=utf-8
+from Database.models import get_db
+from Database.tables import UserImage
+from FileHandler.Upload import AuthKeyHandler
+
 
 def userinfo_smply(u_info, u_change_info):
     '''
@@ -40,3 +44,4 @@ def user_login_fail_model():
         auth_key='wu'
     )
     return user_model
+

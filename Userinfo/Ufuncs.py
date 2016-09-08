@@ -4,7 +4,8 @@
 #create_time:2016-09-01
 '''
 from Database.models import get_db
-from Database.tables import User, AppointEntry, UserImage
+from Database.tables import User, AppointEntry, UserImage, Image
+from FileHandler.Upload import AuthKeyHandler
 
 
 class Ufuncs(object):
@@ -83,7 +84,7 @@ class Ufuncs(object):
                 user['id'] = register.AEregisterID
                 # todo: 待变为真图片
                 #  user['uimgurl'] = get_db().query(UserImage.UIurl).filter(UserImage.UIuid == user['uid'])
-                user['headImage'] = 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2413410606,339859400&fm=21&gp=0.jpg '
+                user['headImage'] = Ufuncs.get_user_headimage_intent_from_userid(user['id'])
                 users.append(user)
             return users
         except Exception, e:
@@ -105,7 +106,7 @@ class Ufuncs(object):
                 new_user = dict(
                     uid=user.Uid,
                     ualais=user.Ualais,
-                    uimage="http://img.pconline.com.cn/images/upload/upc/tx/wallpaper/1301/04/c1/17113515_1357280582181.jpg",
+                    uimage=Ufuncs.get_user_headimage_intent_from_userid(user.Uid),
                     usign=user.Usign
                 )
                 users.append(new_user)
@@ -130,7 +131,7 @@ class Ufuncs(object):
                 new_user = dict(
                     uid=user.Uid,
                     ualais=user.Ualais,
-                    uimage="http://img.pconline.com.cn/images/upload/upc/tx/wallpaper/1301/04/c1/17113515_1357280582181.jpg",
+                    uimage=Ufuncs.get_user_headimage_intent_from_userid(user.Uid),
                     usign=user.Usign,
                     uchoosed=int(register.AEchoosed)
                 )
@@ -154,6 +155,26 @@ class Ufuncs(object):
         except Exception,e:
             print e
         return userids
+
+    @staticmethod
+    def get_user_headimage_intent_from_userid(userid):
+        user_intent = ''
+        authkey_handler = AuthKeyHandler()
+        try:
+            user_images = get_db().query(UserImage).filter(UserImage.UIuid == userid).all()
+            user_images[0] = 'logo1.png'
+            for user_image in user_images:
+                isvalid = get_db().query(Image).filter(Image.IMid == user_image.UIuid).one()
+                if isvalid.IMvalie == 1:
+                    ui_url = user_image.UIurl
+                    user_intent = authkey_handler.download_url(ui_url)
+                else:
+                    user_intent = authkey_handler.download_url("logo1.png")
+        except Exception, e:
+            print e
+            user_intent = authkey_handler.download_url("logo1.png")
+        return user_intent
+
 
 
 
