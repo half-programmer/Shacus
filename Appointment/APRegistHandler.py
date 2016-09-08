@@ -2,7 +2,7 @@
 import json
 
 from  BaseHandlerh import BaseHandler
-from Database.tables import User, AppointEntry
+from Database.tables import User, AppointEntry, Appointment
 from Userinfo.Ufuncs import Ufuncs
 
 '''
@@ -45,6 +45,12 @@ class APregistHandler(BaseHandler):  # 报名约拍
                             AEvalid=1,
                             AEchoosed=0,
                         )
+                        try:
+                            appointment = self.db.query(Appointment.APregistN).\
+                                filter(Appointment.APid == new_appointmententry.AEapid).one()
+                            appointment.APregistN +=1
+                        except Exception,e:
+                            self.retjson['contents'] = '报名人数增加错误'
                         self.db.merge(new_appointmententry)
                         try:
                             self.db.commit()

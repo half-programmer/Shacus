@@ -7,6 +7,7 @@ import json
 
 from BaseHandlerh import BaseHandler
 from Database.tables import Appointment, User
+from FileHandler.ImageHandler import ImageHandler
 from FileHandler.Upload import AuthKeyHandler
 
 
@@ -29,8 +30,8 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                 print '进入try::::::'
                 key = sponsor.Uauthkey
                 ap_sponsorid = sponsor.Uid
-                print  'ap_sponsorid::::',ap_sponsorid
-                print 'ap_title::::',ap_title
+                print  'ap_sponsorid::::', ap_sponsorid
+                print 'ap_title::::', ap_title
                 if auth_key == key:  # 认证成功
                     print '认证成功'
                     try:
@@ -68,6 +69,12 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                                    Appointment.APtitle == ap_title, Appointment.APsponsorid == ap_sponsorid).one()
                             ap_id = ap.APid
                             retjson_body['apId'] = ap_id
+                            imghandler = ImageHandler()
+                            try:
+                                imghandler.insert_appointment_image(ap_imgs_json, appointment.APid)
+                            except Exception, e:
+                                print e, '网络故障'
+                                self.retjson['contents'] = u'网络故障'
                             self.retjson['contents'] = retjson_body
                         except Exception, e:
                             print '插入失败！！'

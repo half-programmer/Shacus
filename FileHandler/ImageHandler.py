@@ -92,7 +92,7 @@ class ImageHandler(object):
         imids = self.insert(list)
         for i in range(len(imids)):
             image = AppointmentImage(
-                APIacid=ap_id,
+                APIapid=ap_id,
                 APIimid=imids[i],
                 APIurl=list[i]
             )
