@@ -177,6 +177,8 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                     print e
                     self.retjson['code'] = '10264'
                     self.retjson['contents'] = u'未查询到报名人'
+
+
         else:
             self.retjson['contents'] = '授权码不存在或已过期'
             self.retjson['code'] = '10214'

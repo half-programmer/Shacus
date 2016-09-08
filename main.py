@@ -22,6 +22,10 @@ from Database.models import engine
 from ImageCallback import ImageCallback
 from Pressuretest.Simplerequest import Simplerequest
 from RegisterHandler import RegisterHandler
+
+from TRends.TRendspost import TRendspost
+from Userhomepager import Userhomepager
+from Userinfo.UserIndent import UserIndent
 from Settings import PaswChange
 from Userinfo.UserFavoriteHandler import UserFavorite
 from Userinfo.UserIndent import UserIndent
@@ -29,6 +33,10 @@ from Userinfo.UserInfo import UserInfo
 from Userinfo.UserLike import FindUlike
 from Userinfo.Userhomepager import Userhomepager
 from loginHandler import LoginHandler
+from Settings import PaswChange
+from Userinfo.UserInfo import UserInfo
+from Pressuretest.Simplerequest import Simplerequest
+
 
 define("port", default=800, help="run on the given port", type=int)
 
@@ -54,6 +62,7 @@ class Application(tornado.web.Application):
              (r"/activity/register",ActivityRegister),
              (r"/ImageCallback",ImageCallback),
              (r"/PaswChange",PaswChange),
+             (r"/trend/Trendspost",TRendspost),
              (r"/course/homepage",Chomepage),
              (r"/course/ask",CourseAsk),
              (r"/course/like",Courselike),
