@@ -30,7 +30,7 @@ class User(Base): # 用户表   #添加聊天专用chattoken
     Usex = Column(Boolean,nullable=False)
     Usign = Column(VARCHAR(256))
     Uauthkey = Column(VARCHAR(32))
-    Uchattoken = Column(VARCHAR(128),nullable=False)
+    Uchattoken = Column(VARCHAR(128), nullable=False)
 
 class UCinfo(Base):
     __tablename__ = 'UCinfo'
