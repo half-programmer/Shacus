@@ -41,7 +41,7 @@ class Chomepage(BaseHandler):# 教程首页
                 self.retjson['code'] = '11010'
 
             if type == '11009':    #教程首页点击more
-                courses = self.db.query(Course).all()
+                courses = self.db.query(Course).order_by(desc(Course.Cscore)).all()
                 for course in courses:
                     u_cid = course.Cid
                     course = self.db.query(Course).filter(Course.Cid == u_cid).one()
