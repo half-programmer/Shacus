@@ -40,7 +40,7 @@ class Chomepage(BaseHandler):# 教程首页
                 self.retjson['contents'] = ret_contents
                 self.retjson['code'] = '11010'
 
-            if type == '11009':    #活动首页点击more
+            if type == '11009':    #教程首页点击more
                 courses = self.db.query(Course).all()
                 for course in courses:
                     u_cid = course.Cid
@@ -55,10 +55,10 @@ class Chomepage(BaseHandler):# 教程首页
                         u_ucourse = self.db.query(Usercourse).filter(Usercourse.UCuid == u_id,
                                                                         Usercourse.UCcid == u_cid).one()
                         ret_course.append(
-                            Coursemodel.Coursemodel.Course_Model_Simply(course, like, int(u_ucourse.UCfav),
+                            Coursemodel.Course_Model_Simply(course, like, int(u_ucourse.UCfav),
                                                                            int(u_ucourse.UCseen)))
                     except Exception, e:
-                        ret_course.append(Coursemodel.Coursemodel.Course_Model_Simply(course, like, 0, 0))
+                        ret_course.append(Coursemodel.Course_Model_Simply(course, like, 0, 0))
                 if courses:
                     self.retjson['contents'] = ret_course
                     self.retjson['code'] = '11091'
