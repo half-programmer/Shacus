@@ -63,6 +63,7 @@ def Acresponse(item,item2,aclurl,userurl,retdata,userid):
 
     m_Acresponse=dict(
         ACid=item.ACid,
+        ACtitle=item.ACtitle,
         ACsponsorid=item.ACsponsorid,#username
         AClocation=item.AClocation,#location
         ACcontent=item.ACcontent,#
