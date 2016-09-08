@@ -259,3 +259,22 @@ class Usercourse(Base):   #和用户有关的教程
     UCseen = Column(Boolean,nullable=False,default=0)
     UCfav = Column(Boolean,nullable=False,default=0)
 
+class Trend(Base):
+    __tablename__ = "Trend"
+
+    Tid = Column(Integer, primary_key=True)
+    Tsponsorid = Column(Integer, ForeignKey('User.Uid',onupdate='CASCADE'),primary_key=True)  #用户id
+    TsponsT = Column(DateTime(timezone=True), default=func.now())                                         #时间
+    TcommentN = Column(Integer,nullable=False,default=0)
+    TlikeN =Column(Integer,nullable=False,default=0)
+    Tcontent = Column(VARCHAR(128),nullable=False)
+    Ttitle = Column(VARCHAR(12),nullable=False)
+
+class TrendImage(Base):
+    __tablename__ = 'TrendImage'
+    TIid = Column(Integer ,primary_key=True)
+    TItid =Column (Integer,ForeignKey('Trend.Tid',onupdate='CASCADE'),primary_key=True)
+    TIimid = Column(Integer,ForeignKey('Image.IMid',onupdate='CASCADE'),primary_key=True)
+    TIimgurl = Column(VARCHAR(128))
+
+

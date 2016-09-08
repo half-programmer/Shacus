@@ -41,6 +41,7 @@ class Chomepage(BaseHandler):# 教程首页
                 self.retjson['code'] = '11010'
 
             if type == '11009':    #教程首页点击more
+                like = 0
                 courses = self.db.query(Course).order_by(desc(Course.Cscore)).all()
                 for course in courses:
                     u_cid = course.Cid
@@ -50,6 +51,7 @@ class Chomepage(BaseHandler):# 教程首页
                                                             CourseLike.CLvalid == 1).one()
                         like = 1
                     except Exception, e:
+                        like = 0
                         print e
                     try:
                         u_ucourse = self.db.query(Usercourse).filter(Usercourse.UCuid == u_id,
