@@ -2,11 +2,15 @@
 import json
 import random
 
+import time
+
 from  BaseHandlerh import BaseHandler
-from Database.tables import User, UCinfo
+from Database.tables import User, UCinfo, Image, UserImage
 from Database.tables import Verification
 from Userinfo.Usermodel import user_login_fail_model
 from messsage import message
+from FileHandler.ImageHandler import ImageHandler
+from FileHandler.Upload import AuthKeyHandler
 
 
 def generate_verification_code(len=6):
@@ -112,12 +116,33 @@ class RegisterHandler(BaseHandler):
                         self.retjson['code'] = 10004  # success
                         m_time = self.db.query(User.UregistT).filter(User.Uauthkey == m_auth_key).one()
                         m_id = self.db.query(User.Uid).filter(User.Uauthkey == m_auth_key).one()
+                        image = Image(
+                            IMvalid=True,
+                            IMT=time.strftime('%Y-%m-%d %H:%M:%S'),
+                            IMname=m_nick_name
+                        )
+
+                        self.db.merge(image)
+                        self.db.commit()
+                        new_img = self.db.query(Image).filter(Image.IMname == m_nick_name).one()
+                        imid = new_img.IMid
+                        userImage = UserImage(
+                            UIuid = m_id[0],
+                            UIimid = imid,
+                            UIurl = "user-default-image.jpg"
+                        )
+                        self.db.merge(userImage)
+                        self.db.commit()
+
+
+
+                        auth = AuthKeyHandler()
 
                         data=dict(
                             phone = m_phone,
                             authkey  = m_auth_key,
                             nickName = m_nick_name,
-                            headImage ='',
+                            headImage =auth.download_url("user-default-image.jpg"),
                             realName ='',
                             birthday ='',
                             sign ='',

@@ -32,7 +32,7 @@ class Coursefav(BaseHandler):
                         else:              #用户没有收藏过此教程
                             exist.UCfav = 1
                             self.db.query(Course).filter(Course.Cid == c_id). \
-                                update({Course.CfavN: Course.CfavN + 1}, synchronize_session=False)
+                                update({Course.CfavN: Course.CfavN + 1,Course.Cscore :Course.Cscore+10}, synchronize_session=False)
                             try:
                                 self.db.commit()
                                 self.retjson['contents'] = '收藏教程成功'
@@ -44,7 +44,7 @@ class Coursefav(BaseHandler):
                         if exist.UCfav == 1:  #用户取消收藏教程
                             exist.UCfav = 0
                             self.db.query(Course).filter(Course.Cid == c_id). \
-                                update({Course.CfavN: Course.CfavN - 1}, synchronize_session=False)
+                                update({Course.CfavN: Course.CfavN - 1,Course.Cscore :Course.Cscore-10}, synchronize_session=False)
                             try:
                                 self.db.commit()
                                 self.retjson['contents'] = '取消收藏教程成功'
@@ -66,7 +66,7 @@ class Coursefav(BaseHandler):
                          )
                         self.db.merge(usercourse)
                         self.db.query(Course).filter(Course.Cid == c_id).\
-                            update({Course.CfavN: Course.CfavN+1},synchronize_session=False)
+                            update({Course.CfavN: Course.CfavN+1,Course.Cscore :Course.Cscore+10},synchronize_session=False)
                         try:
                             self.db.commit()
                             self.retjson['contents'] = '收藏教程成功'

@@ -33,7 +33,7 @@ class Courselike(BaseHandler):
                             self.retjson['code'] = '11041'
                             self.retjson['contents'] = '取消赞成功'
                             self.db.query(Course).filter(Course.Cid == c_id). \
-                                update({Course.ClikeN: Course.ClikeN - 1}, synchronize_session=False)
+                                update({Course.ClikeN: Course.ClikeN - 1,Course.Cscore :Course.Cscore-5}, synchronize_session=False)
                             self.db.commit()
                     else:
                         if type =='11003': #点赞时已经取消赞
@@ -41,7 +41,7 @@ class Courselike(BaseHandler):
                             self.retjson['code'] = '11032'
                             self.retjson['contents'] = '成功点赞'
                             self.db.query(Course).filter(Course.Cid == c_id). \
-                                update({Course.ClikeN: Course.ClikeN + 1}, synchronize_session=False)
+                                update({Course.ClikeN: Course.ClikeN + 1,Course.Cscore :Course.Cscore+5}, synchronize_session=False)
                             self.db.commit()
                         if type == '11004': #取消时已取消赞
                             self.retjson['code'] = '11042'
@@ -58,7 +58,7 @@ class Courselike(BaseHandler):
                         self.retjson['code'] = '11032'
                         self.retjson['contents'] = '成功点赞'
                         self.db.query(Course).filter(Course.Cid == c_id). \
-                            update({Course.ClikeN: Course.ClikeN + 1}, synchronize_session=False)
+                            update({Course.ClikeN: Course.ClikeN + 1,Course.Cscore :Course.Cscore+5}, synchronize_session=False)
                         self.db.commit()
                     if type == '11004':     #取消赞时从未点赞过
                         self.retjson['code'] = '11043'

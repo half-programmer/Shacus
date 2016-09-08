@@ -13,6 +13,7 @@ class Coursemodel(object):
             Cid = course.Cid,
             Ctitle = course.Ctitle,
             CimageUrl  =  auth.download_url(course.Cimagerul),
+            Curl = course.Curl
         )
         return ret_course
 

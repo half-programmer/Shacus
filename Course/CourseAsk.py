@@ -51,6 +51,7 @@ class CourseAsk(BaseHandler):
                         tags.append(tag_info.CTname)
                     ret_content ['course']= Coursemodel.Coursemodel.Course_Model_Complete(course,tags)     #将浏览人数加一
                     course.CwatchN+=1
+                    course.Cscore +=1
                     self.db.commit()
                     try:
                         self.db.query(CourseLike).filter(CourseLike.CLcid ==c_id,
