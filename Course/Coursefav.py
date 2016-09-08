@@ -40,7 +40,7 @@ class Coursefav(BaseHandler):
                             except Exception,e:
                                 self.retjson['contents'] = '服务器出错'
                                 self.retjson['code'] = '11082'
-                    if type =='11008':    #用户取消收藏教程
+                    if type =='11009':    #用户取消收藏教程
                         if exist.UCfav == 1:  #用户取消收藏教程
                             exist.UCfav = 0
                             self.db.query(Course).filter(Course.Cid == c_id). \

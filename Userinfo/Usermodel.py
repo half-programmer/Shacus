@@ -1,8 +1,9 @@
 # coding=utf-8
 from Database.models import get_db
-from Database.tables import UserImage
+from Database.tables import UserImage, Image
 from FileHandler.Upload import AuthKeyHandler
-
+from Database.models import get_db
+from FileHandler.Upload import AuthKeyHandler
 
 def userinfo_smply(u_info, u_change_info):
     '''
@@ -14,10 +15,18 @@ def userinfo_smply(u_info, u_change_info):
     Returns:
 
     '''
+    auth = AuthKeyHandler()
+    user_headimages = get_db().query(UserImage).filter(UserImage.UIuid == u_info.Uid).all()
+    userimg = []
+    for user_headimage in user_headimages:
+        exist = get_db().query(Image).filter(Image.IMid == user_headimage.UIimid, Image.IMvalid == 1).all()
+        if exist:
+            userimg = user_headimage
+            break;
     ret_info = {'uid': u_info.Uid, 'ualais': u_info.Ualais, 'ulocation': u_info.Ulocation,
                      'utel': u_info.Utel, 'uname': u_info.Uname, 'umailbox': u_info.Umailbox,
                      'ubirthday': u_info.Ubirthday, 'uscore': u_info.Uscore, 'usex': u_info.Usex,
-                     'usign': u_info.Usign, 'uimage': '', 'ulikeN': u_change_info.UClikeN,
+                     'usign': u_info.Usign, 'uimage': auth.download_url(userimg.UIurl), 'ulikeN': u_change_info.UClikeN,
                      'ulikedN': u_change_info.UClikedN, 'uapN': u_change_info.UCapN,
                      'uphotoN': u_change_info.UCphotoN, 'ucourseN': u_change_info.UCcourseN,
                      'umomentN': u_change_info.UCmomentN}

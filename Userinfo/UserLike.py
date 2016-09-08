@@ -7,7 +7,8 @@ import json
 
 import Ufuncs
 from BaseHandlerh import BaseHandler
-from  Database.tables import UserLike, User, UCinfo
+from  Database.tables import UserLike, User, UCinfo, UserImage, Image
+from FileHandler.Upload import AuthKeyHandler
 
 
 class FindUlike(BaseHandler):
@@ -66,7 +67,17 @@ class FindUlike(BaseHandler):
 
                     my_like_id = my_like.ULlikedid
                     userinfo = self.db.query(User).filter(User.Uid == my_like_id).one()
-                    user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign, 'uimgurl': ''}
+                    auth = AuthKeyHandler()
+                    user_headimages = self.db.query(UserImage).filter(UserImage.UIuid == my_like_id).all()
+                    userimg = []
+                    for user_headimage in user_headimages:
+                        exist = self.db.query(Image).filter(Image.IMid == user_headimage.UIimid,
+                                                             Image.IMvalid == 1).all()
+                        if exist:
+                            userimg = user_headimage
+                            break;
+                    user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign,
+                                 'uimgurl': auth.download_url(userimg.UIurl)}
                     retdata.append(user_json)
                     print '成功返回关注者'
                     self.retjson['code'] = '10430'
@@ -156,6 +167,15 @@ class FindUlike(BaseHandler):
                 for my_like in my_likes:
 
                     my_like_id = my_like.ULlikeid
+                    auth = AuthKeyHandler()
+                    user_headimages = self.db.query(UserImage).filter(UserImage.UIuid == my_like_id).all()
+                    userimg = []
+                    for user_headimage in user_headimages:
+                        exist = self.db.query(Image).filter(Image.IMid == user_headimage.UIimid,
+                                                            Image.IMvalid == 1).all()
+                        if exist:
+                            userimg = user_headimage
+                            break;
                     userinfo = self.db.query(User).filter(User.Uid == my_like_id,).one()
                     #接来下测试是否我也关注了我的粉丝
                     try:
@@ -166,7 +186,8 @@ class FindUlike(BaseHandler):
                         text =True
                     except Exception,e:
                         text=False
-                    user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign, 'uimgurl': '','fansback':text}
+                    user_json = {'uid': userinfo.Uid, 'ualais': userinfo.Ualais, 'usign': userinfo.Usign,
+                                 'uimgurl':auth.download_url(userimg.UIurl) ,'fansback':text}
                     retdata.append(user_json)
                 print '成功返回粉丝'
                 self.retjson['code'] = '10440'
