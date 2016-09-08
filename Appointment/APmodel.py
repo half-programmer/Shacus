@@ -83,6 +83,7 @@ class APmodelHandler(object):
         except Exception,e:
             print e
             apimgurl=''
+        headimage = Ufuncs.get_user_headimage_intent_from_userid(userid)
         ret_ap = dict(
             APid=appointment.APid,
                 APtitle=appointment.APtitle,
@@ -90,7 +91,7 @@ class APmodelHandler(object):
                 APstartT=appointment.APstartT.strftime('%Y-%m-%dT%H:%M:%S'),
                 APlikeN=appointment.APlikeN,
                 APregistN=appointment.APregistN,
-                Userimg=r"http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg",
+                Userimg=headimage,
                 Userliked=liked
                 )
         return ret_ap

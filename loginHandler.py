@@ -7,6 +7,7 @@ from tornado.web import asynchronous
 
 from BaseHandlerh import BaseHandler
 from Database.tables import Appointment, User
+from Userinfo.Ufuncs import Ufuncs
 from Userinfo.Usermodel import Model_daohanglan
 
 class LoginHandler(BaseHandler):
@@ -51,7 +52,7 @@ class LoginHandler(BaseHandler):
                                 birthday=Ubirthday,
                                 registTime=user.UregistT.strftime('%Y-%m-%d %H:%M:%S'),
                                 mailBox=user.Umailbox,
-                                headImage=r"http://img5.imgtn.bdimg.com/it/u=1268523085,477716560&fm=21&gp=0.jpg",
+                                headImage=Ufuncs.get_user_headimage_intent_from_userid(user.Uid),
                                 auth_key=u_auth_key
                             )
                             photo_list = []  # 摄影师发布的约拍
