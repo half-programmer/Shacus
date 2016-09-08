@@ -62,8 +62,6 @@ class LoginHandler(BaseHandler):
                             daohangl_list.append(
                                 Model_daohanglan('http://image8.360doc.com/DownloadImg/2010/04/0412/2762690_45.jpg','http://image.baidu.com/search/detail?ct=503316480&z=0&ipn=d&word=%E7%BE%8E%E5%9B%BE&step_word=&hs=0&pn=24&spn=0&di=14293150190&pi=0&rn=1&tn=baiduimagedetail&is=&istype=0&ie=utf-8&oe=utf-8&in=&cl=2&lm=-1&st=undefined&cs=2860350365%2C3214019191&os=289517539%2C4157278886&simid=0%2C0&adpicid=0&ln=1992&fr=&fmq=1472885603080_R&fm=&ic=undefined&s=undefined&se=&sme=&tab=0&width=&height=&face=undefined&ist=&jit=&cg=&bdtype=0&oriquery=&objurl=http%3A%2F%2Fimage8.360doc.com%2FDownloadImg%2F2010%2F04%2F0412%2F2762690_45.jpg&fromurl=ippr_z2C%24qAzdH3FAzdH3Fooo_z%26e3Bnma15v_z%26e3Bv54AzdH3Fv5gpjgpAzdH3F8aAzdH3FabdaAzdH3F88AzdH3F8nad0dl_9098dc0d_z%26e3Bfip4s&gsm=0&rpstart=0&rpnum=0'))
                             try:
-                                print 'shaixuanqian'
-
                                 photo_list_all = self.db.query(Appointment).filter(Appointment.APtype == 1,
                                                                                    Appointment.APvalid == 1).\
                                     order_by(desc(Appointment.APcreateT)).limit(6).all()
@@ -72,12 +70,9 @@ class LoginHandler(BaseHandler):
                                     order_by(desc(Appointment.APcreateT)).limit(6).all()
                                 from Appointment.APmodel import APmodelHandler
                                 ap_model_handler = APmodelHandler()  # 创建对象
-                                print 'chuangjianchengg'
 
                                 ap_model_handler.ap_Model_simply(photo_list_all, photo_list, user.Uid)
-
                                 ap_model_handler.ap_Model_simply(model_list_all, model_list, user.Uid)
-                                print 'shaixuanchengg'
                                 data = dict(
                                 userModel=user_model,
                                 daohanglan=daohangl_list,
@@ -92,7 +87,6 @@ class LoginHandler(BaseHandler):
                             except Exception,e:
                                 print e
                                 self.retjson['contents'] = r"摄影师约拍列表导入失败！"
-
                         else:
                             self.retjson['contents'] = u'密码错误'
                             self.retjson['code'] = '10104'  # 密码错误
