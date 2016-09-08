@@ -10,7 +10,7 @@ from sqlalchemy import desc
 
 import ACFunction
 from BaseHandlerh import  BaseHandler
-from Database.tables import Activity
+from Database.tables import Activity, Image
 from Database.tables import User,ActivityImage,ActivityEntry,UserImage
 from FileHandler.Upload import AuthKeyHandler
 from Userinfo.Ufuncs import Ufuncs
@@ -145,10 +145,17 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                     entryid=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACid).all()
                     for item in entryid:
                         Userjson = {'id': '', 'headImage': ''}
-                        Userurl=self.db.query(UserImage).filter(UserImage.UIuid==item.ACEregisterid).one()
+                        Userurls=self.db.query(UserImage).filter(UserImage.UIuid==item.ACEregisterid).all()
+                        userimg = []
+                        for Userurl in Userurls:
+                            exist = self.db.query(Image).filter(Image.IMid == Userurl.UIimid,
+                                                                 Image.IMvalid == 1).all()
+                            if exist:
+                                userimg = Userurl
+                                break;
                         Userjson['id'] = item.ACEregisterid
                        # print
-                        Userjson['headImage'] = auth.download_url(Userurl.UIurl)
+                        Userjson['headImage'] = auth.download_url(userimg.UIurl)
                         Usermodel.append(Userjson)
                         print Userjson
                         #print Usermodel
