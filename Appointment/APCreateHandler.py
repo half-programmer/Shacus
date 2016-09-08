@@ -71,7 +71,7 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                             retjson_body['apId'] = ap_id
                             imghandler = ImageHandler()
                             try:
-                                imghandler.insert_appointment_image(ap_imgs_json, appointment.APid)
+                                imghandler.insert_appointment_image(ap_imgs_json, ap.APid)
                             except Exception, e:
                                 print e, '网络故障'
                                 self.retjson['contents'] = u'网络故障'
