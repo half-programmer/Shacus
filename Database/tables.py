@@ -14,7 +14,7 @@ reload(sys)
 # from models import engine
 
 # 每个类对应一个表
-class User(Base): # 用户表
+class User(Base): # 用户表   #添加聊天专用chattoken
     __tablename__ = 'User'
 
     Uid = Column(Integer, nullable=False, primary_key=True)  # 主键
@@ -30,6 +30,7 @@ class User(Base): # 用户表
     Usex = Column(Boolean,nullable=False)
     Usign = Column(VARCHAR(256))
     Uauthkey = Column(VARCHAR(32))
+    Uchattoken = Column(VARCHAR(128), nullable=False)
 
 class UCinfo(Base):
     __tablename__ = 'UCinfo'

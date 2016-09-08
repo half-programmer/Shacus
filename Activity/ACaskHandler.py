@@ -10,7 +10,7 @@ from sqlalchemy import desc
 
 import ACFunction
 from BaseHandlerh import  BaseHandler
-from Database.tables import Activity
+from Database.tables import Activity, Image
 from Database.tables import User,ActivityImage,ActivityEntry,UserImage
 from FileHandler.Upload import AuthKeyHandler
 from Userinfo.Ufuncs import Ufuncs
@@ -49,6 +49,7 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                              datauser = self.db.query(User).filter(User.Uid == data[item].ACsponsorid).one()
                              aclurl = self.db.query(ActivityImage).filter(ActivityImage.ACIacid == data[item].ACid).limit(1).all()
                              print datauser.Uid
+                             print data[item].ACid
                              userurl = self.db.query(UserImage).filter(UserImage.UIuid == datauser.Uid).one()
                              ACFunction.Acresponse(data[item],datauser,aclurl[0].ACIurl,userurl.UIurl,retdata,u_id)
                              self.retjson['code'] = '10303'
@@ -144,10 +145,17 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                     entryid=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACid).all()
                     for item in entryid:
                         Userjson = {'id': '', 'headImage': ''}
-                        Userurl=self.db.query(UserImage).filter(UserImage.UIuid==item.ACEregisterid).one()
+                        Userurls=self.db.query(UserImage).filter(UserImage.UIuid==item.ACEregisterid).all()
+                        userimg = []
+                        for Userurl in Userurls:
+                            exist = self.db.query(Image).filter(Image.IMid == Userurl.UIimid,
+                                                                 Image.IMvalid == 1).all()
+                            if exist:
+                                userimg = Userurl
+                                break;
                         Userjson['id'] = item.ACEregisterid
                        # print
-                        Userjson['headImage'] = auth.download_url(Userurl.UIurl)
+                        Userjson['headImage'] = auth.download_url(userimg.UIurl)
                         Usermodel.append(Userjson)
                         print Userjson
                         #print Usermodel

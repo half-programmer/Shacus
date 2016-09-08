@@ -9,7 +9,7 @@ import json
 from Activity.ACmodel import ACmodelHandler
 from Appointment.APmodel import APmodelHandler
 from BaseHandlerh import BaseHandler
-from Database.tables import ActivityEntry, Activity, AppointEntry, Appointment, AppointmentInfo
+from Database.tables import ActivityEntry, Activity, AppointEntry, Appointment, AppointmentInfo, ActivityImage
 from Userinfo import Ufuncs
 
 class UserIndent(BaseHandler):
@@ -55,6 +55,7 @@ class UserIndent(BaseHandler):
                 ret_contents['myappointment'] = ret_my_appointment
                 self.retjson['code'] = '10394'
                 self.retjson['contents'] = ret_contents
+
             elif type == '10904':  # 选择约拍对象
                 apid = self.get_argument('apid')
                 chooseuid = self.get_argument('chooseduid')
@@ -68,7 +69,7 @@ class UserIndent(BaseHandler):
                             else:  # 用户报名中且未被选择，添加新的约拍项
                                 registEntry.AEchoosed = 1  # 该用户被选择
                                 try:
-                                    appointment = self.db.query(Appointment.APid,Appointment.APsponsorid, Appointment.APtype,
+                                    appointment = self.db.query(Appointment.APid, Appointment.APsponsorid, Appointment.APtype,
                                                                 Appointment.APstatus).\
                                         filter(Appointment.APid == registEntry.AEapid).one()
                                     if appointment.APsponsorid == int(u_id):  # 该操作用户是发起者
@@ -114,11 +115,36 @@ class UserIndent(BaseHandler):
 
             elif type == '10906': #结束活动
                 ac_id = self.get_argument("ac_id")
-                self.finish_avtivity(u_id,ac_id)
+                self.finish_avtivity(u_id, ac_id)
 
             elif type == '10907': #结束活动报名
                 ac_id = self.get_argument('acid')
                 self.finnish_activity_register(u_id,ac_id)
+            elif type == '10905':  # 将约拍移动到已完成
+                ap_id = self.get_argument('apid')
+                try:
+                    appointment = self.db.query(Appointment).filter(Appointment.APid == ap_id).one()
+                    if appointment.APstatus == 0:  # 报名中
+                        self.retjson['code'] = '10260'
+                        self.retjson['contents'] = u'该约拍尚在报名中，无法结束！'
+
+                    elif appointment.APstatus == 1:  # 进行中
+                        if int(u_id) == appointment.APsponsorid:
+                            appointment.APstatus = 2
+                            self.db.commit()
+                            self.retjson['code'] = '10258'
+                            self.retjson['contents'] = u'成功结束约拍！'
+                        else:
+                            self.retjson['code'] = '10260'
+                            self.retjson['contents'] = u'该用户无结束权限！！'
+
+                    elif appointment.APstatus == 2:  # 已完成
+                        self.retjson['code'] = '10260'
+                        self.retjson['contents'] = u'该约拍已结束！'
+                except Exception, e:
+                    print e
+                    self.retjson['code'] = '10261'
+                    self.retjson['contents'] = u'未找到该约拍记录！'
 
 
 
@@ -136,9 +162,15 @@ class UserIndent(BaseHandler):
         for ac_entey in ac_enteys:
            ac_id = ac_entey.ACEacid
            ac_info = self.db.query(Activity).filter(Activity.ACid == ac_id,
-                                                 Activity.ACstatus == number).all()
+                                                 Activity.ACstatus == number,Activity.ACvalid == 1).all()
+           url = self.db.query(ActivityImage).filter(ActivityImage.ACIacid == ac_id).limit(1).all()
            if ac_info:
-               ret_activity.append(ACmodelHandler.ac_Model_simply(ac_info[0]))
+               ret_activity.append(ACmodelHandler.ac_Model_simply(ac_info[0],url[0].ACIurl))
+        ac_mentrys = self.db.query(Activity).filter(Activity.ACsponsorid == u_id,Activity.ACvalid == 1,
+                                                    Activity.ACstatus == number).all()
+        for ac_mentry in ac_mentrys:
+            url = self.db.query(ActivityImage).filter(ActivityImage.ACIacid == ac_id).limit(1).all()
+            ret_activity.append(ACmodelHandler.ac_Model_simply(ac_mentry, url[0].ACIurl))
         return ret_activity
 
 
@@ -162,6 +194,7 @@ class UserIndent(BaseHandler):
                 print e
             if ap_e_info:
                 ret_e_appointment.append(APmodelHandler.ap_Model_simply_one(ap_e_info[0],u_id))
+
         return ret_e_appointment
 
     def get_my_appointment(self,u_id,number):
