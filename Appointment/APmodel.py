@@ -75,10 +75,14 @@ class APmodelHandler(object):
         # todo:userliked不对
         print '得到Url前'
         apimgurls = APmodelHandler.ap_get_imgs_from_apid(appointment.APid)
-        if apimgurls[0]:
+        try:
+            if apimgurls[0]:
                 apimgurl = apimgurls[0]
-        else:
+            else:
                 apimgurl=''
+        except Exception,e:
+            print e
+            apimgurl=''
         ret_ap = dict(
             APid=appointment.APid,
                 APtitle=appointment.APtitle,
