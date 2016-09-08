@@ -164,11 +164,15 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                         try:
                             print "in try"
                             userids = Ufuncs.Ufuncs.get_registids_from_appointment(appointment)
-                            registers = Ufuncs.Ufuncs.get_users_registlist_from_uids(userids)
+                            print 'before get '
+                            registers = Ufuncs.Ufuncs.get_users_chooselist_from_uids(userids, appointment.APid)
+                            self.retjson['code'] = '10257'
+                            self.retjson['contents'] = registers
                         except Exception, e:
                             print e
-                        self.retjson['code'] = '10257'
-                        self.retjson['contents'] = registers
+                            self.retjson['code'] = ''
+                            self.retjson['contents'] = u'读写错误'
+
                 except Exception, e:
                     print e
                     self.retjson['code'] = '10264'

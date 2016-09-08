@@ -68,7 +68,7 @@ class UserIndent(BaseHandler):
                             else:  # 用户报名中且未被选择，添加新的约拍项
                                 registEntry.AEchoosed = 1  # 该用户被选择
                                 try:
-                                    appointment = self.db.query(Appointment.APid,Appointment.APsponsorid, Appointment.APtype,
+                                    appointment = self.db.query(Appointment.APid, Appointment.APsponsorid, Appointment.APtype,
                                                                 Appointment.APstatus).\
                                         filter(Appointment.APid == registEntry.AEapid).one()
                                     if appointment.APsponsorid == int(u_id):  # 该操作用户是发起者

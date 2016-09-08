@@ -114,6 +114,34 @@ class Ufuncs(object):
         return users
 
     @staticmethod
+    def get_users_chooselist_from_uids(userids, appointmentid):
+        '''
+        返回选择报名用户中用户详细模型
+        Args:
+            userids:
+        Returns:
+        '''
+        users = []
+        for userid in userids:
+            try:
+                register = get_db().query(AppointEntry.AEchoosed, AppointEntry.AEregisterID, AppointEntry.AEapid). \
+                    filter(AppointEntry.AEapid == appointmentid, AppointEntry.AEregisterID == userid).one()
+                user = get_db().query(User.Uid, User.Ualais, User.Usign).filter(User.Uid == userid).one()
+                new_user = dict(
+                    uid=user.Uid,
+                    ualais=user.Ualais,
+                    uimage="http://img.pconline.com.cn/images/upload/upc/tx/wallpaper/1301/04/c1/17113515_1357280582181.jpg",
+                    usign=user.Usign,
+                    uchoosed=int(register.AEchoosed)
+                )
+                print '插入新用户'
+                users.append(new_user)
+            except Exception, e:
+                print e, "找用户出现错误"
+        return users
+
+
+    @staticmethod
     def get_registids_from_appointment(appointment):
         userids = []
         try:
