@@ -9,7 +9,7 @@ import json
 from sqlalchemy import desc
 
 from BaseHandlerh import BaseHandler
-from Course import Coursemodel
+from Course.Coursemodel import Coursemodel
 from Database.tables import Course, CourseTag, CourseLike, Usercourse
 from Userinfo import Ufuncs
 
