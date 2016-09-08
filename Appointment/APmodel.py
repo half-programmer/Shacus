@@ -47,10 +47,11 @@ class APmodelHandler(object):
             print '无图片'
         try:
             if img_tokens[0]:
-                return img_tokens
+                print '有图片'
         except Exception, e:
+            img_tokens.append(authkeyhandler.download_url('default13.jpg'))
             print e
-            return img_tokens
+        return img_tokens
 
 
     @classmethod
