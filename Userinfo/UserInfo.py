@@ -17,14 +17,14 @@ class UserInfo(BaseHandler):  #获取用户自己的ID
             ufuncs = Ufuncs.Ufuncs()
             if ufuncs.judge_user_valid(u_id,auth_key):   #判断用户是否有效
                 try:
-                   u_info = self.db.query(User).filter(User.Uid ==u_id).one()
+                   u_info = self.db.query(User).filter(User.Uid == u_id).one()
                    u_change_info = self.db.query(UCinfo).filter(UCinfo.UCuid == u_id).one()
                    #u_image = self.db.query(UserImage).filter(UserImage.UIuid == u_id).one()
 
                    ret_info = userinfo_smply(u_info,u_change_info)
                    ret_content_json['usermodel'] = ret_info
                    retjson['code'] ='10703'
-                   retjson['contents']=ret_content_json
+                   retjson['contents'] = ret_content_json
                 except Exception,e:
                     print e
                     retjson['code'] = '10702'

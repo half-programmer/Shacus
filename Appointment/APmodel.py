@@ -144,8 +144,6 @@ class APmodelHandler(object):
             print e,'dff'
 
 
-
-
     @classmethod
     def ApInforesponse(appointment, retdata):
         '''
