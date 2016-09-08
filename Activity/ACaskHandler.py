@@ -49,6 +49,7 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                              datauser = self.db.query(User).filter(User.Uid == data[item].ACsponsorid).one()
                              aclurl = self.db.query(ActivityImage).filter(ActivityImage.ACIacid == data[item].ACid).limit(1).all()
                              print datauser.Uid
+                             print data[item].ACid
                              userurl = self.db.query(UserImage).filter(UserImage.UIuid == datauser.Uid).one()
                              ACFunction.Acresponse(data[item],datauser,aclurl[0].ACIurl,userurl.UIurl,retdata,u_id)
                              self.retjson['code'] = '10303'

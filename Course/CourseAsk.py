@@ -104,11 +104,10 @@ class CourseAsk(BaseHandler):
 
             if type == '11007':   #根据标签返回相应课程
                 tag_id = self.get_argument('tid')
-                now_id =self.get_argument('nid')
                 like = 0
                 ret_course = []
                 courses = self.db.query(CourseTagEntry).filter(CourseTagEntry.CTEtid == tag_id).\
-                    order_by(desc(CourseTagEntry.CTEcreateT)).offset(now_id).limit(10).all()
+                    order_by(desc(CourseTagEntry.CTEcreateT)).all()
                 for course in courses:
                     u_cid = course.CTEcid
                     course = self.db.query(Course).filter(Course.Cid == u_cid).one()
