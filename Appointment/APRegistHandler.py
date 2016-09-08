@@ -75,21 +75,25 @@ class APregistHandler(BaseHandler):  # 报名约拍
                         exist = self.db.query(AppointEntry).filter(
                             AppointEntry.AEregisterID == ap_user_id, AppointEntry.AEapid == ap_id).one()
                         appointment = self.db.query(Appointment).filter(Appointment.APid == ap_id).one()
+                        if appointment.APstatus == 0:  # 报名中：
                             #todo 应该再加上和ap_id的验证
-                        if exist.AEvalid:
-                            exist.AEvalid = 0
-                            try:
-                                appointment.APregistN -= 1
-                                self.db.commit()
-                                self.retjson['contents'] = '取消报名成功'
-                                self.retjson['code'] = '10276'
-                            except Exception, e:
-                                print e
-                                self.db.rollback()
-                                self.db_error()
+                            if exist.AEvalid:
+                                exist.AEvalid = 0
+                                try:
+                                    appointment.APregistN -= 1
+                                    self.db.commit()
+                                    self.retjson['contents'] = '取消报名成功'
+                                    self.retjson['code'] = '10276'
+                                except Exception, e:
+                                    print e
+                                    self.db.rollback()
+                                    self.db_error()
+                            else:
+                                self.retjson['contents'] = '用户已经取消报名'
+                                self.retjson['code'] = '10277'
                         else:
-                            self.retjson['contents'] = '用户已经取消报名'
-                            self.retjson['code'] = '10277'
+                            self.retjson['contents'] = '该约拍不在报名中，不能取消报名'
+                            self.retjson['code'] = '10260'
                     except Exception, e:
                         print e
                         self.retjson['contents'] = '用户未报名过该约拍'

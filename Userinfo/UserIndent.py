@@ -115,11 +115,36 @@ class UserIndent(BaseHandler):
 
             elif type == '10906': #结束活动
                 ac_id = self.get_argument("ac_id")
-                self.finish_avtivity(u_id,ac_id)
+                self.finish_avtivity(u_id, ac_id)
 
             elif type == '10907': #结束活动报名
                 ac_id = self.get_argument('acid')
                 self.finnish_activity_register(u_id,ac_id)
+            elif type == '10905':  # 将约拍移动到已完成
+                ap_id = self.get_argument('apid')
+                try:
+                    appointment = self.db.query(Appointment).filter(Appointment.APid == ap_id).one()
+                    if appointment.APstatus == 0:  # 报名中
+                        self.retjson['code'] = '10260'
+                        self.retjson['contents'] = u'该约拍尚在报名中，无法结束！'
+
+                    elif appointment.APstatus == 1:  # 进行中
+                        if int(u_id) == appointment.APsponsorid:
+                            appointment.APstatus = 2
+                            self.db.commit()
+                            self.retjson['code'] = '10258'
+                            self.retjson['contents'] = u'成功结束约拍！'
+                        else:
+                            self.retjson['code'] = '10260'
+                            self.retjson['contents'] = u'该用户无结束权限！！'
+
+                    elif appointment.APstatus == 2:  # 已完成
+                        self.retjson['code'] = '10260'
+                        self.retjson['contents'] = u'该约拍已结束！'
+                except Exception, e:
+                    print e
+                    self.retjson['code'] = '10261'
+                    self.retjson['contents'] = u'未找到该约拍记录！'
 
 
 
