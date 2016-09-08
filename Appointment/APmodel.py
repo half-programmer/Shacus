@@ -50,7 +50,7 @@ class APmodelHandler(object):
                 return img_tokens
         except Exception, e:
             print e
-            return 0
+            return img_tokens
 
 
     @classmethod
@@ -82,7 +82,7 @@ class APmodelHandler(object):
                 apimgurl=''
         except Exception,e:
             print e
-            apimgurl=''
+            apimgurl=[]
         headimage = Ufuncs.get_user_headimage_intent_from_userid(userid)
         ret_ap = dict(
             APid=appointment.APid,
