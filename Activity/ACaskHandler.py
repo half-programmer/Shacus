@@ -142,7 +142,7 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                     print '认证成功'
                     data=self.db.query(Activity).filter(m_ACid == Activity.ACid).one() #活动的基本详情
                     #下面是返回用户的信息
-                    entryid=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACid).all()
+                    entryid=self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid==m_ACid,ActivityEntry.ACEregisttvilid == 1).all()
                     for item in entryid:
                         Userjson = {'id': '', 'headImage': ''}
                         Userurls=self.db.query(UserImage).filter(UserImage.UIuid==item.ACEregisterid).all()
@@ -156,6 +156,9 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                         Userjson['id'] = item.ACEregisterid
                        # print
                         Userjson['headImage'] = auth.download_url(userimg.UIurl)
+                        user = self.db.query(User).filter(User.Uid == item.ACEregisterid).one()
+                        Userjson['alais'] = user.Ualais
+                        Userjson['sign'] = user.Usign
                         Usermodel.append(Userjson)
                         print Userjson
                         #print Usermodel
