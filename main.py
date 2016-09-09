@@ -24,6 +24,7 @@ from Pressuretest.Simplerequest import Simplerequest
 from RegisterHandler import RegisterHandler
 
 from TRends.TRendspost import TRendspost
+from TRends.TrendHandler import TrendHandler
 from Userhomepager import Userhomepager
 from Userinfo.UserIndent import UserIndent
 from Settings import PaswChange
@@ -63,6 +64,7 @@ class Application(tornado.web.Application):
              (r"/ImageCallback",ImageCallback),
              (r"/PaswChange",PaswChange),
              (r"/trend/Trendspost",TRendspost),
+             (r"/trend/Trendhanler",TrendHandler),
              (r"/course/homepage",Chomepage),
              (r"/course/ask",CourseAsk),
              (r"/course/like",Courselike),
