@@ -114,7 +114,7 @@ class UserIndent(BaseHandler):
 
 
             elif type == '10906': #结束活动
-                ac_id = self.get_argument("ac_id")
+                ac_id = self.get_argument("acid")
                 self.finish_avtivity(u_id, ac_id)
 
             elif type == '10907': #结束活动报名
@@ -145,7 +145,9 @@ class UserIndent(BaseHandler):
                     print e
                     self.retjson['code'] = '10261'
                     self.retjson['contents'] = u'未找到该约拍记录！'
-
+            # 用户结束订单并评价
+            elif type == '10908':
+                score = self.get_argument('score')
 
 
         else :

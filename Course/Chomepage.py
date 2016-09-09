@@ -40,7 +40,7 @@ class Chomepage(BaseHandler):# 教程首页
                 self.retjson['contents'] = ret_contents
                 self.retjson['code'] = '11010'
 
-            if type == '11009':    #教程首页点击more
+            if type == '11101':    #教程首页点击more
                 like = 0
                 courses = self.db.query(Course).order_by(desc(Course.Cscore)).all()
                 for course in courses:
@@ -63,7 +63,7 @@ class Chomepage(BaseHandler):# 教程首页
                         ret_course.append(Coursemodel.Course_Model_Simply(course, like, 0, 0))
                 if courses:
                     self.retjson['contents'] = ret_course
-                    self.retjson['code'] = '11091'
+                    self.retjson['code'] = '11110'
 
 
 

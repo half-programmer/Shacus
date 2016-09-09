@@ -161,15 +161,18 @@ class Ufuncs(object):
         user_intent = ''
         authkey_handler = AuthKeyHandler()
         try:
-            user_images = get_db().query(UserImage).filter(UserImage.UIuid == userid).all()
-            user_images[0] = 'logo1.png'
-            for user_image in user_images:
-                isvalid = get_db().query(Image).filter(Image.IMid == user_image.UIuid).one()
-                if isvalid.IMvalie == 1:
-                    ui_url = user_image.UIurl
-                    user_intent = authkey_handler.download_url(ui_url)
-                else:
-                    user_intent = authkey_handler.download_url("logo1.png")
+            # user_images = get_db().query(UserImage).filter(UserImage.UIuid == userid).all()
+            user_image = get_db().query(UserImage).filter(UserImage.UIuid == userid).one()
+            # user_images[0] = 'logo1.png'
+            # for user_image in user_images:
+            #     isvalid = get_db().query(Image).filter(Image.IMid == user_image.UIuid).one()
+            #     if isvalid.IMvalie == 1:
+            #         ui_url = user_image.UIurl
+            ui_url = user_image.UIurl
+            user_intent = authkey_handler.download_url(ui_url)
+            #         user_intent = authkey_handler.download_url(ui_url)
+            #     else:
+            #         user_intent = authkey_handler.download_url("logo1.png")
         except Exception, e:
             print e
             user_intent = authkey_handler.download_url("logo1.png")

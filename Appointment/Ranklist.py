@@ -8,7 +8,7 @@ from Database.models import get_db
 from sqlalchemy import desc
 
 from BaseHandlerh import BaseHandler
-from Database.tables import User, RankScore
+from Database.tables import User, RankScore, AppointmentInfo
 from Userinfo import Usermodel
 from Userinfo.Ufuncs import Ufuncs
 
@@ -18,7 +18,7 @@ db = get_db()
 # 排行榜共有多少名
 global last
 # 目前排行榜共有十名
-last = 10
+last = 3
 class Ranklist(BaseHandler):
     '''
         用来与客户端通信的类
@@ -133,10 +133,46 @@ class RanklistHandler(object):
             except Exception, e:
                 print e
 
+    def rank_judge_photoer_up(self, rs_p):
+        '''
+        每次排行榜分数变动后，此方法对此次变动的模特的分数与排行榜进行比较，
+        判断是否能进入排行榜
+        如果进入则冒泡排序，升降名次
+        在约拍结束等加分项后调用
+        Args:
+            rs_p: 摄影师的RankScore表项
+        Returns:
+            将rs_p的RSPscore与前面的RSPscore比较
+        '''
+
+        p_score = rs_p.RSPscore
+
+        # 如果此模特分数增加后比排行榜最末端高：
+        if p_score > self.get_modellist_some_score(last):
+            # compareN: 每次比较的名次
+            # 冒泡排序
+            # 临时名次
+            temp_rank = last
+            compare_rank = last
+            compare_rank -= 1
+            # 当前的分数大于前一名的分数
+            while compare_rank >= 1 and p_score > self.get_photoerlist_some_score(compare_rank) :
+                #自己的名次等于前一名的名次
+                rs_p.RSPrank = compare_rank
+                #前一名的名次后退一步
+                formor_model = self.get_photoerlist_some(compare_rank)
+                formor_model.RSPrank += 1
+                db.commit()
+
+
+
+
+
 
     def rank_score_finish_appoint(self, appointinfo):
         '''
         此为完成一次约拍后，模特与摄影师加分
+        @attention：注意是加分，减分在其他函数中
         加分规则：
         1.完成后，摄影师、模特直接加分
         2.按照对方评分（满意度），再增添相应积分
@@ -154,84 +190,96 @@ class RanklistHandler(object):
 
         try:
             # 模特项
-            rs_model = db.query(RankScore.RSuid, RankScore.RSMscore).filter(RankScore.RSuid == uid_model).one()
+            rs_model = db.query(RankScore.RSuid, RankScore.RSMscore, RankScore.RSid).\
+                filter(RankScore.RSuid == uid_model).one()
             # 模特加分
-            rs_model.RSMscore += 10
+            score = RankScore.RSMscore + 10
+            db.query(RankScore).filter(RankScore.RSuid == rs_model.RSuid).\
+                update({RankScore.RSMscore: score})
             # todo：排名上升下降
+
 
             # 摄影师项
-            rs_photo = db.query(RankScore.RSuid, RankScore.RSPscore).filter(RankScore.RSuid == uid_photoer).one()
+            rs_photoer = db.query(RankScore.RSuid, RankScore.RSMscore, RankScore.RSid).filter(
+                RankScore.RSuid == uid_photoer).one()
+            score = RankScore.RSPscore + 10
+            db.query(RankScore).filter(RankScore.RSuid == rs_photoer.RSuid).\
+                update({RankScore.RSPscore: score})
             #摄影师加分
-            rs_photo.RSPscore += 10
             # todo：排名上升下降
-
+            db.commit()
         except Exception, e:
-            print e, "排行榜查询错误"
+            print e, "排行榜查询错误1"
 
-    def get_photoerlist_final_score(self):
+    def get_modellist_some_score(self, rank):
         '''
-        Returns: 得到摄影师榜最后一名的分数的分数
-        '''
-        try:
-            # 摄影师榜最后一名
-            photoer_last = db.query(RankScore.RSMrank, RankScore.RSMscore).filter(RankScore.RSMrank == last).one()
-            return photoer_last.RSMscore
-        except Exception, e:
-            print e, "读取摄影师榜最后一名时出错"
-
-    def get_modellist_final_score(self):
-        '''
-        Returns: 得到模特榜最后一名的分数的分数
+        @rank:名次
+        Returns: 得到模特榜某一名的分数的分数
         '''
         try:
             # 模特榜最后一名
-            model_last = db.query(RankScore.RSMrank, RankScore.RSMscore).filter(RankScore.RSMrank == last).one()
+            model_last = db.query(RankScore.RSMrank, RankScore.RSMscore).filter(RankScore.RSMrank == rank).one()
             return model_last.RSMscore
         except Exception, e:
-            print e, "读取模特榜最后一名时出错"
+            print e, "读取模特榜某一名时出错"
 
-    def rank_model_update(self, modelid):
+    def get_photoerlist_some_score(self, rank):
         '''
-        每次排行榜分数变动后，此方法对此次变动的模特的分数与排行榜进行比较，
-        判断是否能进入排行榜
-        如果进入则冒泡排序，升降名次
-        Args:
-            modelid:
-
-        Returns:
-
+        @rank:名次
+        Returns: 得到摄影师榜某一名的分数
         '''
+        try:
+            # 摄影师榜最后一名
+            photoer_one = db.query(RankScore.RSMrank, RankScore.RSMscore).filter(RankScore.RSMrank == rank).one()
+            return photoer_one.RSMscore
+        except Exception, e:
+            print e, "读取摄影师榜某一名时出错"
+
+    def get_photoerlist_some(self, rank):
+        '''
+        @rank:名次
+        Returns: 得到摄影师榜某一名的项
+        '''
+        try:
+            # 摄影师榜最后一名
+            photoer_one = db.query(RankScore.RSMrank, RankScore.RSMscore).filter(RankScore.RSMrank == rank).one()
+            return photoer_one
+        except Exception, e:
+            print e, "读取摄影师榜某一名时出错"
 
     def rank_model_init(self):
         '''
         对模特榜进行排序
         '''
         try:
-            models = db.query(RankScore.RSMrank, RankScore.RSMscore).order_by(desc(RankScore.RSMscore)).all()
+            models = db.query(RankScore.RSMrank, RankScore.RSMscore, RankScore.RSuid).order_by(desc(RankScore.RSMscore)).all()
             rank = 1
             for model in models:
-                #model.RSMrank = 1
-                db.query(RankScore).filter(RankScore.RSid == model.RSid).update({RankScore})
-                # elf.db.query(Appointment).filter(Appointment.APid == ap_id). \
-                #     update({Appointment.APstartT: ap_start_time, Appointment.APendT: ap_end_time,
-                #             Appointment.APjoinT: ap_join_time,
-                #             Appointment.APlocation: ap_location, Appointment.APfree: ap_free,
-                #             Appointment.APcontent: ap_content,
-                #             Appointment.APaddallowed: ap_addallowed,
-                #             Appointment.APtype: ap_type,
-                #             Appointment.APvalid: 1
-                #             }, synchronize_session=False)
+                db.query(RankScore).filter(RankScore.RSuid == model.RSuid).update({RankScore.RSMrank: rank})
+                rank += 1
+            db.commit()
+        except Exception, e:
+            print e, "对模特榜进行排序时出错！"
+
+    def rank_photoer_init(self):
+        '''
+        对摄影师榜进行排序
+        '''
+        try:
+            models = db.query(RankScore.RSPrank, RankScore.RSPscore, RankScore.RSuid).order_by(desc(RankScore.RSPscore)).all()
+            rank = 1
+            for model in models:
+                db.query(RankScore).filter(RankScore.RSuid == model.RSuid).update({RankScore.RSPrank: rank})
                 rank += 1
             db.commit()
         except Exception, e:
             print e, "对模特榜进行排序时出错！"
 
 
-    def rank_photoer_list(self):
-        '''
-        对摄影师榜进行排序
-        '''
-
-
-rlhandler = RanklistHandler()
-rlhandler.rank_model_init()
+#
+#
+# rlhandler = RanklistHandler()
+# rlhandler.rank_model_init()
+# rlhandler.rank_photoer_init()
+# apinfo = db.query(AppointmentInfo).filter(AppointmentInfo.AIappoid == 24).one()
+# rlhandler.rank_score_finish_appoint(apinfo)
