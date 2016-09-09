@@ -9,6 +9,7 @@ from BaseHandlerh import BaseHandler
 from Database.tables import Appointment, User
 from FileHandler.ImageHandler import ImageHandler
 from FileHandler.Upload import AuthKeyHandler
+from Userinfo.Ufuncs import Ufuncs
 
 
 class APcreateHandler(BaseHandler):  # 创建约拍
@@ -152,6 +153,40 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                 print e
                 self.retjson['code'] = '10211'
                 self.retjson['contents'] = r'用户授权码错误！'
+
+        # 取消约拍
+        elif ap_type == '10207':
+            auth_key = self.get_argument('authkey')
+            apid = self.get_argument('apid')
+            uid = self.get_argument('userid')
+            ufunc = Ufuncs()
+            if ufunc.judge_user_valid(uid, auth_key):
+                try:
+                    appointment = self.db.query(Appointment).filter(Appointment.APid == apid).one()
+                    if appointment.APvalid == 1:
+                        # 约拍还有效
+                        if appointment.APsponsorid == int(uid):
+                            # 报名中，可以取消
+                            if appointment.APstatus == 0:
+                                appointment.APvalid = 0
+                                self.db.commit()
+                                self.retjson['code'] = '10200'
+                                self.retjson['contents'] = '成功取消约拍！'
+                            else:
+                                self.retjson['code'] = '10215'
+                                self.retjson['contents'] = '该约拍正在进行中或已完成，不能取消！'
+                        else:
+                            self.retjson['code'] = '10216'
+                            self.retjson['contents'] = '该用户不是发起人，无权利取消'
+                    else:
+                        self.retjson['code'] = '10217'
+                        self.retjson['contents'] = '该约拍之前已被取消！'
+                except Exception ,e:
+                    self.retjson['code'] = '10218'
+                    self.retjson['contents'] = '该约拍不存在！'
+            else:
+                self.retjson['code'] = '10211'
+                self.retjson['contents'] = '用户授权错误'
         else:
             print 'ap_type: ', ap_type
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))

@@ -5,7 +5,7 @@ import TRfunction
 from BaseHandlerh import BaseHandler
 from FileHandler.Upload import AuthKeyHandler
 from Userinfo.Ufuncs import Ufuncs
-from Database.tables import Trend, TrendImage, Image
+from Database.tables import Trend, TrendImage, Image, Favorite
 
 
 class TRendspost(BaseHandler):
@@ -13,20 +13,27 @@ class TRendspost(BaseHandler):
     def post(self):
        retdata = []
        type = self.get_argument('type',default='unsolved')
-       if type == '12001':
+       if type == '12001':#请求刷新所有动态
            u_id = self.get_argument('uid',default='null')
            u_auth_key = self.get_argument('authkey',default='null')
-           #a_auth = AuthKeyHandler
-           #image_urls = []
            ufuncs = Ufuncs() #判断用户权限
            if ufuncs.judge_user_valid(u_id , u_auth_key):#认证成功
                data=self.db.query(Trend).all()
+               favorites = self.db.query(Favorite).filter(Favorite.Fuid == u_id,Favorite.Ftype==3,
+                                                          Favorite.Fvalid == 1).all()
+               list=[]
+               for items in favorites:
+                   list.append(items.Ftypeid)
                for i in range(len(data)):
                    print '哈哈哈哈'
                    try:
                        url=self.db.query(TrendImage).filter(TrendImage.TItid==data[i].Tid).one()
-                       #self.db.query(Image).filter(Image.IMid== url.TIimid)
-                       TRfunction.TRresponse(data[i],url.TIimgurl,retdata)
+                       for item in list:
+                           if data[i].Tid == item:
+                               exsit =1
+                           else:
+                               exsit = 0
+                       TRfunction.TRresponse(data[i],url.TIimgurl,retdata,exsit)
                    except Exception,e:
                        print e
                self.retjson['code']='12013'
