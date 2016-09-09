@@ -30,7 +30,7 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                 ufuncs = Ufuncs()  # 判断用户权限
                 if ufuncs.judge_user_valid(u_id, u_auth_key):  # 用户认证成功
                     try:
-                        data=self.db.query(Activity).order_by(desc(Activity.ACcreateT)).all()
+                        data=self.db.query(Activity).filter(Activity.ACvalid==1).order_by(desc(Activity.ACcreateT)).all()
                         length=len(data)
                         print length
                         if length < 10:
@@ -70,7 +70,7 @@ class AskActivity(BaseHandler): #关于用户的一系列活动
                 try:
                     acsended=self.get_argument('acsended')
                     Acsended=int(acsended)
-                    data=self.db.query(Activity).order_by(desc(Activity.ACcreateT)).all()
+                    data=self.db.query(Activity).filter(Activity.ACvalid==1).order_by(desc(Activity.ACcreateT)).all()
                     length = len(data)
                     print length
                     m_length=length-Acsended

@@ -99,13 +99,20 @@ class UserFavorite(BaseHandler):
             if type == '10541': # 查看所有收藏的约拍
                 retdata = []
                 try:
-                    favorites = self.db.query(Favorite).filter(Favorite.Fuid == user_id, Favorite.Fvalid == 1).all()  # 返回收藏列表
+                    favorites = self.db.query(Favorite).filter(Favorite.Fuid == user_id, Favorite.Fvalid == 1,Favorite.type==1).all()  # 返回收藏列表
                     ap_favorates = []
                     for each_favorite in favorites:
                         ap_favorite_id = each_favorite.Ftypeid  # 即约拍Id
                         ap_favorite = self.db.query(Appointment).filter(Appointment.APid == ap_favorite_id).one()
                         ap_favorates.append(ap_favorite)
                     APmodelHandler.ap_Model_simply(ap_favorates, retdata, user_id)
+
+                    # favorites = self.db.query(Favorite).filter(Favorite.Fuid == user_id, Favorite.Fvalid == 1,Favorite.type == 2).all()
+                    # for item in favorites:
+                    #     ap_favorite_id = each_favorite.Ftypeid  # 即活动Id
+                    #     ap_favorite = self.db.query(Activity).filter(Activity.ACid == ap_favorite_id).one()
+                    #     ap_favorates.append(ap_favorite)
+
                     self.retjson['code'] = '10550'
                     self.retjson['contents'] = retdata
                 except Exception, e:
@@ -182,17 +189,17 @@ class UserFavorite(BaseHandler):
                 except Exception, e:
                     self.not_in_fav_list()
 
-            if type == '10542':  # 查看所有收藏的约拍
+            if type == '10542':  # 查看所有收藏的活动
                 retdata = []
                 try:
                     favorites = self.db.query(Favorite).filter(Favorite.Fuid == user_id,
-                                                               Favorite.Fvalid == 2).all()  # 返回收藏列表
+                                                               Favorite.Fvalid == 1).all()  # 返回收藏列表
                     ap_favorates = []
                     for each_favorite in favorites:
                         ap_favorite_id = each_favorite.Ftypeid  # 即活动Id
                         ap_favorite = self.db.query(Activity).filter(Activity.ACid == ap_favorite_id).one()
                         ap_favorates.append(ap_favorite)
-                    APmodelHandler.ap_Model_simply(ap_favorates, retdata, user_id)
+                    #APmodelHandler.ap_Model_simply(ap_favorates, retdata, user_id)
                     self.retjson['code'] = '10550'
                     self.retjson['contents'] = retdata
                 except Exception, e:

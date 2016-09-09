@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+from Database.models import get_db
+from Database.tables import Favorite
 from FileHandler.Upload import AuthKeyHandler
-def TRresponse(item,url,retdata):
+def TRresponse(item,url,retdata,isfav):
     authkey= AuthKeyHandler()
     m_trresponse = dict (
         Tid=item.Tid,
@@ -12,5 +14,6 @@ def TRresponse(item,url,retdata):
         Ttitle=item.Ttitle,
         Tsponsorimg = authkey.download_url(item.Tsponsorimg),
         TIimgurl=authkey.download_url(url),
+        TIisfavorite=isfav,
     )
     retdata.append(m_trresponse)
