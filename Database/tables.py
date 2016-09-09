@@ -290,6 +290,6 @@ class RankScore(Base):
     RSid = Column(Integer, nullable=False, primary_key=True)
     RSuid = Column(Integer, ForeignKey('User.Uid', onupdate='CASCADE'), nullable=False)
     RSMscore = Column(Integer, nullable=False, default=0)
-    RSPsocre = Column(Integer, nullable=False, default=0)
+    RSPscore = Column(Integer, nullable=False, default=0)
     RSMrank = Column(Integer, nullable=False, default=101)
     RSPrank = Column(Integer, nullable=False, default=101)

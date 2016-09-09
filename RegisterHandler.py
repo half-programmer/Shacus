@@ -4,6 +4,7 @@ import random
 
 import time
 
+from Appointment.Ranklist import RanklistHandler
 from  BaseHandlerh import BaseHandler
 from Database.tables import User, UCinfo, Image, UserImage
 from Database.tables import Verification
@@ -133,7 +134,8 @@ class RegisterHandler(BaseHandler):
                         )
                         self.db.merge(userImage)
                         self.db.commit()
-
+                        rank_list_handler = RanklistHandler()
+                        rank_list_handler.insert_new_rank(m_id[0])
 
 
                         auth = AuthKeyHandler()
