@@ -22,6 +22,7 @@ class TRendspost(BaseHandler):
                favorites = self.db.query(Favorite).filter(Favorite.Fuid == u_id,Favorite.Ftype==3,
                                                           Favorite.Fvalid == 1).all()
                list=[]
+               exsit=0
                for items in favorites:
                    list.append(items.Ftypeid)
                for i in range(len(data)):

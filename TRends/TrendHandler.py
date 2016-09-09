@@ -2,7 +2,7 @@
 
 import json
 import TRfunction
-import Userinfo
+import Userinfo.Ufuncs
 from BaseHandlerh import BaseHandler
 from FileHandler.Upload import AuthKeyHandler
 from Userinfo.Ufuncs import Ufuncs
@@ -102,10 +102,10 @@ class TrendHandler(BaseHandler):
                     self.retjson['contents'] = r'用户未收藏任何动态'
 
 
-            else:
-                self.retjson['code'] = '12403'
-                self.retjson['contents'] = r'用户认证错误！操作失败'
-            self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))  # 返回中文
+        else:
+            self.retjson['code'] = '12403'
+            self.retjson['contents'] = r'用户认证错误！操作失败'
+        self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))  # 返回中文
 
 
 
