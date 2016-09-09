@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-
+from FileHandler.Upload import AuthKeyHandler
 def TRresponse(item,url,retdata):
+    authkey= AuthKeyHandler()
     m_trresponse = dict (
         Tid=item.Tid,
         Tsponsorid=item.Tsponsorid,
@@ -10,6 +11,6 @@ def TRresponse(item,url,retdata):
         Tcontent=item.Tcontent,
         Ttitle=item.Ttitle,
         Tsponsorimg = item.Tsponsorimg,
-        TIimgurl=url,
+        TIimgurl=authkey.download_url(url),
     )
     retdata.append(m_trresponse)
