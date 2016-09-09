@@ -145,7 +145,9 @@ class UserIndent(BaseHandler):
                     print e
                     self.retjson['code'] = '10261'
                     self.retjson['contents'] = u'未找到该约拍记录！'
-
+            # 用户结束订单并评价
+            elif type == '10908':
+                score = self.get_argument('score')
 
 
         else :

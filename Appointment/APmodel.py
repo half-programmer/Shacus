@@ -84,7 +84,7 @@ class APmodelHandler(object):
         except Exception,e:
             print e
             apimgurl=[]
-        headimage = Ufuncs.get_user_headimage_intent_from_userid(userid)
+        headimage = Ufuncs.get_user_headimage_intent_from_userid(appointment.APsponsorid)
         ret_ap = dict(
             APid=appointment.APid,
                 APtitle=appointment.APtitle,
