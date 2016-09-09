@@ -25,10 +25,13 @@ class TrendHandler(BaseHandler):
                 trendid = self.get_argument('trendid',default='none')
                 try:
                     exsit = self.db.query(Trend).filter(Trend.Tid==trendid).one()
+                    print exsit.Tid
                     if exsit:
                         try:#判断是否已经有这行（即用户之前有没有操作过）
-                            once_favorite = self.db.query(Favorite).filter(Favorite.Fuid == u_id , Favorite.Ftypeid == trendid ,Favorite.Ftype==3)
-                            if once_favorite.Fvalid== 0 : #以前收藏过但取消了
+                            once_favorite = self.db.query(Favorite).filter(Favorite.Fuid == u_id , Favorite.Ftypeid == trendid ,Favorite.Ftype == 3).one()
+                            print '哈哈哈'
+                            print once_favorite.Fvalid
+                            if once_favorite.Fvalid == 0 : #以前收藏过但取消了
                                 once_favorite.Fvalid = 1  #重新收藏
                                 self.db.commit()
                                 self.retjson['code']='12021'
