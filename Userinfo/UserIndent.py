@@ -114,7 +114,7 @@ class UserIndent(BaseHandler):
 
 
             elif type == '10906': #结束活动
-                ac_id = self.get_argument("ac_id")
+                ac_id = self.get_argument("acid")
                 self.finish_avtivity(u_id, ac_id)
 
             elif type == '10907': #结束活动报名
