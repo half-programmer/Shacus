@@ -100,7 +100,9 @@ class RegisterHandler(BaseHandler):
                     Uscore=0,
                     Usex=1,
                     Usign='',
-                    Uauthkey=m_auth_key
+                    Uauthkey=m_auth_key,
+                    Uchattoken =''
+
             )
             try:
                 same_nickname_user = self.db.query(User).filter(User.Ualais == m_nick_name).one()
