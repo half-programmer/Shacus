@@ -100,6 +100,7 @@ class RanklistHandler(object):
                 # self.retjson['content'] = u"未查找找到该用户"
         return user_models
 
+
     def insert_new_rank(self,userid):
         '''
         用户初始化时，添加入新的排行榜
@@ -126,5 +127,25 @@ class RanklistHandler(object):
                 db.commit()
             except Exception, e:
                 print e
+
+
+    def rank_score_finish_appoint(self, appointinfo):
+        '''
+        此为完成一次约拍后，模特与摄影师加分
+        加分规则：
+        1.完成后，摄影师、模特加分
+        2.
+        Args:
+            userid: 用户id
+            type: 用户在此约拍中类型，1为摄影师，2为模特
+            appointment:AppointInfo的一列
+
+        Returns:直接加分，不用
+
+        '''
+        uid_model = appointinfo.AImid
+        uid_photoer = appointinfo.AIpid
+
+
 
 
