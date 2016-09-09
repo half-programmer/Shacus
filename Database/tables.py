@@ -263,6 +263,7 @@ class Trend(Base):
     __tablename__ = "Trend"
 
     Tid = Column(Integer, primary_key=True)
+    Tsponsorimg = Column(VARCHAR(128),nullable=False)
     Tsponsorid = Column(Integer, ForeignKey('User.Uid',onupdate='CASCADE'),primary_key=True)  #用户id
     TsponsT = Column(DateTime(timezone=True), default=func.now())                                         #时间
     TcommentN = Column(Integer,nullable=False, default=0)
