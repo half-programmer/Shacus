@@ -29,7 +29,7 @@ class Userhomepager(BaseHandler):
         u_id = self.get_argument('uid')
         auth_key = self.get_argument('authkey')
         u_other_id = self.get_argument('seeid')
-        if type == '10801':
+        if type == '10801':                                    #查看个人主页
             ufuncs = Userinfo.Ufuncs.Ufuncs()
             if ufuncs.judge_user_valid(u_id, auth_key):                    #判断userID与auth_key是否匹配
                 u_info = self.db.query(User).filter(User.Uid == u_other_id).one()
@@ -73,9 +73,10 @@ class Userhomepager(BaseHandler):
                                                                  ActivityEntry.ACEregisttvilid ==1).all()
                 for u_ac_info in u_ac_infos:
                     ac_id = u_ac_info.ACEacid
-                    ac_info = self.db.query(Activity).filter(Activity.ACid ==ac_id ,Activity.ACvalid == 1).one()
-                    ret_ac  = ac.ac_Model_simply(ac_info)
-                    retdata_ac.append(ret_ac)
+                    ac_info = self.db.query(Activity).filter(Activity.ACid ==ac_id ,Activity.ACvalid == 1).all()
+                    if ac_info:
+                        ret_ac  = ac.ac_Model_simply(ac_info)
+                        retdata_ac.append(ret_ac)
                 ret_json_contents['ac_info'] =retdata_ac
                 retjson['code'] = '10601'
                 retjson['contents'] =ret_json_contents
