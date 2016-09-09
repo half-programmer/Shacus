@@ -18,8 +18,9 @@ class LoginHandler(BaseHandler):
     @gen.coroutine
     def post(self):
         askcode = self.get_argument('askCode')  # 请求码
-        m_phone = self.get_argument('phone')
+
         if askcode == '10106':  # 手动登录
+            m_phone = self.get_argument('phone')
             m_password = self.get_argument('password')
             if not m_phone or not m_password:
                 self.retjson['code'] = 400
@@ -79,24 +80,39 @@ class LoginHandler(BaseHandler):
                                 #todo 待生成真的导航栏
 
                                 retdata.append(data)
-                                self.retjson['code'] = '10101'
+                                self.retjson['code'] = '10111'
                                 self.retjson['contents'] = retdata
                             except Exception,e:
                                 print e
                                 self.retjson['contents'] = r"摄影师约拍列表导入失败！"
                         else:
                             self.retjson['contents'] = u'密码错误'
-                            self.retjson['code'] = '10104'  # 密码错误
+                            self.retjson['code'] = '10114'  # 密码错误
                     else:  # 用户不存在
                         self.retjson['contents'] = u'该用户不存在'
-                        self.retjson['code'] = '10103'
+                        self.retjson['code'] = '10113'
                 except Exception, e:  # 还没有注册
                     print "异常："
                     print e
                     self.retjson['contents'] = u'该用户名不存在'
-                    self.retjson['code'] = '10103' # '该用户名不存在'
+                    self.retjson['code'] = '10113'  # '该用户名不存在'
         elif askcode == '10105':  # 自动登录
-            authcode = self.get_argument("authcode")  # 授权码
+            auth_key = self.get_argument("authkey")  # 授权码
+            uid = self.get_argument('uid')
+            try:
+                user = self.db.query(User.Uid, User.Uauthkey).filter(User.Uid == uid).one()
+                u_auth_key = user.Uauthkey
+                if auth_key == u_auth_key:
+                    self.retjson['code'] = '10111'
+                    self.retjson['contents'] = u'自动登录成功！'
+                else:
+                    self.retjson['code'] = '10116'
+                    self.retjson['contents'] = u'授权码不正确或已过期'
+            except Exception, e:
+                print e
+                self.retjson['code'] = '10113'
+                self.retjson['contents'] = u'该用户名不存在'
+
         else:
             self.retjson['contents'] = u"登录类型不满足要求，请重新登录！"
             self.retjson['data'] = u"登录类型不满足要求，请重新登录！"
