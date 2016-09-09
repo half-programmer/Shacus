@@ -165,12 +165,15 @@ class UserIndent(BaseHandler):
                                                  Activity.ACstatus == number,Activity.ACvalid == 1).all()
            url = self.db.query(ActivityImage).filter(ActivityImage.ACIacid == ac_id).limit(1).all()
            if ac_info:
-               ret_activity.append(ACmodelHandler.ac_Model_simply(ac_info[0],url[0].ACIurl))
+               if url :
+                ret_activity.append(ACmodelHandler.ac_Model_simply(ac_info[0],url[0].ACIurl))
         ac_mentrys = self.db.query(Activity).filter(Activity.ACsponsorid == u_id,Activity.ACvalid == 1,
                                                     Activity.ACstatus == number).all()
         for ac_mentry in ac_mentrys:
+            ac_id = ac_mentry.ACid
             url = self.db.query(ActivityImage).filter(ActivityImage.ACIacid == ac_id).limit(1).all()
-            ret_activity.append(ACmodelHandler.ac_Model_simply(ac_mentry, url[0].ACIurl))
+            if url:
+                ret_activity.append(ACmodelHandler.ac_Model_simply(ac_mentry, url[0].ACIurl))
         return ret_activity
 
 
