@@ -14,6 +14,11 @@ from Userinfo.Ufuncs import Ufuncs
 
 global db
 db = get_db()
+
+# 排行榜共有多少名
+global last
+# 目前排行榜共有十名
+last = 10
 class Ranklist(BaseHandler):
     '''
         用来与客户端通信的类
@@ -133,8 +138,8 @@ class RanklistHandler(object):
         '''
         此为完成一次约拍后，模特与摄影师加分
         加分规则：
-        1.完成后，摄影师、模特加分
-        2.
+        1.完成后，摄影师、模特直接加分
+        2.按照对方评分（满意度），再增添相应积分
         Args:
             userid: 用户id
             type: 用户在此约拍中类型，1为摄影师，2为模特
@@ -147,5 +152,76 @@ class RanklistHandler(object):
         uid_photoer = appointinfo.AIpid
 
 
+        try:
+            # 模特项
+            rs_model = db.query(RankScore.RSuid, RankScore.RSMscore).filter(RankScore.RSuid == uid_model).one()
+            # 模特加分
+            rs_model.RSMscore += 10
+            # todo：排名上升下降
+
+            # 摄影师项
+            rs_photo = db.query(RankScore.RSuid, RankScore.RSPscore).filter(RankScore.RSuid == uid_photoer).one()
+            #摄影师加分
+            rs_photo.RSPscore += 10
+            # todo：排名上升下降
+
+        except Exception, e:
+            print e, "排行榜查询错误"
+
+    def get_photoerlist_final_score(self):
+        '''
+        Returns: 得到摄影师榜最后一名的分数的分数
+        '''
+        try:
+            # 摄影师榜最后一名
+            photoer_last = db.query(RankScore.RSMrank, RankScore.RSMscore).filter(RankScore.RSMrank == last).one()
+            return photoer_last.RSMscore
+        except Exception, e:
+            print e, "读取摄影师榜最后一名时出错"
+
+    def get_modellist_final_score(self):
+        '''
+        Returns: 得到模特榜最后一名的分数的分数
+        '''
+        try:
+            # 模特榜最后一名
+            model_last = db.query(RankScore.RSMrank, RankScore.RSMscore).filter(RankScore.RSMrank == last).one()
+            return model_last.RSMscore
+        except Exception, e:
+            print e, "读取模特榜最后一名时出错"
+
+    def rank_model_update(self, modelid):
+        '''
+        每次排行榜分数变动后，此方法对此次变动的模特的分数与排行榜进行比较，
+        判断是否能进入排行榜
+        如果进入则冒泡排序，升降名次
+        Args:
+            modelid:
+
+        Returns:
+
+        '''
+
+    def rank_model_init(self):
+        '''
+        对模特榜进行排序
+        '''
+        try:
+            models = db.query(RankScore.RSMrank, RankScore.RSMscore).order_by(desc(RankScore.RSMscore)).all()
+            rank = 1
+            for model in models:
+                model.RSMrank = rank
+                rank += 1
+            db.commit()
+        except Exception, e:
+            print e, "对模特榜进行排序时出错！"
 
 
+    def rank_photoer_list(self):
+        '''
+        对摄影师榜进行排序
+        '''
+
+
+# rlhandler = RanklistHandler()
+# rlhandler.rank_model_init()
