@@ -9,6 +9,7 @@ def TRresponse(item,url,retdata):
         TlikeN=item.TlikeN,
         Tcontent=item.Tcontent,
         Ttitle=item.Ttitle,
+        Tsponsorimg = item.Tsponsorimg,
         TIimgurl=url,
     )
     retdata.append(m_trresponse)
