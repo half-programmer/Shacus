@@ -12,7 +12,7 @@ from Userinfo.Usermodel import user_login_fail_model
 from messsage import message
 from FileHandler.ImageHandler import ImageHandler
 from FileHandler.Upload import AuthKeyHandler
-
+from Userinfo.Userctoken import get_token
 
 def generate_verification_code(len=6):
  ''' 随机生成6位的验证码 '''
@@ -119,6 +119,9 @@ class RegisterHandler(BaseHandler):
                         self.retjson['code'] = 10004  # success
                         m_time = self.db.query(User.UregistT).filter(User.Uauthkey == m_auth_key).one()
                         m_id = self.db.query(User.Uid).filter(User.Uauthkey == m_auth_key).one()
+                        user =self.db.query(User).filter(User.Uauthkey == m_auth_key).one()
+                        m_token=get_token(user.Uid,user.Ualais)
+                        user.Uchattoken = m_token
                         image = Image(
                             IMvalid=True,
                             IMT=time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -154,7 +157,8 @@ class RegisterHandler(BaseHandler):
                             location ='',
                             registTime ='',
                             mailbaox = '',
-                            id = m_id[0]
+                            id = m_id[0],
+                            chattoken = m_token
                         )
                         retdata_body['userModel'] =data
                         retdata.append(retdata_body)
