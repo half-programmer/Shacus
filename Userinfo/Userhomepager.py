@@ -75,7 +75,7 @@ class Userhomepager(BaseHandler):
                     ac_id = u_ac_info.ACEacid
                     ac_info = self.db.query(Activity).filter(Activity.ACid ==ac_id ,Activity.ACvalid == 1).all()
                     if ac_info:
-                        ret_ac  = ac.ac_Model_simply(ac_info)
+                        ret_ac  = ac.ac_Model_simply(ac_info[0])
                         retdata_ac.append(ret_ac)
                 ret_json_contents['ac_info'] =retdata_ac
                 retjson['code'] = '10601'
