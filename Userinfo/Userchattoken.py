@@ -6,4 +6,3 @@
 
 class Userchattken(object):
 
-    
