@@ -24,7 +24,6 @@ from Pressuretest.Simplerequest import Simplerequest
 from RegisterHandler import RegisterHandler
 
 from TRends.TRendspost import TRendspost
-from Userhomepager import Userhomepager
 from Userinfo.UserIndent import UserIndent
 from Settings import PaswChange
 from Userinfo.UserFavoriteHandler import UserFavorite
