@@ -210,7 +210,17 @@ class RanklistHandler(object):
             models = db.query(RankScore.RSMrank, RankScore.RSMscore).order_by(desc(RankScore.RSMscore)).all()
             rank = 1
             for model in models:
-                model.RSMrank = rank
+                #model.RSMrank = 1
+                db.query(RankScore).filter(RankScore.RSid == model.RSid).update({RankScore})
+                # elf.db.query(Appointment).filter(Appointment.APid == ap_id). \
+                #     update({Appointment.APstartT: ap_start_time, Appointment.APendT: ap_end_time,
+                #             Appointment.APjoinT: ap_join_time,
+                #             Appointment.APlocation: ap_location, Appointment.APfree: ap_free,
+                #             Appointment.APcontent: ap_content,
+                #             Appointment.APaddallowed: ap_addallowed,
+                #             Appointment.APtype: ap_type,
+                #             Appointment.APvalid: 1
+                #             }, synchronize_session=False)
                 rank += 1
             db.commit()
         except Exception, e:
@@ -223,5 +233,5 @@ class RanklistHandler(object):
         '''
 
 
-# rlhandler = RanklistHandler()
-# rlhandler.rank_model_init()
+rlhandler = RanklistHandler()
+rlhandler.rank_model_init()
