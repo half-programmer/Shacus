@@ -10,7 +10,7 @@ def TRresponse(item,url,retdata):
         TlikeN=item.TlikeN,
         Tcontent=item.Tcontent,
         Ttitle=item.Ttitle,
-        Tsponsorimg = item.Tsponsorimg,
+        Tsponsorimg = authkey.download_url(item.Tsponsorimg),
         TIimgurl=authkey.download_url(url),
     )
     retdata.append(m_trresponse)
