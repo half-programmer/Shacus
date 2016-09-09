@@ -265,10 +265,10 @@ class Trend(Base):
     Tid = Column(Integer, primary_key=True)
     Tsponsorid = Column(Integer, ForeignKey('User.Uid',onupdate='CASCADE'),primary_key=True)  #用户id
     TsponsT = Column(DateTime(timezone=True), default=func.now())                                         #时间
-    TcommentN = Column(Integer,nullable=False,default=0)
-    TlikeN =Column(Integer,nullable=False,default=0)
-    Tcontent = Column(VARCHAR(128),nullable=False)
-    Ttitle = Column(VARCHAR(12),nullable=False)
+    TcommentN = Column(Integer,nullable=False, default=0)
+    TlikeN =Column(Integer,nullable=False, default=0)
+    Tcontent = Column(VARCHAR(128), nullable=False)
+    Ttitle = Column(VARCHAR(12), nullable=False)
 
 class TrendImage(Base):
     __tablename__ = 'TrendImage'
@@ -278,3 +278,17 @@ class TrendImage(Base):
     TIimgurl = Column(VARCHAR(128))
 
 
+class RankScore(Base):
+    '''
+       摄影师模特排行榜
+       每个用户仅能有一列
+       @RSMscore:用户在当模特方面的分数
+       @RSPscore：用户在当摄影师方面的分数
+    '''
+    __tablename__ = 'RankScore'
+    RSid = Column(Integer, nullable=False, primary_key=True)
+    RSuid = Column(Integer, ForeignKey('User.Uid', onupdate='CASCADE'), nullable=False)
+    RSMscore = Column(Integer, nullable=False, default=0)
+    RSPsocre = Column(Integer, nullable=False, default=0)
+    RSMrank = Column(Integer, nullable=False, default=101)
+    RSPrank = Column(Integer, nullable=False, default=101)

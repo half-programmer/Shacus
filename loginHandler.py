@@ -7,12 +7,15 @@ from tornado.web import asynchronous
 
 from BaseHandlerh import BaseHandler
 from Database.tables import Appointment, User
+from Userinfo import Usermodel
 from Userinfo.Ufuncs import Ufuncs
 from Userinfo.Usermodel import Model_daohanglan
 
 class LoginHandler(BaseHandler):
 
     retjson = {'code': '', 'contents': u'未处理 '}
+
+
 
     @asynchronous
     @gen.coroutine
@@ -33,58 +36,7 @@ class LoginHandler(BaseHandler):
                     if user:  # 用户存在
                         password = user.Upassword
                         if m_password == password:  # 密码正确
-                            print u'密码正确'
-                            self.retjson['code'] = 200
-                            if user.Ubirthday:
-                                Ubirthday = user.Ubirthday.strftime('%Y-%m-%d %H:%M:%S'),
-                            else:
-                                Ubirthday = ''
-                            retdata = []
-                            u_auth_key = user.Uauthkey
-                            user_model = dict(
-                                id=user.Uid,
-                                phone=user.Utel,
-                                nickName=user.Ualais,
-                                realName=user.Uname,
-                                sign=user.Usign,
-                                sex=user.Usex,
-                                score=user.Uscore,
-                                location=user.Ulocation,
-                                birthday=Ubirthday,
-                                registTime=user.UregistT.strftime('%Y-%m-%d %H:%M:%S'),
-                                mailBox=user.Umailbox,
-                                headImage=Ufuncs.get_user_headimage_intent_from_userid(user.Uid),
-                                auth_key=u_auth_key,
-                                chattoken=user.Uchattoken
-                            )
-                            photo_list = []  # 摄影师发布的约拍
-                            model_list = []
-                            try:
-                                photo_list_all = self.db.query(Appointment).filter(Appointment.APtype == 1,
-                                                                                   Appointment.APvalid == 1).\
-                                    order_by(desc(Appointment.APcreateT)).limit(6).all()
-                                model_list_all = self.db.query(Appointment).filter(Appointment.APtype == 0,
-                                                                                   Appointment.APvalid == 1). \
-                                    order_by(desc(Appointment.APcreateT)).limit(6).all()
-                                from Appointment.APmodel import APmodelHandler
-                                ap_model_handler = APmodelHandler()  # 创建对象
-
-                                ap_model_handler.ap_Model_simply(photo_list_all, photo_list, user.Uid)
-                                ap_model_handler.ap_Model_simply(model_list_all, model_list, user.Uid)
-                                data = dict(
-                                userModel=user_model,
-                                daohanglan=self.bannerinit(),
-                                photoList=photo_list,
-                                modelList=model_list,
-                                )
-                                #todo 待生成真的导航栏
-
-                                retdata.append(data)
-                                self.retjson['code'] = '10111'
-                                self.retjson['contents'] = retdata
-                            except Exception,e:
-                                print e
-                                self.retjson['contents'] = r"摄影师约拍列表导入失败！"
+                            self.get_login_model(user)
                         else:
                             self.retjson['contents'] = u'密码错误'
                             self.retjson['code'] = '10114'  # 密码错误
@@ -100,11 +52,11 @@ class LoginHandler(BaseHandler):
             auth_key = self.get_argument("authkey")  # 授权码
             uid = self.get_argument('uid')
             try:
-                user = self.db.query(User.Uid, User.Uauthkey).filter(User.Uid == uid).one()
+                user = self.db.query(User).filter(User.Uid == uid).one()
                 u_auth_key = user.Uauthkey
                 if auth_key == u_auth_key:
                     self.retjson['code'] = '10111'
-                    self.retjson['contents'] = u'自动登录成功！'
+                    self.get_login_model(user)
                 else:
                     self.retjson['code'] = '10116'
                     self.retjson['contents'] = u'授权码不正确或已过期'
@@ -138,3 +90,34 @@ class LoginHandler(BaseHandler):
         bannertokens.append(banner_json4)
         return bannertokens
 
+    def get_login_model(self, user):
+        retdata = []
+        user_model = Usermodel.get_user_detail_from_user(user)  # 用户模型
+        photo_list = []  # 摄影师发布的约拍
+        model_list = []
+        try:
+            photo_list_all = self.db.query(Appointment).filter(Appointment.APtype == 1,
+                                                               Appointment.APvalid == 1). \
+                order_by(desc(Appointment.APcreateT)).limit(6).all()
+            model_list_all = self.db.query(Appointment).filter(Appointment.APtype == 0,
+                                                               Appointment.APvalid == 1). \
+                order_by(desc(Appointment.APcreateT)).limit(6).all()
+            from Appointment.APmodel import APmodelHandler
+            ap_model_handler = APmodelHandler()  # 创建对象
+
+            ap_model_handler.ap_Model_simply(photo_list_all, photo_list, user.Uid)
+            ap_model_handler.ap_Model_simply(model_list_all, model_list, user.Uid)
+            data = dict(
+                userModel=user_model,
+                daohanglan=self.bannerinit(),
+                photoList=photo_list,
+                modelList=model_list,
+            )
+            # todo 待生成真的导航栏
+
+            retdata.append(data)
+            self.retjson['code'] = '10111'
+            self.retjson['contents'] = retdata
+        except Exception, e:
+            print e
+            self.retjson['contents'] = r"摄影师约拍列表导入失败！"

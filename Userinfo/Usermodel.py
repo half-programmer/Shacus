@@ -4,6 +4,8 @@ from Database.tables import UserImage, Image
 from FileHandler.Upload import AuthKeyHandler
 from Database.models import get_db
 from FileHandler.Upload import AuthKeyHandler
+from Userinfo.Ufuncs import Ufuncs
+
 
 def userinfo_smply(u_info, u_change_info):
     '''
@@ -51,6 +53,33 @@ def user_login_fail_model():
         mailBox='wu',
         headImage='wu',
         auth_key='wu'
+    )
+    return user_model
+
+def get_user_detail_from_user(user):
+    try:
+        if user.Ubirthday:
+            Ubirthday = user.Ubirthday.strftime('%Y-%m-%d %H:%M:%S'),
+        else:
+            Ubirthday = ''
+    except Exception, e:
+        print e
+        Ubirthday = ''
+    user_model = dict(
+        id=user.Uid,
+        phone=user.Utel,
+        nickName=user.Ualais,
+        realName=user.Uname,
+        sign=user.Usign,
+        sex=user.Usex,
+        score=user.Uscore,
+        location=user.Ulocation,
+        birthday=Ubirthday,
+        registTime=user.UregistT.strftime('%Y-%m-%d %H:%M:%S'),
+        mailBox=user.Umailbox,
+        headImage=Ufuncs.get_user_headimage_intent_from_userid(user.Uid),
+        auth_key=user.Uauthkey,
+        chattoken=user.Uchattoken
     )
     return user_model
 
