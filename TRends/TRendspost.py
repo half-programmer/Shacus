@@ -5,7 +5,7 @@ import TRfunction
 from BaseHandlerh import BaseHandler
 from FileHandler.Upload import AuthKeyHandler
 from Userinfo.Ufuncs import Ufuncs
-from Database.tables import Trend, TrendImage
+from Database.tables import Trend, TrendImage, Image
 
 
 class TRendspost(BaseHandler):
@@ -25,6 +25,7 @@ class TRendspost(BaseHandler):
                    print '哈哈哈哈'
                    try:
                        url=self.db.query(TrendImage).filter(TrendImage.TItid==data[i].Tid).one()
+                       #self.db.query(Image).filter(Image.IMid== url.TIimid)
                        TRfunction.TRresponse(data[i],url.TIimgurl,retdata)
                    except Exception,e:
                        print e

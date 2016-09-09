@@ -4,6 +4,7 @@ import random
 
 import time
 
+from Appointment.Ranklist import RanklistHandler
 from  BaseHandlerh import BaseHandler
 from Database.tables import User, UCinfo, Image, UserImage
 from Database.tables import Verification
@@ -99,7 +100,9 @@ class RegisterHandler(BaseHandler):
                     Uscore=0,
                     Usex=1,
                     Usign='',
-                    Uauthkey=m_auth_key
+                    Uauthkey=m_auth_key,
+                    Uchattoken =''
+
             )
             try:
                 same_nickname_user = self.db.query(User).filter(User.Ualais == m_nick_name).one()
@@ -133,7 +136,8 @@ class RegisterHandler(BaseHandler):
                         )
                         self.db.merge(userImage)
                         self.db.commit()
-
+                        rank_list_handler = RanklistHandler()
+                        rank_list_handler.insert_new_rank(m_id[0])
 
 
                         auth = AuthKeyHandler()
