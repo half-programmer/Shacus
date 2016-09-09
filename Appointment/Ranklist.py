@@ -29,14 +29,16 @@ class Ranklist(BaseHandler):
         u_auth_key = self.get_argument('authkey')
         uid = self.get_argument('uid')
         rank_list_handler = RanklistHandler()
-        if Ufuncs.judge_user_valid(uid,u_auth_key):  # 用户验证成功
-            if type == '10281':  # 请求摄影师排行
-                self.retjson['content'] = rank_list_handler.get_model_list()
+        ufunc = Ufuncs()
+        if ufunc.judge_user_valid(uid, u_auth_key):  # 用户验证成功
+            if type == '10281':  # 请求摄影师排行get_rank_photoers
+                self.retjson['content'] = rank_list_handler.get_rank_photoers()
             elif type == '10282':  # 请求模特排行
-                self.retjson['content'] = rank_list_handler.get_photoer_list()
+                self.retjson['content'] = rank_list_handler.get_rank_models()
         else:
             self.retjson['code'] = '10285'
             self.retjson['content'] = u'用户认证失败！'
+        self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
 
 class RanklistHandler(object):
@@ -50,7 +52,7 @@ class RanklistHandler(object):
         Returns:获得前十模特的RankScore模型
         '''
         try:
-            models = db.query(RankScore).filter(RankScore.RSMrank<=10).all()   # 排行榜前十的模特
+            models = db.query(RankScore).filter(RankScore.RSMrank<=last).all()   # 排行榜前十的模特
             return models
         except Exception, e:
             print e, u'获取排行榜列表时出现异常'
@@ -63,7 +65,7 @@ class RanklistHandler(object):
         Returns:前十摄影师的RankScore模型
         '''
         try:
-            photoers = db.query(RankScore).filter(RankScore.RSPrank<=10).all()  # 排行榜前十的摄影师
+            photoers = db.query(RankScore).filter(RankScore.RSPrank<=last).all()  # 排行榜前十的摄影师
             return photoers
         except Exception, e:
             print e, u'获取排行榜列表时出现异常'
@@ -74,22 +76,23 @@ class RanklistHandler(object):
         '''
         Returns:获得前十名摄影师的用户模型
         '''
-        photoers_user_models = self.get_rank_list_usermodel(self.get_photoer_list())  # 前十摄影师的用户模型
+        photoers_user_models = self.get_rank_list_usermodel(self.get_photoer_list(), 1)  # 前十摄影师的用户模型
         return photoers_user_models
 
     def get_rank_models(self):
         '''
         Returns:得前十名模特的用户模型
         '''
-        models_user_models = self.get_rank_list_usermodel(self.get_model_list())  # 前十模特的用户模型
+        models_user_models = self.get_rank_list_usermodel(self.get_model_list(), 2)  # 前十模特的用户模型
         return  models_user_models
 
 
-    def get_rank_list_usermodel(self, rs_models):
+    def get_rank_list_usermodel(self, rs_models, type):
         '''
         Args:
-            rs_pmodels: 前十摄影师的RankScore模型
-        Returns:返回前十摄影师的用户模型
+            type: 1为摄影师，2为模特
+            rs_pmodels: 排行榜摄影师或模特的RankScore模型
+        Returns:排行榜摄影师的用户模型
         '''
         user_models = []
         for rs_umodel in rs_models:
@@ -97,6 +100,13 @@ class RanklistHandler(object):
             try:
                 user = db.query(User).filter(User.Uid == rs_u_id).one()
                 user_model = Usermodel.get_user_detail_from_user(user)
+                # 摄影师
+                if type == 1:
+                    user_model['rank'] = rs_umodel.RSPrank
+                    print user_model.uid
+                # 模特
+                elif type == 2:
+                    user_model['rank'] = rs_umodel.RSMrank
                 user_models.append(user_model)
 
             except Exception, e:
