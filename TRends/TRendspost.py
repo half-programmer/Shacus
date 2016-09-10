@@ -25,13 +25,15 @@ class TRendspost(BaseHandler):
                exsit=0
                for items in favorites:
                    list.append(items.Ftypeid)
+                   print '哈哈哈',items.Ftypeid
                for i in range(len(data)):
-                   print '哈哈哈哈'
+                   print '哈哈哈哈',len(data)
                    try:
                        url=self.db.query(TrendImage).filter(TrendImage.TItid==data[i].Tid).one()
                        for item in list:
                            if data[i].Tid == item:
                                exsit =1
+                               break
                            else:
                                exsit = 0
                        TRfunction.TRresponse(data[i],url.TIimgurl,retdata,exsit)
