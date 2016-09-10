@@ -80,7 +80,12 @@ class Application(tornado.web.Application):
 if __name__ == "__main__":
     print "HI,I am in main "
     tornado.options.parse_command_line()
-    Application().listen(options.port)
+    #Application().listen(options.port)
+    http_server = tornado.httpserver.HTTPServer(Application)
+
+    http_server.bind(options.port)
+
+    http_server.start(num_processes=0)
     try:
         tornado.ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:
