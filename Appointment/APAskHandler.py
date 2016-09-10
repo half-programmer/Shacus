@@ -103,7 +103,8 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 retdata = []
                 try:
                     appointments = self.db.query(Appointment). \
-                        filter(Appointment.APtype == 1, Appointment.APclosed == 0, Appointment.APvalid == 1).\
+                        filter(Appointment.APtype == 1, Appointment.APclosed == 0, Appointment.APvalid == 1,
+                               Appointment.APstatus != 2).\
                         order_by(desc(Appointment.APid)).limit(6).all()
                     APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
                     self.retjson['code'] = '10251'
@@ -115,7 +116,8 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 retdata = []
                 try:
                     appointments = self.db.query(Appointment). \
-                        filter(Appointment.APtype == 0, Appointment.APclosed == 0, Appointment.APvalid == 1).\
+                        filter(Appointment.APtype == 0, Appointment.APclosed == 0, Appointment.APvalid == 1,
+                               Appointment.APstatus != 2).\
                     order_by(desc(Appointment.APid)).limit(6).all()
                     APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
                     self.retjson['code'] = '10252'
