@@ -54,6 +54,7 @@ class Coursemodel(object):
             CimageUrl=auth.download_url(course.Cimagerul),
             Cvalid = int(course.Cvalid),
             CwatchN = course.CwatchN,
+            CfavN = course.CfavN,
             Cliked = like,
             Cfav = fav,
             Csee = see
