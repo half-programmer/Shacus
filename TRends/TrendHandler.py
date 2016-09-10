@@ -33,6 +33,7 @@ class TrendHandler(BaseHandler):
                             print once_favorite.Fvalid
                             if once_favorite.Fvalid == 0 : #以前收藏过但取消了
                                 once_favorite.Fvalid = 1  #重新收藏
+                                exsit.TlikeN+=1
                                 self.db.commit()
                                 self.retjson['code']='12021'
                                 self.retjson['contents']='收藏成功'
@@ -48,6 +49,7 @@ class TrendHandler(BaseHandler):
                                                     )
                             self.db.merge(new_favorite)
                             try:
+                                exsit.TlikeN += 1
                                 self.db.commit()
                                 self.retjson['code']='12021'
                                 self.retjson['contents']='收藏成功'
@@ -62,7 +64,7 @@ class TrendHandler(BaseHandler):
                 trendid = self.get_argument('trendid')  # 动态id
                 # todo：是否要判断该活动是否过期？
                 try:
-                    # 用户收藏了该约拍，可以取消
+                    exsit = self.db.query(Trend).filter(Trend.Tid == trendid).one()
                     try:
                         once_favorite = self.db.query(Favorite).filter(Favorite.Ftype == 3, Favorite.Ftypeid == trendid,
                                                                        Favorite.Fuid == u_id).one()
@@ -70,6 +72,7 @@ class TrendHandler(BaseHandler):
                             try:
                                 self.db.query(Favorite).filter(Favorite.Fuid == u_id, Favorite.Ftypeid == trendid). \
                                     update({Favorite.Fvalid: 0}, synchronize_session=False)
+                                exsit.TlikeN -= 1
                                 self.db.commit()
                                 self.retjson['code'] = '12301'
                                 self.retjson['contents'] = r'取消收藏动态成功'
@@ -87,7 +90,7 @@ class TrendHandler(BaseHandler):
             if type == '12004':  # 查看所有收藏的动态
                 retdata = []
                 try:
-                    favorites = self.db.query(Favorite).filter(Favorite.Fuid == u_id,
+                    favorites = self.db.query(Favorite).filter(Favorite.Fuid == u_id,Favorite.Ftype==3,
                                                                Favorite.Fvalid == 1).all()  # 返回收藏列表
                     ap_favorates = []
                     exsit = 1
@@ -95,6 +98,7 @@ class TrendHandler(BaseHandler):
 
                         ap_favorite_id = each_favorite.Ftypeid  # 即动态Id
                         ap_favorite = self.db.query(Trend).filter(Trend.Tid == ap_favorite_id).one()
+                        print '哈哈哈',ap_favorite.Tid
                         url = self.db.query(TrendImage).filter(TrendImage.TItid == ap_favorite.Tid).one()
                         TRfunction.TRresponse(ap_favorite,url.TIimgurl,retdata,exsit)
                     self.retjson['code'] = '12401'

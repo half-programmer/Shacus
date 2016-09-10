@@ -117,6 +117,7 @@ class UserFavorite(BaseHandler):
                         userurl = self.db.query(UserImage).filter(UserImage.UIuid == datauser.Uid).one()
                         ACFunction.Acresponse(ap_favorite,datauser,aclurl,userurl,retdata,user_id)
 
+
                     self.retjson['code'] = '10550'
                     self.retjson['contents'] = retdata
                 except Exception, e:
@@ -196,14 +197,20 @@ class UserFavorite(BaseHandler):
             if type == '10542':  # 查看所有收藏的活动
                 retdata = []
                 try:
-                    favorites = self.db.query(Favorite).filter(Favorite.Fuid == user_id,
+                    favorites = self.db.query(Favorite).filter(Favorite.Fuid == user_id,Favorite.Ftype==2,
                                                                Favorite.Fvalid == 1).all()  # 返回收藏列表
-                    ap_favorates = []
+
+                    #ap_favorates = []
                     for each_favorite in favorites:
                         ap_favorite_id = each_favorite.Ftypeid  # 即活动Id
+                        print ap_favorite_id,'哈哈哈哈'
                         ap_favorite = self.db.query(Activity).filter(Activity.ACid == ap_favorite_id).one()
-                        ap_favorates.append(ap_favorite)
-                    #APmodelHandler.ap_Model_simply(ap_favorates, retdata, user_id)
+                        datauser=self.db.query(User).filter(User.Uid == user_id).one()
+                        aclurl=self.db.query(ActivityImage).filter(ActivityImage.ACIacid==ap_favorite.ACid).limit(1).all()
+                        userurl=self.db.query(UserImage).filter(UserImage.UIuid == datauser.Uid).one()
+                        ACFunction.Acresponse(ap_favorite,datauser,aclurl[0].ACIurl,userurl.UIurl,retdata,user_id)
+                        #ap_favorates.append(ap_favorite)
+                        #APmodelHandler.ap_Model_simply(ap_favorates, retdata, user_id)
                     self.retjson['code'] = '10550'
                     self.retjson['contents'] = retdata
                 except Exception, e:
