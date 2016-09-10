@@ -23,6 +23,7 @@ class upload(BaseHandler):
         retjson = {'code': 200, 'content': 'ok'}  # 返回json
         try:
             file_metas=self.request.files['file']
+
             if file_metas:
                 for meta in file_metas:
                     filename=meta['filename']
