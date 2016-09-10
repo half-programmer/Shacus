@@ -6,7 +6,9 @@ import  json
 
 from BaseHandlerh import BaseHandler
 from Database.tables import User
-
+from FileHandler.Upload import AuthKeyHandler
+from Userinfo import Ufuncs
+from FileHandler.ImageHandler import ImageHandler
 
 class PaswChange(BaseHandler):
     retjson={'code':200,'contents':'none'}
@@ -89,4 +91,40 @@ class PaswChange(BaseHandler):
                 print e
                 self.retjson['code'] = '10510'
                 self.retjson['contents'] = '修改邮箱失败'
+
+        #修改头像，第一次存储图片，返回token
+        elif type =='10513':
+
+            #todo:第一二次握手之间应该加一个验证码
+
+            u_id = self.get_argument('uid')
+            u_authkey =self.get_argument('authkey')
+            image = self.get_argument('image')
+            ufuncs =Ufuncs.Ufuncs()
+            if ufuncs.judge_user_valid(u_id, u_authkey):
+                retjson_body = {'image_token': ''}
+                image_token_handler = AuthKeyHandler()
+                m_image_json = json.loads(image)
+                self.retjson['contents'] = image_token_handler.generateToken(m_image_json)
+                self.retjson['code'] = '10515'
+            else :
+                self.retjson['contents'] = '用户授权码不正确'
+                self.retjson['code'] = '10514'
+        elif type =='10516':
+            u_id = self.get_argument('uid')
+            u_authkey = self.get_argument('authkey')
+            image = self.get_argument('image')
+            ufuncs = Ufuncs.Ufuncs()
+            if ufuncs.judge_user_valid(u_id, u_authkey):
+                m_image_json = json.loads(image)
+                im = ImageHandler()
+                im.change_user_headimage(m_image_json,u_id)
+                self.retjson['contents'] = '头像修改成功'
+                self.retjson['code'] = '10517'
+            else:
+                self.retjson['contents'] = '用户授权码不正确'
+                self.retjson['code'] = '10514'
+
+
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))  # 返回中文
+

@@ -68,8 +68,6 @@ class ActivityCreate(BaseHandler):   #创建活动
                                         Activity.ACtitle == m_title and Activity.ACsponsorid == m_sponsorid
                                     ).one()
                                     retjson_body['acID'] = ac_id[0];
-                                    Image = ImageHandler()
-                                    Image.insert_activity_image(m_image_json,ac_id[0])
                                     self.retjson['code'] = '10313'
                                     self.retjson['contents'] = retjson_body
                                 except Exception,e:
@@ -109,6 +107,7 @@ class ActivityCreate(BaseHandler):   #创建活动
             ac_price = self.get_argument('price')
             ac_maxp = self.get_argument('maxp')
             ac_minp = self.get_argument('minp')
+            m_image = self.get_argument('images')
             if(ac_id==''or ac_title ==''or ac_auth_key==''or ac_location==''or ac_startT==''or ac_entT==''or
                ac_joinT==''or ac_content==''or ac_maxp ==''or ac_minp==''):
                 self.retjson['code'] = '10324'
@@ -131,6 +130,9 @@ class ActivityCreate(BaseHandler):   #创建活动
                                         Activity.ACregistN:1,Activity.ACvalid: 1},synchronize_session = False)
                             try :
                                self.db.commit()
+                               m_image_json = json.loads(m_image)
+                               Image = ImageHandler()
+                               Image.insert_activity_image(m_image_json, ac_id)
                                self.retjson['code'] = '10323'
                                self.retjson['contents'] = '发布活动成功'
                             except Exception,e:
