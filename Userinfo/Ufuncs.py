@@ -76,11 +76,12 @@ class Ufuncs(object):
 
         '''
         users = []
-        user = {'id': '', 'headImage': ''}
+
         try:
             registers = get_db().query(AppointEntry).filter(AppointEntry.AEapid == apid,
                                                             AppointEntry.AEvalid == 1).all()  # 返回的是报名项
             for register in registers:
+                user = {'id': '', 'headImage': ''}
                 user['id'] = register.AEregisterID
                 # todo: 待变为真图片
                 #  user['uimgurl'] = get_db().query(UserImage.UIurl).filter(UserImage.UIuid == user['uid'])
