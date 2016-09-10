@@ -14,6 +14,7 @@ from Appointment.APAskHandler import APaskHandler
 from Appointment.APCreateHandler import APcreateHandler
 from Appointment.APRegistHandler import APregistHandler
 from Appointment.APpraseHandler import APprase
+from Appointment.Ranklist import Ranklist
 from Course.Chomepage import Chomepage
 from Course.CourseAsk import CourseAsk
 from Course.CourseLike import Courselike
@@ -67,7 +68,8 @@ class Application(tornado.web.Application):
              (r"/course/homepage",Chomepage),
              (r"/course/ask",CourseAsk),
              (r"/course/like",Courselike),
-             (r"/course/fav",Coursefav)
+             (r"/course/fav",Coursefav),
+             (r"/ranklist", Ranklist)
         ]
         tornado.web.Application.__init__(self, handlers)
         self.db = scoped_session(sessionmaker(bind=engine,

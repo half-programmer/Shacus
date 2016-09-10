@@ -14,9 +14,9 @@ DB_CONNECT_STRING = 'mysql+mysqldb://root:ydrs.sql.7234@localhost:3306/Shacus?ch
 
 #DB_CONNECT_STRING = 'mysql+mysqldb://root@127.0.0.1:3307/shacustest?charset=utf8'
 
-#DB_CONNECT_STRING = 'mysql+mysqldb://root@127.0.0.1:3307/shacustest?charset=utf8'
-
 #DB_CONNECT_STRING = 'mysql+mysqldb://root@127.0.0.1/shacustest?charset=utf8'
+
+
 
 
 #  pool_recycle=10
