@@ -72,12 +72,7 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                                    Appointment.APtitle == ap_title, Appointment.APsponsorid == ap_sponsorid).one()
                             ap_id = ap.APid
                             retjson_body['apId'] = ap_id
-                            imghandler = ImageHandler()
-                            try:
-                                imghandler.insert_appointment_image(ap_imgs_json, ap.APid)
-                            except Exception, e:
-                                print e, '网络故障'
-                                self.retjson['contents'] = u'网络故障'
+
                             self.retjson['contents'] = retjson_body
                         except Exception, e:
                             print '插入失败！！'
@@ -106,7 +101,9 @@ class APcreateHandler(BaseHandler):  # 创建约拍
             ap_tag = self.get_argument('tags')  # 约拍标签？确认长度
             ap_addallowed = self.get_argument('ap_allowed')
             ap_type = self.get_argument('ap_type')
+            ap_imgs = self.get_argument('imgs')
             try:
+                ap_imgs_json = json.loads(ap_imgs)
                 user = self.db.query(User.Uid).filter(User.Uauthkey == auth_key).one()  # 查看该用户id
                 uid = user.Uid
                 print 'uid: ', uid
@@ -142,6 +139,12 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                                             Appointment.APtype: ap_type,
                                             Appointment.APvalid:1
                                             }, synchronize_session=False)
+                                imghandler = ImageHandler()
+                                try:
+                                    imghandler.insert_appointment_image(ap_imgs_json, ap.APid)
+                                except Exception, e:
+                                    print e, '网络故障'
+                                    self.retjson['contents'] = u'网络故障'
                                 self.db.commit()
                                 self.retjson['code'] = '10214'
                                 self.retjson['contents'] = '发布约拍成功'
