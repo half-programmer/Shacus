@@ -101,6 +101,16 @@ class ImageHandler(object):
             db.commit()
 
 
+    def change_user_headimage(self,newimage,uid):
+        db = get_db()
+        images = db.query(UserImage).filter(UserImage.UIuid == uid).all()
+        for image in images:
+            image_id = image.UIimid
+            im = db.query(Image).filter(Image.IMid == image_id).one()
+            if im.IMvalid == 1:
+                im.IMvalid = 0
+        db.commit()
+        self.insert_user_image(newimage,uid)
 
 
 
