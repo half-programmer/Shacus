@@ -39,13 +39,7 @@ class LoginHandler(BaseHandler):
                     if user:  # 用户存在
                         password = user.Upassword
                         if m_password == password:  # 密码正确
-                            #self.get_login_model(user)
-                            def callback(user):
-                                self.get_login_model(user)
-                                future.set_result(user)
-                            tornado.ioloop.IOLoop.instance().add_callback(callback, user)
-                            yield future
-
+                            self.get_login_model(user)
                         else:
                             self.retjson['contents'] = u'密码错误'
                             self.retjson['code'] = '10114'  # 密码错误
