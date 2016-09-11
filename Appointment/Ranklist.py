@@ -286,10 +286,10 @@ class RanklistHandler(object):
             print e, "对模特榜进行排序时出错！"
 
 
-#
-#
-# rlhandler = RanklistHandler()
-# rlhandler.rank_model_init()
-# rlhandler.rank_photoer_init()
-# apinfo = db.query(AppointmentInfo).filter(AppointmentInfo.AIappoid == 24).one()
-# rlhandler.rank_score_finish_appoint(apinfo)
+
+
+rlhandler = RanklistHandler()
+rlhandler.rank_model_init()
+rlhandler.rank_photoer_init()
+#apinfo = db.query(AppointmentInfo).filter(AppointmentInfo.AIappoid == 24).one()
+#rlhandler.rank_score_finish_appoint(apinfo)
