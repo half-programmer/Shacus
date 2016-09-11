@@ -11,6 +11,7 @@ from BaseHandlerh import BaseHandler
 from Database.tables import User, RankScore, AppointmentInfo
 from Userinfo import Usermodel
 from Userinfo.Ufuncs import Ufuncs
+from FileHandler.Upload import AuthKeyHandler
 
 global db
 db = get_db()
@@ -100,6 +101,7 @@ class RanklistHandler(object):
         Returns:排行榜摄影师的用户模型
         '''
         user_models = []
+        auth = AuthKeyHandler()
         for rs_umodel in rs_models:
             rs_u_id = rs_umodel.RSuid  # 摄影师的用户id
             try:
@@ -108,10 +110,12 @@ class RanklistHandler(object):
                 # 摄影师
                 if type == 1:
                     user_model['rank'] = rs_umodel.RSPrank
+                    user_model['image'] =auth.download_url(str(user.Uid)+'.jpg')
                     #print user_model.id
                 # 模特
                 elif type == 2:
                     user_model['rank'] = rs_umodel.RSMrank
+                    user_model['image'] = auth.download_url(str(user.Uid) + '.jpg')
                 user_models.append(user_model)
 
             except Exception, e:
