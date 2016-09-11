@@ -40,7 +40,7 @@ class LoginHandler(BaseHandler):
                         password = user.Upassword
                         if m_password == password:  # 密码正确
                             #self.get_login_model(user)
-                            def callback(self, user):
+                            def callback(user):
                                 self.get_login_model(user)
                                 future.set_result(user)
                             tornado.ioloop.IOLoop.instance().add_callback(callback, user)
