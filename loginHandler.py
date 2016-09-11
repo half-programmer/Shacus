@@ -80,8 +80,8 @@ class LoginHandler(BaseHandler):
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
         self.finish()
 
-
-
+    @asynchronous
+    @gen.coroutine
     def bannerinit(self):
         from FileHandler.Upload import AuthKeyHandler
         bannertokens = []
@@ -101,6 +101,8 @@ class LoginHandler(BaseHandler):
         bannertokens.append(banner_json4)
         return bannertokens
 
+    @asynchronous
+    @gen.coroutine
     def get_login_model(self, user):
         retdata = []
         user_model = Usermodel.get_user_detail_from_user(user)  # 用户模型
