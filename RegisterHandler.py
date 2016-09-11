@@ -5,23 +5,20 @@ type :用户注册
 '''
 import json
 import random
-
 import time
 
 from sqlalchemy import desc
 
-from Appointment.Ranklist import RanklistHandler
 from  BaseHandlerh import BaseHandler
+from Database.Ranklist import RanklistHandler
 from Database.tables import User, UCinfo, Image, UserImage, Appointment
 from Database.tables import Verification
 from Userinfo import Usermodel
+from Userinfo.Userctoken import get_token
 from Userinfo.Usermodel import user_login_fail_model
 from messsage import message
-from FileHandler.ImageHandler import ImageHandler
-from FileHandler.Upload import AuthKeyHandler
-from Userinfo.Userctoken import get_token
 
-from loginHandler import LoginHandler
+
 def generate_verification_code(len=6):
  ''' 随机生成6位的验证码 '''
  # 注意： 这里我们生成的是0-9的列表，当然你也可以指定这个list，这里很灵活
