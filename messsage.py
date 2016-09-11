@@ -1,5 +1,8 @@
 # -*- coding:utf-8 -*-
-
+'''
+@author 兰威
+@type 发送短信验证码
+'''
 
 import sys, urllib, urllib2, json
 def message(code=000000,phone=00000000000):

@@ -1,7 +1,8 @@
 #-*- coding:utf-8 -*-
 '''
-@author:黄鑫晨
+@author:兰威
 #create_time:2016-09-01
+@type 用户关注请求
 '''
 import json
 
