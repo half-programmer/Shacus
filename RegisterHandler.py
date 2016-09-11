@@ -1,4 +1,8 @@
 # -*- coding:utf-8 -*-
+'''
+@author 兰威
+type :用户注册
+'''
 import json
 import random
 

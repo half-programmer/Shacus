@@ -1,4 +1,8 @@
 # coding=utf-8
+'''
+@author 兰威
+用于查看用户个人主页
+'''
 import json
 
 import Userinfo.Ufuncs
@@ -9,9 +13,7 @@ from Database.tables import User, UCinfo, Appointment, UserLike, AppointEntry, A
     Activity
 from Userinfo.Usermodel import userinfo_smply
 class Userhomepager(BaseHandler):
-    '''
-    查看他人主页
-    '''
+
 
 
     def post(self):

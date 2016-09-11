@@ -1,8 +1,10 @@
 # coding=utf-8
 import json
 
+import tornado
 from sqlalchemy import desc
 from tornado import gen
+from tornado.concurrent import Future
 from tornado.web import asynchronous
 
 from BaseHandlerh import BaseHandler
@@ -21,6 +23,7 @@ class LoginHandler(BaseHandler):
     @gen.coroutine
     def post(self):
         askcode = self.get_argument('askCode')  # 请求码
+        future =Future()
 
         if askcode == '10106':  # 手动登录
             m_phone = self.get_argument('phone')
@@ -36,7 +39,10 @@ class LoginHandler(BaseHandler):
                     if user:  # 用户存在
                         password = user.Upassword
                         if m_password == password:  # 密码正确
-                            self.get_login_model(user)
+                            #self.get_login_model(user)
+                            tornado.ioloop.IOLoop.instance().add_callback(self.callback, user)
+                            yield future
+
                         else:
                             self.retjson['contents'] = u'密码错误'
                             self.retjson['code'] = '10114'  # 密码错误
@@ -70,6 +76,10 @@ class LoginHandler(BaseHandler):
             self.retjson['data'] = u"登录类型不满足要求，请重新登录！"
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
         self.finish()
+        
+    def callback(self,user):
+        self.get_login_model(user)
+        self.future.set_result(user)
 
     def bannerinit(self):
         from FileHandler.Upload import AuthKeyHandler
