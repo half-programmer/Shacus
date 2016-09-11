@@ -21,6 +21,7 @@ from Course.CourseLike import Courselike
 from Course.Coursefav import Coursefav
 from Database.models import engine
 from ImageCallback import ImageCallback
+from Pressuretest import login
 from Pressuretest.Simplerequest import Simplerequest
 from RegisterHandler import RegisterHandler
 
@@ -47,6 +48,7 @@ class Application(tornado.web.Application):
         handlers = [
              (r"/appointment/create", APcreateHandler),
              (r"/pressuretest",Simplerequest),
+             (r"/pressuretest2", login.login),
              (r"/appointment/ask", APaskHandler),
              (r"/appointment/prase", APprase),
              (r"/appointment/regist", APregistHandler),
