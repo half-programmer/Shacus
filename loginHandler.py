@@ -40,7 +40,10 @@ class LoginHandler(BaseHandler):
                         password = user.Upassword
                         if m_password == password:  # 密码正确
                             #self.get_login_model(user)
-                            tornado.ioloop.IOLoop.instance().add_callback(self.callback, user)
+                            def callback(self, user):
+                                self.get_login_model(user)
+                                future.set_result(user)
+                            tornado.ioloop.IOLoop.instance().add_callback(callback, user)
                             yield future
 
                         else:
@@ -76,10 +79,8 @@ class LoginHandler(BaseHandler):
             self.retjson['data'] = u"登录类型不满足要求，请重新登录！"
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
         self.finish()
-        
-    def callback(self,user):
-        self.get_login_model(user)
-        self.future.set_result(user)
+
+
 
     def bannerinit(self):
         from FileHandler.Upload import AuthKeyHandler
