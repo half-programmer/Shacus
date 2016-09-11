@@ -40,6 +40,10 @@ class Ranklist(BaseHandler):
             self.retjson['code'] = '10286'
             self.retjson['content'] = u'用户认证失败！'
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
+    def get(self):
+        rlhandler = RanklistHandler()
+        rlhandler.rank_model_init()
+        rlhandler.rank_photoer_init()
 
 
 class RanklistHandler(object):
@@ -289,8 +293,6 @@ class RanklistHandler(object):
 
 
 
-rlhandler = RanklistHandler()
-rlhandler.rank_model_init()
-rlhandler.rank_photoer_init()
+
 #apinfo = db.query(AppointmentInfo).filter(AppointmentInfo.AIappoid == 24).one()
 #rlhandler.rank_score_finish_appoint(apinfo)

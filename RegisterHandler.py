@@ -9,8 +9,8 @@ import time
 
 from sqlalchemy import desc
 
+from Appointment.Ranklist import RanklistHandler
 from  BaseHandlerh import BaseHandler
-from Database.Ranklist import RanklistHandler
 from Database.tables import User, UCinfo, Image, UserImage, Appointment
 from Database.tables import Verification
 from Userinfo import Usermodel

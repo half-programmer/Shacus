@@ -14,11 +14,11 @@ from Appointment.APAskHandler import APaskHandler
 from Appointment.APCreateHandler import APcreateHandler
 from Appointment.APRegistHandler import APregistHandler
 from Appointment.APpraseHandler import APprase
+from Appointment.Ranklist import Ranklist
 from Course.Chomepage import Chomepage
 from Course.CourseAsk import CourseAsk
 from Course.CourseLike import Courselike
 from Course.Coursefav import Coursefav
-from Database.Ranklist import Ranklist
 from Database.models import engine
 from ImageCallback import ImageCallback
 from Pressuretest import login
