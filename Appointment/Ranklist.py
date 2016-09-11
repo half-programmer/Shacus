@@ -33,10 +33,11 @@ class Ranklist(BaseHandler):
         if ufunc.judge_user_valid(uid, u_auth_key):  # 用户验证成功
             if type == '10281':  # 请求摄影师排行get_rank_photoers
                 self.retjson['content'] = rank_list_handler.get_rank_photoers()
+                self.retjson['code'] = '10285'
             elif type == '10282':  # 请求模特排行
                 self.retjson['content'] = rank_list_handler.get_rank_models()
         else:
-            self.retjson['code'] = '10285'
+            self.retjson['code'] = '10286'
             self.retjson['content'] = u'用户认证失败！'
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
@@ -91,7 +92,7 @@ class RanklistHandler(object):
         '''
         Args:
             type: 1为摄影师，2为模特
-            rs_pmodels: 排行榜摄影师或模特的RankScore模型
+            rs_models: 排行榜摄影师或模特的RankScore模型
         Returns:排行榜摄影师的用户模型
         '''
         user_models = []
@@ -103,7 +104,7 @@ class RanklistHandler(object):
                 # 摄影师
                 if type == 1:
                     user_model['rank'] = rs_umodel.RSPrank
-                    print user_model.uid
+                    #print user_model.id
                 # 模特
                 elif type == 2:
                     user_model['rank'] = rs_umodel.RSMrank
