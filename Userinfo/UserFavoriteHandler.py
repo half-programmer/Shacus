@@ -8,7 +8,7 @@ from BaseHandlerh import BaseHandler
 from Database.tables import Favorite, Appointment, Activity, User, ActivityImage, UserImage, Image
 
 '''
-@author:黄鑫晨
+@author:黄鑫晨，王佳镭
 @type:用户收藏
 @time:2019-09-02
 @attention:由于每次插入时有当前时间项，所以merge无法避免重复，仍需要判断
