@@ -11,6 +11,7 @@ from BaseHandlerh import BaseHandler
 from Database.tables import User, RankScore, AppointmentInfo
 from Userinfo import Usermodel
 from Userinfo.Ufuncs import Ufuncs
+from FileHandler.Upload import AuthKeyHandler
 
 global db
 db = get_db()
@@ -18,7 +19,7 @@ db = get_db()
 # 排行榜共有多少名
 global last
 # 目前排行榜共有十名
-last = 3
+last = 10
 class Ranklist(BaseHandler):
     '''
         用来与客户端通信的类
@@ -33,12 +34,17 @@ class Ranklist(BaseHandler):
         if ufunc.judge_user_valid(uid, u_auth_key):  # 用户验证成功
             if type == '10281':  # 请求摄影师排行get_rank_photoers
                 self.retjson['content'] = rank_list_handler.get_rank_photoers()
+                self.retjson['code'] = '10285'
             elif type == '10282':  # 请求模特排行
                 self.retjson['content'] = rank_list_handler.get_rank_models()
         else:
-            self.retjson['code'] = '10285'
+            self.retjson['code'] = '10286'
             self.retjson['content'] = u'用户认证失败！'
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
+    def get(self):
+        rlhandler = RanklistHandler()
+        rlhandler.rank_model_init()
+        rlhandler.rank_photoer_init()
 
 
 class RanklistHandler(object):
@@ -91,10 +97,11 @@ class RanklistHandler(object):
         '''
         Args:
             type: 1为摄影师，2为模特
-            rs_pmodels: 排行榜摄影师或模特的RankScore模型
+            rs_models: 排行榜摄影师或模特的RankScore模型
         Returns:排行榜摄影师的用户模型
         '''
         user_models = []
+        auth = AuthKeyHandler()
         for rs_umodel in rs_models:
             rs_u_id = rs_umodel.RSuid  # 摄影师的用户id
             try:
@@ -103,10 +110,12 @@ class RanklistHandler(object):
                 # 摄影师
                 if type == 1:
                     user_model['rank'] = rs_umodel.RSPrank
-                    print user_model.uid
+                    user_model['image'] =auth.download_url(str(user.Uid)+'.jpg')
+                    #print user_model.id
                 # 模特
                 elif type == 2:
                     user_model['rank'] = rs_umodel.RSMrank
+                    user_model['image'] = auth.download_url(str(user.Uid) + '.jpg')
                 user_models.append(user_model)
 
             except Exception, e:
@@ -286,10 +295,8 @@ class RanklistHandler(object):
             print e, "对模特榜进行排序时出错！"
 
 
-#
-#
-# rlhandler = RanklistHandler()
-# rlhandler.rank_model_init()
-# rlhandler.rank_photoer_init()
-# apinfo = db.query(AppointmentInfo).filter(AppointmentInfo.AIappoid == 24).one()
-# rlhandler.rank_score_finish_appoint(apinfo)
+
+
+
+#apinfo = db.query(AppointmentInfo).filter(AppointmentInfo.AIappoid == 24).one()
+#rlhandler.rank_score_finish_appoint(apinfo)

@@ -1,5 +1,5 @@
 # coding=utf-8
-'''返回不同格式的教程模型
+'''对教程关注
 @author：兰威
 '''
 import json

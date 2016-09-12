@@ -76,11 +76,12 @@ class Ufuncs(object):
 
         '''
         users = []
-        user = {'id': '', 'headImage': ''}
+
         try:
             registers = get_db().query(AppointEntry).filter(AppointEntry.AEapid == apid,
                                                             AppointEntry.AEvalid == 1).all()  # 返回的是报名项
             for register in registers:
+                user = {'id': '', 'headImage': ''}
                 user['id'] = register.AEregisterID
                 # todo: 待变为真图片
                 #  user['uimgurl'] = get_db().query(UserImage.UIurl).filter(UserImage.UIuid == user['uid'])
@@ -162,13 +163,20 @@ class Ufuncs(object):
         authkey_handler = AuthKeyHandler()
         try:
             # user_images = get_db().query(UserImage).filter(UserImage.UIuid == userid).all()
-            user_image = get_db().query(UserImage).filter(UserImage.UIuid == userid).one()
+            #user_image = get_db().query(UserImage).filter(UserImage.UIuid == userid).one()
             # user_images[0] = 'logo1.png'
             # for user_image in user_images:
             #     isvalid = get_db().query(Image).filter(Image.IMid == user_image.UIuid).one()
             #     if isvalid.IMvalie == 1:
             #         ui_url = user_image.UIurl
-            ui_url = user_image.UIurl
+            user_headimages = get_db().query(UserImage).filter(UserImage.UIuid == userid).all()
+            userimg = []
+            for user_headimage in user_headimages:
+                exist = get_db().query(Image).filter(Image.IMid == user_headimage.UIimid, Image.IMvalid == 1).all()
+                if exist:
+                    userimg = user_headimage
+                    break;
+            ui_url = userimg.UIurl
             user_intent = authkey_handler.download_url(ui_url)
             #         user_intent = authkey_handler.download_url(ui_url)
             #     else:

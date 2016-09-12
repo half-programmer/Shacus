@@ -21,23 +21,18 @@ from Course.CourseLike import Courselike
 from Course.Coursefav import Coursefav
 from Database.models import engine
 from ImageCallback import ImageCallback
+from Pressuretest import login
 from Pressuretest.Simplerequest import Simplerequest
 from RegisterHandler import RegisterHandler
-
+from Settings import PaswChange
 from TRends.TRendspost import TRendspost
 from TRends.TrendHandler import TrendHandler
-from Userinfo.UserIndent import UserIndent
-from Settings import PaswChange
 from Userinfo.UserFavoriteHandler import UserFavorite
 from Userinfo.UserIndent import UserIndent
 from Userinfo.UserInfo import UserInfo
 from Userinfo.UserLike import FindUlike
 from Userinfo.Userhomepager import Userhomepager
 from loginHandler import LoginHandler
-from Settings import PaswChange
-from Userinfo.UserInfo import UserInfo
-from Pressuretest.Simplerequest import Simplerequest
-
 
 define("port", default=800, help="run on the given port", type=int)
 
@@ -47,6 +42,7 @@ class Application(tornado.web.Application):
         handlers = [
              (r"/appointment/create", APcreateHandler),
              (r"/pressuretest",Simplerequest),
+             (r"/pressuretest2", login.login),
              (r"/appointment/ask", APaskHandler),
              (r"/appointment/prase", APprase),
              (r"/appointment/regist", APregistHandler),
@@ -81,6 +77,7 @@ if __name__ == "__main__":
     print "HI,I am in main "
     tornado.options.parse_command_line()
     Application().listen(options.port)
+
     try:
         tornado.ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:

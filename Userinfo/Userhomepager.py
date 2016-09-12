@@ -1,4 +1,8 @@
 # coding=utf-8
+'''
+@author 兰威
+用于查看用户个人主页
+'''
 import json
 
 import Userinfo.Ufuncs
@@ -9,9 +13,7 @@ from Database.tables import User, UCinfo, Appointment, UserLike, AppointEntry, A
     Activity
 from Userinfo.Usermodel import userinfo_smply
 class Userhomepager(BaseHandler):
-    '''
-    查看他人主页
-    '''
+
 
 
     def post(self):
@@ -75,7 +77,7 @@ class Userhomepager(BaseHandler):
                     ac_id = u_ac_info.ACEacid
                     ac_info = self.db.query(Activity).filter(Activity.ACid ==ac_id ,Activity.ACvalid == 1).all()
                     if ac_info:
-                        ret_ac  = ac.ac_Model_simply(ac_info[0])
+                        ret_ac  = ac.ac_Model_simply(ac_info[0],'default')
                         retdata_ac.append(ret_ac)
                 ret_json_contents['ac_info'] =retdata_ac
                 retjson['code'] = '10601'

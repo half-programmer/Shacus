@@ -13,11 +13,9 @@ from Userinfo import Usermodel
 from Userinfo.Ufuncs import Ufuncs
 from Userinfo.Usermodel import Model_daohanglan
 
-class LoginHandler(BaseHandler):
+class login(BaseHandler):
 
     retjson = {'code': '', 'contents': u'未处理 '}
-
-
 
     @asynchronous
     @gen.coroutine
@@ -74,8 +72,8 @@ class LoginHandler(BaseHandler):
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
         self.finish()
 
-    #@asynchronous
-    #@gen.coroutine
+    @asynchronous
+    @gen.coroutine
     def bannerinit(self):
         from FileHandler.Upload import AuthKeyHandler
         bannertokens = []
@@ -120,6 +118,7 @@ class LoginHandler(BaseHandler):
                 photoList=photo_list,
                 modelList=model_list,
             )
+            # todo 待生成真的导航栏
 
             retdata.append(data)
             self.retjson['code'] = '10111'

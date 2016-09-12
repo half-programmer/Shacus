@@ -100,7 +100,7 @@ class UserFavorite(BaseHandler):
             if type == '10541': # 查看所有收藏的约拍
                 retdata = []
                 try:
-                    favorites = self.db.query(Favorite).filter(Favorite.Fuid == user_id, Favorite.Fvalid == 1,Favorite.type==1).all()  # 返回收藏列表
+                    favorites = self.db.query(Favorite).filter(Favorite.Fuid == user_id, Favorite.Fvalid == 1,Favorite.Ftype == 1).all()  # 返回收藏列表
                     ap_favorates = []
                     for each_favorite in favorites:
                         ap_favorite_id = each_favorite.Ftypeid  # 即约拍Id
