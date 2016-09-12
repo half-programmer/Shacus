@@ -28,7 +28,7 @@ class APregistHandler(BaseHandler):  # 报名约拍
                 try:
                     ap_user = self.db.query(User).filter(User.Uauthkey == u_auth_key).one()
                     ap_user_id = ap_user.Uid
-                    appointment = self.db.query(Appointment).filter(Appointment.APid == ap_id).one()
+                    appointment = self.db.query(Appointment).filter(Appointment.APid == ap_id, Appointment.APstatus == 0).one()
                     try:
                         exist = self.db.query(AppointEntry). \
                             filter(AppointEntry.AEregisterID == u_id, AppointEntry.AEapid == ap_id,
