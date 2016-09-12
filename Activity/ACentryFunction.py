@@ -10,7 +10,7 @@ def response(item,retdata):
     ACEregisttvilid=item.ACEregisttvilid,
     ACEscore=item.ACEscore,
     ACEcomment=item.ACEcomment,
-    ACEregisterT=item.ACEregisterT.strftime('%Y-%m-%dT%H:%M:%S'),
+    ACEregisterT=item.ACEregisterT.strftime('%Y-%m-%d %H:%M:%S'),
     )
     retdata.append(m_response)
 
