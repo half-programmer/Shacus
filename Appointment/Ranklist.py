@@ -24,7 +24,7 @@ class Ranklist(BaseHandler):
     '''
         用来与客户端通信的类
     '''
-    retjson = {'code':'', "content": ''}
+    retjson = {'code':'10287', "content": '意外错误'}
     def post(self):
         type = self.get_argument('type')
         u_auth_key = self.get_argument('authkey')
@@ -36,6 +36,7 @@ class Ranklist(BaseHandler):
                 self.retjson['content'] = rank_list_handler.get_rank_photoers()
                 self.retjson['code'] = '10285'
             elif type == '10282':  # 请求模特排行
+                self.retjson['code'] = '10285'
                 self.retjson['content'] = rank_list_handler.get_rank_models()
         else:
             self.retjson['code'] = '10286'
@@ -115,7 +116,7 @@ class RanklistHandler(object):
                 # 模特
                 elif type == 2:
                     user_model['rank'] = rs_umodel.RSMrank
-                    user_model['image'] = auth.download_url(str(user.Uid) + '.jpg')
+                    user_model['image'] = auth.download_url(str(user.Uid) + '.png')
                 user_models.append(user_model)
 
             except Exception, e:
