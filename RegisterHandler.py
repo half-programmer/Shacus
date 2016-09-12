@@ -17,7 +17,7 @@ from Userinfo import Usermodel
 from Userinfo.Userctoken import get_token
 from Userinfo.Usermodel import user_login_fail_model
 from messsage import message
-
+import datetime
 
 def generate_verification_code(len=6):
  ''' 随机生成6位的验证码 '''
@@ -77,7 +77,10 @@ class RegisterHandler(BaseHandler):
             code=self.get_argument('code')
             try:
                item=self.db.query(Verification).filter(Verification.Vphone==m_phone).one()
+               #exist = self.db.query(Verification).filter(Verification.Vphone == m_phone).one()
+               #delta = datetime.datetime.now() - exist.VT
                if item.Vcode==code:
+                   #if delta>datetime.timedelta(minutes=10):
                    self.retjson['code']=10004
                    self.retjson['contents']=u'验证码验证成功'
                else:

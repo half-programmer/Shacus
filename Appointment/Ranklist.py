@@ -19,7 +19,7 @@ db = get_db()
 # 排行榜共有多少名
 global last
 # 目前排行榜共有十名
-last = 3
+last = 10
 class Ranklist(BaseHandler):
     '''
         用来与客户端通信的类
