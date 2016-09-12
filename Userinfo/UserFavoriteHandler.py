@@ -5,7 +5,7 @@ import Userinfo.Ufuncs
 from Activity import ACFunction
 from Appointment.APmodel import APmodelHandler
 from BaseHandlerh import BaseHandler
-from Database.tables import Favorite, Appointment, Activity, User, ActivityImage, UserImage
+from Database.tables import Favorite, Appointment, Activity, User, ActivityImage, UserImage, Image
 
 '''
 @author:黄鑫晨
@@ -198,8 +198,19 @@ class UserFavorite(BaseHandler):
                         datauser=self.db.query(User).filter(User.Uid == user_id).one()
                         print datauser.Uid,'呵呵'
                         aclurl=self.db.query(ActivityImage).filter(ActivityImage.ACIacid==ap_favorite.ACid).limit(1).all()
-                        userurl=self.db.query(UserImage).filter(UserImage.UIuid == datauser.Uid).one()
-                        ACFunction.Acresponse(ap_favorite,datauser,aclurl[0].ACIurl,userurl.UIurl,retdata,user_id)
+                        #userurl=self.db.query(UserImage).filter(UserImage.UIuid == datauser.Uid).all()
+
+                        user_headimages = self.db.query(UserImage).filter(
+                            UserImage.UIuid == datauser.Uid).all()
+                        userimg = []
+                        for user_headimage in user_headimages:
+                            exist = self.db.query(Image).filter(Image.IMid == user_headimage.UIimid,
+                                                                 Image.IMvalid == 1).all()
+                            if exist:
+                                userimg = user_headimage
+                                break;
+
+                        ACFunction.Acresponse(ap_favorite,datauser,aclurl[0].ACIurl,userimg.UIurl,retdata,user_id)
                         print'哦哦哦'
                         #ap_favorates.append(ap_favorite)
                         #APmodelHandler.ap_Model_simply(ap_favorates, retdata, user_id)
@@ -208,8 +219,8 @@ class UserFavorite(BaseHandler):
                     self.retjson['contents'] = retdict
                 except Exception, e:
                     print e
-                    self.retjson['code'] = '10526'
-                    self.retjson['contents'] = r'用户未收藏任何活动'
+                    self.retjson['code'] = '10551'
+                    self.retjson['contents'] = r''
 
 
         else:
