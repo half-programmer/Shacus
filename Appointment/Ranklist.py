@@ -115,7 +115,7 @@ class RanklistHandler(object):
                 # 模特
                 elif type == 2:
                     user_model['rank'] = rs_umodel.RSMrank
-                    user_model['image'] = auth.download_url(str(user.Uid) + '.jpg')
+                    user_model['image'] = auth.download_url(str(user.Uid) + '.png')
                 user_models.append(user_model)
 
             except Exception, e:
