@@ -111,12 +111,12 @@ class RanklistHandler(object):
                 # 摄影师
                 if type == 1:
                     user_model['rank'] = rs_umodel.RSPrank
-                    user_model['image'] =auth.download_url(str(user.Uid)+'.jpg')
+                    user_model['image'] =auth.download_url('0'+str(user.Uid)+'.png')
                     #print user_model.id
                 # 模特
                 elif type == 2:
                     user_model['rank'] = rs_umodel.RSMrank
-                    user_model['image'] = auth.download_url(str(user.Uid) + '.jpg')
+                    user_model['image'] = auth.download_url(str(user.Uid) + '.png')
                 user_models.append(user_model)
 
             except Exception, e:
