@@ -2,7 +2,9 @@
 from Database.tables import UserImage, Image
 from FileHandler.Upload import AuthKeyHandler
 from Database.models import get_db
-
+'''
+@author:兰威
+'''
 class ACmodelHandler:
     @classmethod
     def ac_Model_simply(clas,activity,url):

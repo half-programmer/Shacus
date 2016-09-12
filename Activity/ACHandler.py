@@ -1,8 +1,9 @@
 # coding=utf-8
 from Database.tables import User, Activity,ActivityEntry
 from FileHandler.Upload import AuthKeyHandler
-__author__='兰威'
+
 '''
+@author:兰威
 2016.08.30
 '''
 import json

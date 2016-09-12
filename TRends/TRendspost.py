@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-
+'''
+@author:王佳镭
+@模块功能：请求所有动态
+'''
 import json
 import TRfunction
 from BaseHandlerh import BaseHandler
