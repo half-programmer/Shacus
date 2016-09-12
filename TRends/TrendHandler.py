@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-
+'''
+@author:王佳镭
+@动态功能：用户收藏；取消收藏；查看所有收藏
+'''
 import json
 import TRfunction
 import Userinfo.Ufuncs

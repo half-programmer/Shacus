@@ -1,10 +1,9 @@
 # -*- coding:utf-8 -*-
-
+'''
+@author:王佳镭
+'''
 from Userinfo.Ufuncs import Ufuncs
-
-__anthor__="wjl"
 import json
-
 import ACFunction
 import ACentryFunction
 from BaseHandlerh import  BaseHandler

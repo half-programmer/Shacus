@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+'''
+@author:王佳镭
+'''
 from Database.models import get_db
 from Database.tables import Favorite
 from FileHandler.Upload import AuthKeyHandler
