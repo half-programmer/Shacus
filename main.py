@@ -24,21 +24,15 @@ from ImageCallback import ImageCallback
 from Pressuretest import login
 from Pressuretest.Simplerequest import Simplerequest
 from RegisterHandler import RegisterHandler
-
+from Settings import PaswChange
 from TRends.TRendspost import TRendspost
 from TRends.TrendHandler import TrendHandler
-from Userinfo.UserIndent import UserIndent
-from Settings import PaswChange
 from Userinfo.UserFavoriteHandler import UserFavorite
 from Userinfo.UserIndent import UserIndent
 from Userinfo.UserInfo import UserInfo
 from Userinfo.UserLike import FindUlike
 from Userinfo.Userhomepager import Userhomepager
 from loginHandler import LoginHandler
-from Settings import PaswChange
-from Userinfo.UserInfo import UserInfo
-from Pressuretest.Simplerequest import Simplerequest
-
 
 define("port", default=800, help="run on the given port", type=int)
 

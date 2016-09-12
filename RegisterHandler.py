@@ -5,7 +5,6 @@ type :用户注册
 '''
 import json
 import random
-
 import time
 
 from sqlalchemy import desc
@@ -15,13 +14,11 @@ from  BaseHandlerh import BaseHandler
 from Database.tables import User, UCinfo, Image, UserImage, Appointment
 from Database.tables import Verification
 from Userinfo import Usermodel
+from Userinfo.Userctoken import get_token
 from Userinfo.Usermodel import user_login_fail_model
 from messsage import message
-from FileHandler.ImageHandler import ImageHandler
-from FileHandler.Upload import AuthKeyHandler
-from Userinfo.Userctoken import get_token
+import datetime
 
-from loginHandler import LoginHandler
 def generate_verification_code(len=6):
  ''' 随机生成6位的验证码 '''
  # 注意： 这里我们生成的是0-9的列表，当然你也可以指定这个list，这里很灵活
@@ -80,7 +77,10 @@ class RegisterHandler(BaseHandler):
             code=self.get_argument('code')
             try:
                item=self.db.query(Verification).filter(Verification.Vphone==m_phone).one()
+               #exist = self.db.query(Verification).filter(Verification.Vphone == m_phone).one()
+               #delta = datetime.datetime.now() - exist.VT
                if item.Vcode==code:
+                   #if delta>datetime.timedelta(minutes=10):
                    self.retjson['code']=10004
                    self.retjson['contents']=u'验证码验证成功'
                else:

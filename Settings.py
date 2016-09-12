@@ -117,10 +117,11 @@ class PaswChange(BaseHandler):
             ufuncs = Ufuncs.Ufuncs()
             if ufuncs.judge_user_valid(u_id, u_authkey):
                 m_image_json = json.loads(image)
+                auth = AuthKeyHandler()
                 im = ImageHandler()
                 im.change_user_headimage(m_image_json,u_id)
-                self.retjson['contents'] = '头像修改成功'
-                self.retjson['code'] = '10517'
+                self.retjson['contents'] = auth.download_url(m_image_json[0])
+                self.retjson['code'] = '66666'
             else:
                 self.retjson['contents'] = '用户授权码不正确'
                 self.retjson['code'] = '10514'
