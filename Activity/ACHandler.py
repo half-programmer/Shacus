@@ -137,7 +137,7 @@ class ActivityCreate(BaseHandler):   #创建活动
                                self.retjson['contents'] = '发布活动成功'
                             except Exception,e:
                                 print e
-                                self.rollback()
+                                self.db.rollback()
                                 self.retjson['code'] = '10322'
                                 self.retjson['contents'] = '服务器错误'
                     except Exception,e:
