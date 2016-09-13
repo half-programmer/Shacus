@@ -125,6 +125,20 @@ class PaswChange(BaseHandler):
             else:
                 self.retjson['contents'] = '用户授权码不正确'
                 self.retjson['code'] = '10514'
+        elif type == '10517':
+            u_id = self.get_argument('uid')
+            u_authkey = self.get_argument('authkey')
+            sign = self.get_argument('sign')
+            ufuncs = Ufuncs.Ufuncs()
+            if ufuncs.judge_user_valid(u_id, u_authkey):
+                user = self.db.query(User).filter(User.Uid == u_id).one()
+                user.Usign = sign
+                self.db.commit()
+                self.retjson['contents']  = '修改个性签名成功'
+                self.retjson['code'] = '10518'
+            else:
+                self.retjson['contents'] = '用户授权码不正确'
+                self.retjson['code'] = '10514'
 
 
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))  # 返回中文

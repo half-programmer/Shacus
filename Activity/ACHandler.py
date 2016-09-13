@@ -138,7 +138,7 @@ class ActivityCreate(BaseHandler):   #创建活动
                                self.retjson['contents'] = '发布活动成功'
                             except Exception,e:
                                 print e
-                                self.rollback()
+                                self.db.rollback()
                                 self.retjson['code'] = '10322'
                                 self.retjson['contents'] = '服务器错误'
                     except Exception,e:
@@ -206,16 +206,17 @@ class ActivityRegister(BaseHandler):#报名活动未考虑人数是否已满
                     self.retjson['code'] = '10354'
                 else :
                     try :
-                        exist = self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid == ac_id and
+                        exist = self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid == ac_id ,
                                                                     ActivityEntry.ACEregisterid == ac_registerid ).one()
                         if exist.ACEregisttvilid :
                             self.retjson['contents'] = r'您已经报名该活动'
                             self.retjson['code'] = '10351'
                         else: #用户曾经报名过该活动
                             self.db.query(ActivityEntry).\
-                                filter(ActivityEntry.ACEacid == ac_id and ActivityEntry.ACEregisterid == ac_registerid ).\
+                                filter(ActivityEntry.ACEacid == ac_id , ActivityEntry.ACEregisterid == ac_registerid ).\
                                 update({ActivityEntry.ACEregisttvilid : 1},synchronize_session = False)
                             self.updata_activity_number(ac_id,1)
+                            self.db.commit()
                             self.retjson['contents'] = r'您已报名成功'
                             self.retjson['code'] = '10352'
                     except Exception,e: #用户从未报名过该活动
@@ -229,6 +230,7 @@ class ActivityRegister(BaseHandler):#报名活动未考虑人数是否已满
                         )
                         self.db.merge(new_activityEntry)
                         try :
+                            self.db.commit()
                             self.updata_activity_number(ac_id, 1)
                             self.retjson['contents'] = r'您已报名成功'
                             self.retjson['code'] = '10352'
@@ -254,11 +256,11 @@ class ActivityRegister(BaseHandler):#报名活动未考虑人数是否已满
                        self.retjson['contents'] = '该活动已经停止报名'
                        self.retjson['code'] = '10354'
                     else:
-                        exist = self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid == ac_id and
+                        exist = self.db.query(ActivityEntry).filter(ActivityEntry.ACEacid == ac_id ,
                                                                     ActivityEntry.ACEregisterid == ac_registerid).one()
                         if exist.ACEregisttvilid:
                             self.db.query(ActivityEntry). \
-                                filter(ActivityEntry.ACEacid == ac_id and ActivityEntry.ACEregisterid == ac_registerid). \
+                                filter(ActivityEntry.ACEacid == ac_id , ActivityEntry.ACEregisterid == ac_registerid). \
                                 update({ActivityEntry.ACEregisttvilid: 0})
                             self.db.commit()
                             self.updata_activity_number(ac_id, -1)
