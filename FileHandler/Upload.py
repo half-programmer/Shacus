@@ -2,7 +2,7 @@
 # flake8: noqa
 '''
  作用：处理七牛云上传凭证获取
- 创建者：黄鑫晨
+ 创建者：兰威
  创建时间：2016-08-30 18:05
 '''
 from qiniu import Auth, put_file, etag, urlsafe_base64_encode

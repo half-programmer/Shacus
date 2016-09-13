@@ -5,7 +5,9 @@ from FileHandler.Upload import AuthKeyHandler
 from Database.models import get_db
 from FileHandler.Upload import AuthKeyHandler
 from Userinfo.Ufuncs import Ufuncs
-
+'''
+@author: 黄鑫晨 兰威
+'''
 
 def userinfo_smply(u_info, u_change_info):
     '''

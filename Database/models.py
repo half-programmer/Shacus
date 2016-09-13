@@ -4,7 +4,9 @@ from sqlalchemy.ext.declarative import declarative_base
 import sys
 
 from sqlalchemy.orm import scoped_session, sessionmaker
-
+'''
+@author: 黄鑫晨
+'''
 reload(sys)
 sys.setdefaultencoding('utf8')  # python的str默认是ascii编码，和unicode编码冲突,需处理
 

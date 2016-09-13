@@ -4,7 +4,7 @@ import time
 from Database.models import get_db
 from Database.tables import UserImage,Image,AppointmentImage,ActivityImage
 '''
- 创建者：兰威
+ 创建者：兰威 黄鑫晨
  创建时间：2016-08-30 18:05
 '''
 class ImageHandler(object):
