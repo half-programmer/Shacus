@@ -12,10 +12,23 @@ from Wconf import Wconf
 from BaseHandlerh import BaseHandler
 from wechat_sdk import WechatBasic
 
-class Wmessage(BaseHandler):
+class WBasic(BaseHandler):
 
     conf = Wconf.conf
     wechat = WechatBasic(conf=conf)
+
+    def get(self):
+        w_signature = self.get_argument('signature')
+        w_timestamp = self.get_argument('timestamp')
+        w_nonce = self.get_argument('nonce')
+        w_echostr = self.get_argument('echostr')
+
+        wechat = WechatBasic(conf=self.conf)
+        if wechat.check_signature(w_signature, w_timestamp, w_nonce):
+            print "成功了"
+            self.write(json.dumps(int(w_echostr)))
+        else:
+            print "失败了"
 
     def post(self):
         body_text  = self.request.body
