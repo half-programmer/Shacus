@@ -293,3 +293,12 @@ class RankScore(Base):
     RSPscore = Column(Integer, nullable=False, default=0)
     RSMrank = Column(Integer, nullable=False, default=101)
     RSPrank = Column(Integer, nullable=False, default=101)
+
+class WeAcToken(Base):
+    '''
+    用于存放微信accesstoken
+    '''
+    __tablename__ = 'WeAcToken'
+    WACid = Column(Integer,primary_key=True)
+    WACtoken = Column(VARCHAR(512))
+    WACexpire = Column(Integer,nullable=False,default=0)

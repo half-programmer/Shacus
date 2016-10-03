@@ -33,6 +33,7 @@ from Userinfo.UserInfo import UserInfo
 from Userinfo.UserLike import FindUlike
 from Userinfo.Userhomepager import Userhomepager
 from loginHandler import LoginHandler
+from Wechatserver.Wver import Wver
 
 define("port", default=800, help="run on the given port", type=int)
 
@@ -65,7 +66,8 @@ class Application(tornado.web.Application):
              (r"/course/ask",CourseAsk),
              (r"/course/like",Courselike),
              (r"/course/fav",Coursefav),
-             (r"/ranklist", Ranklist)
+             (r"/ranklist", Ranklist),
+             (r"/",Wver)
         ]
         tornado.web.Application.__init__(self, handlers)
         self.db = scoped_session(sessionmaker(bind=engine,
