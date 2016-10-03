@@ -1,5 +1,5 @@
 # -*-coding: utf-8 -*-
-__author__='lanwei'
+__author__='兰威'
 import hashlib
 import io
 import  json

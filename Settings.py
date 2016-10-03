@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 '''
-__author__=王佳镭
+@author：王佳镭 兰威
 '''
 import  json
 

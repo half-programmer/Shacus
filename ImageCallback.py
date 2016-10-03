@@ -1,6 +1,8 @@
 # -*-coding: utf-8 -*-
+'''
+@author: 兰威
+'''
 
-__author__='lanwei'
 
 from BaseHandlerh import BaseHandler
 
