@@ -70,7 +70,7 @@ class Application(tornado.web.Application):
              (r"/course/like",Courselike),
              (r"/course/fav",Coursefav),
              (r"/ranklist", Ranklist),
-             (r"/weixin", WBasic)
+             (r"/", WBasic)
         ]
         tornado.web.Application.__init__(self, handlers)
         self.db = scoped_session(sessionmaker(bind=engine,
