@@ -20,9 +20,8 @@ class Wconf(BaseHandler):
         :return: 注意返回值为一个 Tuple，第一个元素为 access_token 的值，第二个元素为 access_token_expires_at 的值
         '''
         db = get_db()
-        access_token = db.query(WeAcToken.WACtoken).all()
-        expires = db.query(WeAcToken.WACexpire).all()
-        token = (access_token[0],expires[0])
+        data = db.query(WeAcToken).all()
+        token = (data[0].WACtoken, data[0].WACexpire)
         return token
 
     def set_access_token_function(access_token, access_token_expires_at):
