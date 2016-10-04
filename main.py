@@ -38,6 +38,7 @@ from Userinfo.Userhomepager import Userhomepager
 from loginHandler import LoginHandler
 from Wechatserver.Wver import Wver
 from Wechatserver.WBasic import WBasic
+from Wechatserver.WgetSign import WgetSign
 define("port", default=800, help="run on the given port", type=int)
 
 
@@ -70,7 +71,8 @@ class Application(tornado.web.Application):
              (r"/course/like",Courselike),
              (r"/course/fav",Coursefav),
              (r"/ranklist", Ranklist),
-             (r"/", WBasic)
+             (r"/", WBasic),
+             (r"/weixin/getsign",WgetSign)
         ]
         tornado.web.Application.__init__(self, handlers)
         self.db = scoped_session(sessionmaker(bind=engine,

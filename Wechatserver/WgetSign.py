@@ -18,8 +18,10 @@ class WgetSign(BaseHandler):
         type = self.get_argument('type')
 
         if type == '20001':
-           wjs = WJS("lanwei")
-           self.ret = wjs.sign()
+            ip = self.request.remote_ip
+            url = 'http://%s:80/WgetSign.html'%ip
+            wjs = WJS(url)
+            self.ret = wjs.sign()
         self.write(json.dump(self.ret,ensure_ascii=False, indent=2))
 
 
