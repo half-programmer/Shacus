@@ -12,7 +12,7 @@ from Database.tables import WeAcToken
 from Database.models import get_db
 class Wconf(BaseHandler):
 
-    def get_access_token_function(self):
+    def get_access_token_function():
         '''
         获取access_token
         :return: 注意返回值为一个 Tuple，第一个元素为 access_token 的值，第二个元素为 access_token_expires_at 的值
@@ -41,6 +41,45 @@ class Wconf(BaseHandler):
             print e
             db.roolback()
 
+    def get_jsapi_ticket_function():
+
+        """
+        获取jsapi_ticket
+        注意返回值为一个 Tuple，第一个元素为 jsapi_ticket 的值，第二个元素为 jsapi_ticket_expires_at 的值
+        """
+        db = get_db()
+        data = db.query(WeAcToken).all()
+        token = (data[1].WACtoken, data[1].WACexpire)
+        return token
+
+    def set_jsapi_ticket_function(jsapi_ticket, jsapi_ticket_expires_at):
+        '''
+        设置jsapi_ticket和jsapi_ticket_expires_at
+        Args:
+            jsapi_ticket
+            jsapi_ticket_expires_at
+
+
+        Returns:
+
+        '''
+        db = get_db()
+        weactoken = db.query(WeAcToken).all()
+        if len(weactoken) == 1:
+            actoken = WeAcToken(
+                WACexpire=jsapi_ticket_expires_at,
+                WACtoken=jsapi_ticket,
+            )
+            db.merge(actoken)
+        else:
+            weactoken[1].WACexpire = jsapi_ticket_expires_at
+            weactoken[1].WACtoken = jsapi_ticket
+        try:
+            db.commit()
+        except Exception, e:
+            print e
+            db.roolback()
+
     conf = WechatConf(
         token='xtIRzP0tcQuGqcgWiu',
         appid='wx679493e73b1bd83b',
@@ -49,6 +88,8 @@ class Wconf(BaseHandler):
         #encoding_aes_key='your_encoding_aes_key'  # 如果传入此值则必须保证同时传入 token, appid
         access_token_getfunc=get_access_token_function,
         access_token_setfunc=set_access_token_function,
+        jsapi_ticket_getfunc=get_jsapi_ticket_function,
+        jsapi_ticket_setfunc=set_jsapi_ticket_function,
 
     )
 

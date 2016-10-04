@@ -53,4 +53,5 @@ class WBasic(BaseHandler):
                         'url': u'http://www.google.com.hk/',
                     }
                 ])
+
         self.write(xml)
