@@ -22,7 +22,7 @@ class WgetSign(BaseHandler):
             url = 'http://%s:80/WgetSign.html'%ip
             wjs = WJS(url)
             self.ret = wjs.sign()
-        self.write(json.dump(self.ret,ensure_ascii=False, indent=2))
+        self.write(json.dumps(self.ret,ensure_ascii=False, indent=2))
 
 
 
