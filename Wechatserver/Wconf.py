@@ -6,6 +6,8 @@
 @datatime : 2016.10.1
 '''
 
+import sys
+sys.path.append("..")
 from wechat_sdk import WechatConf
 from BaseHandlerh import BaseHandler
 from Database.tables import WeAcToken
