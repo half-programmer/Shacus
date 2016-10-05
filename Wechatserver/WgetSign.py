@@ -26,7 +26,7 @@ class WgetSign(BaseHandler):
             url = 'http://%s:80/WgetSign.html'%ip
             wjs = WJS(url)
             ret = wjs.sign()
-            callback = self.get_argument("callback")
+            callback = self.get_argument("jsoncallback")
             jsonp = "{jsfunc}({json});".format(jsfunc=callback,json=json_encode(ret))
         self.write(jsonp)
 
