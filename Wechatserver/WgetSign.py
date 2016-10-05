@@ -23,7 +23,8 @@ class WgetSign(BaseHandler):
         appsecret = self.get_argument("appsecret")
         if appsecret == conf.appsecret and type == 'getSignature':
             ip = self.request.remote_ip
-            url = 'http://%s:80/WgetSign.html'%ip
+            #url = 'http://%s:80/WgetSign.html'%ip
+            url = 'http://e1b3b8b0.ngrok.io/WgetSign.html'
             wjs = WJS(url)
             ret = wjs.sign()
             callback = self.get_argument("jsoncallback")
