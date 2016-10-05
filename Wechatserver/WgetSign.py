@@ -7,6 +7,8 @@
 '''
 import json
 
+from tornado.escape import json_encode
+
 from BaseHandlerh import BaseHandler
 
 from WJS import WJS
@@ -24,7 +26,9 @@ class WgetSign(BaseHandler):
             url = 'http://%s:80/WgetSign.html'%ip
             wjs = WJS(url)
             ret = wjs.sign()
-        self.write(json.dumps(ret,ensure_ascii=False, indent=2))
+            callback = self.get_argument("callback")
+            jsonp = "{jsfunc}({json});".format(jsfunc=callback,json=json_encode(ret))
+        self.write(jsonp)
 
 
 
