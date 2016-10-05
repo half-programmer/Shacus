@@ -12,7 +12,7 @@ from BaseHandlerh import BaseHandler
 from WJS import WJS
 class WgetSign(BaseHandler):
 
-    def post(self):
+    def get(self):
         ret = []
 
         type = self.get_argument('type')
