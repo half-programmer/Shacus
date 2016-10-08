@@ -22,10 +22,11 @@ class WgetSign(BaseHandler):
         type = self.get_argument('type')
         appsecret = self.get_argument("appsecret")
         if appsecret == conf.appsecret:
-            ip = self.request.remote_ip
+            #ip = self.request.remote_ip
             #url = 'http://%s:80/WgetSign.html'%ip
             #url = 'http://e1b3b8b0.ngrok.io/WgetSign.html'
-            url = 'http://shacuswechat.tunnel.2bdata.com/{}'.format(type)
+            #url = 'http://shacuswechat.tunnel.2bdata.com/{}'.format(type)
+            url = '{}'.format(type)
             wjs = WJS(url)
             ret = wjs.sign()
             callback = self.get_argument("jsoncallback")
