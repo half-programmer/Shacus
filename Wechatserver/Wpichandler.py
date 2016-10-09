@@ -5,7 +5,8 @@
 @type:微信图片处理，包含从微信服务器下载和图片的上传至七牛云图片
 '''
 import json
-
+import sys
+sys.path.append("..")
 from BaseHandlerh import BaseHandler
 from Wconf import Wconf
 from wechat_sdk import WechatBasic
