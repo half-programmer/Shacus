@@ -16,6 +16,7 @@ from Activity.ACentryHandler import AskEntry
 from Appointment.APAskHandler import APaskHandler
 from Appointment.APCreateHandler import APcreateHandler
 from Appointment.APRegistHandler import APregistHandler
+from Appointment.APchatCreateHandler import APchatCreateHandler
 from Appointment.APpraseHandler import APprase
 from Appointment.Ranklist import Ranklist
 from Course.Chomepage import Chomepage
@@ -31,10 +32,12 @@ from Settings import PaswChange
 from TRends.TRendspost import TRendspost
 from TRends.TrendHandler import TrendHandler
 from Userinfo.UserFavoriteHandler import UserFavorite
+from Userinfo.UserImgHandler import UserImgHandler
 from Userinfo.UserIndent import UserIndent
 from Userinfo.UserInfo import UserInfo
 from Userinfo.UserLike import FindUlike
 from Userinfo.Userhomepager import Userhomepager
+from Userinfo.Userhpimg import Userhpimg
 from loginHandler import LoginHandler
 from Wechatserver.Wver import Wver
 from Wechatserver.WBasic import WBasic
@@ -72,7 +75,9 @@ class Application(tornado.web.Application):
              (r"/course/fav",Coursefav),
              (r"/ranklist", Ranklist),
              (r"/", WBasic),
-             (r"/weixin/getsign",WgetSign)
+             (r"/weixin/getsign",WgetSign),
+             (r"/appointment/chat",APchatCreateHandler),
+             (r"/Userinfo/imghandler",Userhpimg)
         ]
         tornado.web.Application.__init__(self, handlers)
         self.db = scoped_session(sessionmaker(bind=engine,

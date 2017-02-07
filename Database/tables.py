@@ -303,3 +303,34 @@ class WeAcToken(Base):
     WACid = Column(Integer,primary_key=True)
     WACtoken = Column(VARCHAR(512))
     WACexpire = Column(Integer,nullable=False,default=0)
+
+class UserHomepageimg(Base):
+    #用户个人图片展示
+    __tablename__ = 'UserHomepageimg'
+    UHpageid= Column(Integer, primary_key=True)
+    UHuser = Column(Integer, ForeignKey('User.Uid', onupdate='CASCADE'))
+    UHimgid = Column (Integer, ForeignKey('Image.IMid', onupdate='CASCADE'))
+    UHpicurl= Column(VARCHAR(128))
+    UHpicvalid = Column(Integer, default=0)
+
+class UserCollection(Base):
+    #用户作品集
+    __tablename__ = 'UserCollection'
+    UCid = Column(Integer, primary_key=True,nullable=False)
+    UCuser = Column(Integer, ForeignKey('User.Uid', onupdate='CASCADE'),nullable=False)
+    UCcreateT = Column(DateTime(timezone=True), default=func.now())
+    UCtitle = Column(VARCHAR(32), nullable=False)  #作品集名称
+    UCcontent = Column(VARCHAR(128))               #作品集描述
+    UCvalid = Column(Integer, default=0)
+    UCiscollection = Column(Integer, default=0) #0是作品集 1是动态
+
+class UserCollectionimg(Base):
+    __tablename__ = 'UserCollectionimg'
+    UCIuser = Column(Integer, ForeignKey(UserCollection.UCid, onupdate='CASCADE')) #作品集id
+    UCIimid = Column(Integer, ForeignKey(Image.IMid, onupdate='CASCADE'), primary_key=True)
+    UCIurl = Column(VARCHAR(128))
+    UCIvalid = Column(Integer, nullable=False, default=0)
+
+
+
+
