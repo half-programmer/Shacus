@@ -7,53 +7,51 @@ from FileHandler.Upload import AuthKeyHandler
 
 
 class UserImgHandler(object):
-    def delete_Homepage_image(self,uid):#先注释掉该用户的所有图片
-
+    # 删除个人照片
+    def delete_Homepage_image(self,list,uid):#
         try:
             db = get_db()
             userinfo = db.query(User).filter(User.Uid == uid).one()
-            allimage=  db.query(UserHomepageimg).filter(UserHomepageimg.UHuser == userinfo.Uid).all()
-            for item in allimage:
-                item.UHpicvalid = 0
-            db.commit()
-
+            for imageitem in list:
+                try:
+                    deleteimage = db.query(UserHomepageimg).filter(UserHomepageimg.UHpicurl == imageitem,UserHomepageimg.UHuser==userinfo.Uid).one()
+                    deleteimage.UHpicvalid = 0
+                    db.commit()
+                except Exception, e:
+                    print e
+                    print '没有找到删除的图片'+imageitem
         except Exception, e:
             print e
             print 'the user doesn\'t exsit'
-
-    def change_Homepage_image(self,list,uid):#改变个人图片信息
-        try:
-            db = get_db()
-            for item in list:  #如果有那么重置为1，如果没有就继续保持0
-                try:
-                    userimage = db.query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid,UserHomepageimg.UHpicurl == item).one()
-                    userimage.HPimgvalid = 1
-                    db.commit()
-                except Exception ,e:#新的需要插入
-                    print 'insert new Homepageimage'
-                    itemlist = []
-                    itemlist.append(item)
-                    self.insert_Homepage_image(itemlist, uid)
-        except Exception,e:
-            print e
-            print 'doesn\'t exsit'
-
+    # 添加个人照片
     def insert_Homepage_image(self,list,uid):
         try:
             db = get_db()
-            usertel = db.query(User).filter(User.Uid == uid).one()
-            HPimg = self.insert(list)
-
-            for i in range(len(HPimg)):
-                new_hpimg = UserHomepageimg(
-
-                    UHuser=usertel.Uid,
-                    UHimgid=HPimg[i],
-                    UHpicurl=list[i],
-                    UHpicvalid=True,
-                )
-                db.merge(new_hpimg)
-                db.commit()
+            userinfo = db.query(User).filter(User.Uid == uid).one()
+            for picurl in list:
+                try:
+                    isexist = db.query(UserHomepageimg).filter(UserHomepageimg.UHpicurl == picurl,UserHomepageimg.UHuser==userinfo.Uid).one()
+                    isexist.UHpicvalid = 1
+                    db.commit()
+                except Exception, e:
+                    # 单张图片插入
+                    image = Image(
+                        IMvalid=True,
+                        IMT=time.strftime('%Y-%m-%d %H:%M:%S'),
+                        IMname=picurl
+                    )
+                    db.merge(image)
+                    db.commit()
+                    new_img = get_db().query(Image).filter(Image.IMname == picurl).one()
+                    imid = new_img.IMid
+                    new_hpimg = UserHomepageimg(
+                        UHuser=userinfo.Uid,
+                        UHimgid=imid,
+                        UHpicurl=picurl,
+                        UHpicvalid=True,
+                    )
+                    db.merge(new_hpimg)
+                    db.commit()
         except Exception, e:
             print e
 
@@ -99,75 +97,128 @@ class UserImgHandler(object):
         except Exception, e:
             print e
 
-    def delete_UserCollection_image(self,list,ucid):
-        db = get_db()
-        itemlist = []
-        for item in list:
-            itemlist.append(item)
+    def delete_UserCollection_image(self,ucid):
+        try:
+            db = get_db()
+            userinfo = db.query(UserCollection).filter(UserCollection.UCid == ucid).one()
+            allimage = db.query(UserCollectionimg).filter(UserCollectionimg.UCIuser == userinfo.UCid).all()
+            for item in allimage:
+                item.UCIvalid = 0
+            db.commit()
 
-    #得到图片
+        except Exception, e:
+            print e
+            print 'the usercollection doesn\'t exsit'
+
+    # def change_UserCollection_image(self,list,ucid):
+    #     try:
+    #         db = get_db()
+    #         for item in list:  # 如果有那么重置为1，如果没有就继续保持0
+    #             try:
+    #                 userimage = db.query(UserCollectionimg).filter(UserCollectionimg.UCIuser == ucid,UserCollectionimg.UCIurl == item).one()
+    #                 userimage.HPimgvalid = 1
+    #                 db.commit()
+    #             except Exception, e:  # 新的需要插入
+    #                 print 'insert new Homepageimage'
+    #                 itemlist = []
+    #                 itemlist.append(item)
+    #                 self.insert_Homepage_image(itemlist,ucid)
+    #     except Exception, e:
+    #         print e
+    #         print 'doesn\'t exsit'
+
+
+    # 得到个人照片大图
     def UHpicget(self,uid):
         img_tokens = []
         authkeyhandler = AuthKeyHandler()
-        try:
-            imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid).all()  # 返回所有图片项
-            for img in imgs:
-                img_url = img.UHpicurl
-                img_tokens.append(authkeyhandler.download_url(img_url))
-        except Exception, e:
-            print '无图片'
-        try:
-            if img_tokens[0]:
+        imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid).all()  # 返回所有图片项
+        for img in imgs:
+            img_url = img.UHpicurl
+            img_tokens.append(authkeyhandler.download_originpic_url(img_url)) # 裁剪？1200宽度
+        if img_tokens[0]:
                 print '有图片'
-        except Exception, e:
-            img_tokens.append(authkeyhandler.download_url('default13.jpg'))
-            print e
+        else:
+            img_tokens = []
         return img_tokens
 
+    # 得到个人照片缩略图
     def UHpicgetassign(self,uid):
         img_tokens = []
         authkeyhandler = AuthKeyHandler()
-        try:
-            imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid).all()  # 返回所有图片项
+        imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid).all()  # 返回所有图片项
+
+        if imgs[0].UHpicurl:
+            print '有图片'
             for img in imgs:
                 img_url = img.UHpicurl
-                img_tokens.append(authkeyhandler.download_assign_url(img_url,1200,1200))
-        except Exception, e:
-            print '无图片'
-        try:
-            if img_tokens[0]:
-                print '有图片'
-        except Exception, e:
-            img_tokens.append(authkeyhandler.download_url('default13.jpg'))
-            print e
+                #img_size = authkeyhandler.getsize(img_url)
+                img_info = dict(
+                    imageUrl=authkeyhandler.download_abb_url(img_url),
+                    #width=img_size['width']/6,
+                    #height=img_size['height']/6,
+                    width= '',
+                    height='',
+                )
+                img_tokens.append(img_info)
+        else:
+            img_tokens.append('null')
         return img_tokens
 
-    def UCmodel(self,UCsample,uid):#UCsample是一个UserCollection对象
+    # b->c作品集详细信息(包括缩略图url和大图url)
+    def UCmodel(self,UCsample, uid):  # UCsample是一个UserCollection对象
         authkeyhandler = AuthKeyHandler()
         img = []
-        ucimg = self.db.query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid).all()
+        imgsimple = []
+        ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid).all()
         for item in ucimg:
             ucimgurl = item.UCIurl
-            img.append(authkeyhandler.download_url(ucimgurl))
+            img.append(authkeyhandler.download_originpic_url(ucimgurl))   # 大图url
+
+            img_size = authkeyhandler.getsize(ucimgurl)   # 获取图片json对象
+            img_info = dict(
+                imageUrl=authkeyhandler.download_abb_url(ucimgurl),
+                width=img_size['width'] / 4,
+                height=img_size['height'] / 4,
+            )
+            imgsimple.append(authkeyhandler.download_abb_url(img_info))
         ret_uc = dict(
             UCid=UCsample.UCid,
             UCuser=uid,
             UCcreateT=UCsample.UCcreateT,
             UCtitle=UCsample.UCtitle,
             UCcontent=UCsample.UCcontent,
-            UCimg=img,
+            UCimg=img,                  # 大图url
+            UCsimpleimg=imgsimple,      # 缩略图url
         )
         return ret_uc
+
+    # a->b:作品集列表:某个列表封面的获取
     def UC_simple_model(self,UCsample,uid):
         authkeyhandler = AuthKeyHandler()
-        img = []
-        ucimg = self.db.query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid).all()
-        for item in ucimg:
-            ucimgurl = item.UCIurl
-            img.append(authkeyhandler.download_assign_url(ucimgurl,1200,1200))
+        # ucsample是一个UserCollection实例
+        ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid).all()
+        if ucimg[0].UCIurl:
+            coverurl = authkeyhandler.download_abb_url(ucimg[0].UCIurl)   # 选取第一张作为封面(缩略图)
+            img_size = authkeyhandler.getsize(ucimg[0].UCIurl)
+            img_info = dict(
+                imageUrl=coverurl,
+                width=img_size['width'] / 4,
+                height=img_size['height'] / 4,
+            )
+        else:
+            img_info = dict(
+                imageUrl='',
+                width='',
+                height='',
+            )
         ret_uc = dict(
             UCid=UCsample.UCid,
-            UCimg=img,
+            UCcreateT=UCsample.UCcreateT,
+            UCimg=img_info,
         )
+        return ret_uc
 
-
+    # a:个人主页作品集封面
+    def UC_homepage_model(self, ucsample, uid):
+        print ''

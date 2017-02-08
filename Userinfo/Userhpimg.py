@@ -4,7 +4,6 @@ import json
 
 from BaseHandlerh import BaseHandler
 from Database.tables import User, UserHomepageimg, UserCollection
-from FileHandler.ImageHandler import ImageHandler
 from FileHandler.Upload import AuthKeyHandler
 from Userinfo.UserImgHandler import UserImgHandler
 
@@ -14,7 +13,8 @@ class Userhpimg(BaseHandler):
     def post(self):
         type = self.get_argument('type')
 
-        if type=='10808': #个人图片
+        # 添加个人图片:第一步返回token
+        if type=='10808':
             u_id = self.get_argument('uid')
             imgs = self.get_argument('imgs')
             auth_key = self.get_argument('authkey')
@@ -26,19 +26,16 @@ class Userhpimg(BaseHandler):
                     ap_imgs_json = json.loads(imgs)
                     retjson_body = {'auth_key': '', 'uid': ''}
                     auth_key_handler = AuthKeyHandler()
-                    retjson_body['auth_key'] = auth_key_handler.generateToken(ap_imgs_json)#上传凭证
-                    #插入数据库
-
+                    retjson_body['auth_key'] = auth_key_handler.generateToken(ap_imgs_json)    # 上传凭证
                     retjson_body['uid']= userid.Uid
-                    self.retjson['contents'] = retjson_body
+                    self.retjson['contents'] = retjson_body   # 返回图片的token
                     self.retjson['code']= '10808'
-
-
             except Exception, e:
                 print e
                 self.retjson['code']='10809'
                 self.retjson['contents']='验证失败'
 
+        # 插入图片第二步(插入数据库)
         elif type == '10810':
             u_id = self.get_argument('uid')
             imgs = self.get_argument('imgs')
@@ -50,9 +47,32 @@ class Userhpimg(BaseHandler):
                     print '验证通过'
                     ap_imgs_json = json.loads(imgs)
                     imhandler= UserImgHandler()
-                    imhandler.delete_Homepage_image(u_id)
-                    imhandler.change_Homepage_image(ap_imgs_json,u_id)
+                    imhandler.insert_Homepage_image(ap_imgs_json,u_id)
                     self.retjson['code']= '10810'
+                    self.retjson['contents'] = '数据库操作成功'
+                else:
+                    print '验证码错误'
+                    self.retjson['code'] = '10810'
+                    self.retjson['contents'] = '验证未通过'
+            except Exception, e:
+                print e
+                self.retjson['code']='10810'
+                self.retjson['contents']='查找用户失败'
+
+        # 删除图片
+        elif type == '10811':
+            u_id = self.get_argument('uid')
+            imgs = self.get_argument('imgs')
+            auth_key = self.get_argument('authkey')
+            try:
+                userid = self.db.query(User).filter(User.Uid == u_id).one()
+                key = userid.Uauthkey
+                if key == auth_key:  # 验证通过
+                    print '验证通过'
+                    ap_imgs_json = json.loads(imgs)
+                    imhandler = UserImgHandler()
+                    imhandler.delete_Homepage_image(ap_imgs_json, u_id)
+                    self.retjson['code'] = '10811'
                     self.retjson['contents'] = '数据库操作成功'
                 else:
                     print '验证码错误'
@@ -60,10 +80,11 @@ class Userhpimg(BaseHandler):
                     self.retjson['contents'] = '验证未通过'
             except Exception, e:
                 print e
-                self.retjson['code']='10811'
-                self.retjson['contents']='查找用户失败'
+                self.retjson['code'] = '10811'
+                self.retjson['contents'] = '查找用户失败'
 
-        elif type == '10812':#获取个人图片
+        # 获取个人主页缩略图
+        elif type == '10812':
             uhuser = self.get_argument('uid')
             authkey = self.get_argument('authkey')
             try:
@@ -71,9 +92,14 @@ class Userhpimg(BaseHandler):
                 key = userid.Uauthkey
                 if key == authkey:  # 验证通过
                     img= UserImgHandler()
-                    piclist = img.UHpicget(uhuser)
-                    self.retjson['code']='10812'
-                    self.retjson['contents']= piclist
+                    try:
+                        piclist = img.UHpicgetassign(uhuser)
+                        self.retjson['code']='10812'
+                        self.retjson['contents']= piclist
+                    except Exception, e:
+                        print e
+                        self.retjson['code'] = '10811'
+                        self.retjson['contents'] = '获取图片信息失败'
                 else:
                     print'认证错误'
                     self.retjson['code']='10813'
@@ -82,7 +108,9 @@ class Userhpimg(BaseHandler):
                 print e
                 self.retjson['code']='10813'
                 self.retjson['contents']='未找到该用户'
-        elif type == '10814':#获取个人图片缩略图
+
+        # 获取个人缩略图片和大图url
+        elif type == '10814':
             uhuser = self.get_argument('uid')
             authkey = self.get_argument('authkey')
             try:
@@ -90,9 +118,15 @@ class Userhpimg(BaseHandler):
                 key = userid.Uauthkey
                 if key == authkey:  # 验证通过
                     img= UserImgHandler()
-                    piclist = img.UHpicgetassign(uhuser)
-                    self.retjson['code']='10814'
-                    self.retjson['contents']= piclist
+                    retdataorigin=[]
+                    retdata = []
+                    piclist = img.UHpicget(uhuser)
+                    retdataorigin.append(piclist)
+                    piclist02 = img.UHpicgetassign(uhuser)
+                    retdata.append(piclist02)
+                    self.retjson['code'] = '10814'
+                    self.retjson['originurl'] = retdataorigin
+                    self.retjson['contents'] = retdata
                 else:
                     print'认证错误'
                     self.retjson['code']='10815'
@@ -102,9 +136,8 @@ class Userhpimg(BaseHandler):
                 self.retjson['code']='10815'
                 self.retjson['contents']='未找到该用户'
 
-
-
-        elif type=='10804' :#作品集
+        # 发布作品集(第一步返回token)
+        elif type == '10804':
             u_id = self.get_argument('uid')
             imgs = self.get_argument('imgs')
             auth_key = self.get_argument('authkey')
@@ -112,7 +145,7 @@ class Userhpimg(BaseHandler):
             try:
                 userid = self.db.query(User).filter(User.Uid==u_id).one()
                 key = userid.Uauthkey
-                if key== auth_key:  #验证通过
+                if key== auth_key:  # 验证通过
                     print '验证通过'
                     ap_imgs_json = json.loads(imgs)
                     retjson_body = {'auth_key': '', 'ucid': ''}
@@ -151,6 +184,7 @@ class Userhpimg(BaseHandler):
                     self.retjson['code'] = '10805'
                     self.retjson['contents'] = "该用户名不存在"
 
+        # 发布作品集(第二步插入数据库)
         elif type == '10806':
             print "进入10806"
             uc_id = self.get_argument('ucid')
@@ -181,17 +215,19 @@ class Userhpimg(BaseHandler):
             except Exception, e:
                 print e
 
-        elif type == '10816':#获取作品集缩略图和标题
+        # 获取作品集封面缩略图和标题
+        elif type == '10816':
             u_id = self.get_argument('uid')
             auth_key = self.get_argument("authkey")
             imghandler = UserImgHandler()
             retdata = []
             pic = self.db.query(UserCollection).filter(UserCollection.UCuser == u_id).all()
             for item in pic:
-                retdata.append(imghandler.UC_simple_model(item, u_id))
+                retdata.append(imghandler.UC_simple_model(item,u_id))
             self.retjson['code'] = '10818'
             self.retjson['contents'] = retdata
 
+        # 获取作品集详细信息
         elif type == '10818':
             print ''
             u_id = self.get_argument('uid')
@@ -203,5 +239,31 @@ class Userhpimg(BaseHandler):
                 retdata.append(imghandler.UCmodel(item,u_id))
             self.retjson['code']='10818'
             self.retjson['contents']=retdata
+
+        # 删除作品集
+        elif type == '10820':
+            print'10820'
+            u_id = self.get_argument('uid')
+            imgs = self.get_argument('imgs')
+            auth_key = self.get_argument('authkey')
+            uc_id = self.get_argument('ucid')
+            try:
+                userid = self.db.query(User).filter(User.Uid == u_id).one()
+                key = userid.Uauthkey
+                if key == auth_key:  # 验证通过
+                    print '验证通过'
+                    ap_imgs_json = json.loads(imgs)
+                    imhandler = UserImgHandler()
+                    imhandler.delete_UserCollection_image(uc_id)
+                    imhandler.change_Homepage_image(ap_imgs_json, uc_id)
+                    self.retjson['code'] = '10820'
+                    self.retjson['contents'] = '数据库操作成功'
+                else:
+                    self.retjson['code']='10821'
+                    self.retjson['contents']='认证失败'
+            except Exception,e:
+                print e
+                self.retjson['code']='10821'
+                self.retjson['contents'] = '未找到此用户'
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 

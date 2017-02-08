@@ -5,6 +5,9 @@
  创建者：兰威
  创建时间：2016-08-30 18:05
 '''
+import json
+import urllib2
+
 from qiniu import Auth, put_file, etag, urlsafe_base64_encode
 import qiniu.config
 
@@ -56,5 +59,32 @@ class AuthKeyHandler:
         private_url =auth.private_download_url(base_url, expires=3600)
         #private_url = private_url+"&imageView2/2/w/200"
         return private_url
+
+    def download_originpic_url(self,name):
+        '''
+        下载宽度为1200按比例缩放图片
+        Args:
+            name: 图片名字
+
+        Returns:图片下载地址
+
+        '''
+        auth = self.get_auth_key()
+        bucket_domain = 'oci8c6557.bkt.clouddn.com'
+        base_url = 'http://%s/%s?imageView2/2/w/1200' % (bucket_domain, name)
+        private_url =auth.private_download_url(base_url, expires=3600)
+        return private_url
+
+    def getsize(self,name):
+        bucket_domain = 'oci8c6557.bkt.clouddn.com'
+        base_url = 'http://%s/%s?imageInfo' % (bucket_domain, name)
+        #  testurl :url = "http://78re52.com1.z0.glb.clouddn.com/resource/gogopher.jpg?imageInfo"
+        req = urllib2.Request(base_url)
+        res_data = urllib2.urlopen(req)
+        res = res_data.read()
+        data = json.loads(res)
+        return data
+
+
 
 
