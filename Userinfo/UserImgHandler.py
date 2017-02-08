@@ -80,52 +80,51 @@ class UserImgHandler(object):
 
     def insert_UserCollection_image(self,list,ucid):
         db = get_db()
-        itemlist=[]
-        for item in list:
-            itemlist.append(item)
-        try:
-            HPimg = self.insert(itemlist)
-            for i in range(len(HPimg)):
+        for picurl in list:
+            try:
+                isexist = db.query(UserCollectionimg).filter(UserCollectionimg.UCIurl==picurl,UserCollectionimg.UCIuser == ucid).one()
+                isexist.UHpicvalid = 1
+                db.commit()
+            except Exception, e:#未找到该图片
+                print'插入单张新图片'
+                image = Image(
+                    IMvalid=True,
+                    IMT=time.strftime('%Y-%m-%d %H:%M:%S'),
+                    IMname=picurl
+                )
+                db.merge(image)
+                db.commit()
+                new_img = get_db().query(Image).filter(Image.IMname == picurl).one()
+                imid = new_img.IMid
                 new_ucimg=UserCollectionimg(
                     UCIuser=ucid,
-                    UCIimid=HPimg[i],
-                    UCIurl=itemlist[i],
+                    UCIimid=imid,
+                    UCIurl=picurl,
                     UCIvalid=1,
                 )
                 db.merge(new_ucimg)
                 db.commit()
-        except Exception, e:
-            print e
 
-    def delete_UserCollection_image(self,ucid):
+    def delete_UserCollection_image(self, list, ucid):
+        # list:要删除的图片
         try:
             db = get_db()
             userinfo = db.query(UserCollection).filter(UserCollection.UCid == ucid).one()
             allimage = db.query(UserCollectionimg).filter(UserCollectionimg.UCIuser == userinfo.UCid).all()
-            for item in allimage:
-                item.UCIvalid = 0
+            for imageitem in list:
+                try:
+                    deleteimage = db.query(UserCollectionimg).filter(UserCollectionimg.UCIurl == imageitem,
+                                                                     UserCollectionimg.UCIuser == ucid).one()
+                    deleteimage.UCIvalid = 0
+                    db.commit()
+                except Exception, e:
+                    print e
+                    print '没有找到删除的图片'+imageitem
             db.commit()
 
         except Exception, e:
             print e
             print 'the usercollection doesn\'t exsit'
-
-    # def change_UserCollection_image(self,list,ucid):
-    #     try:
-    #         db = get_db()
-    #         for item in list:  # 如果有那么重置为1，如果没有就继续保持0
-    #             try:
-    #                 userimage = db.query(UserCollectionimg).filter(UserCollectionimg.UCIuser == ucid,UserCollectionimg.UCIurl == item).one()
-    #                 userimage.HPimgvalid = 1
-    #                 db.commit()
-    #             except Exception, e:  # 新的需要插入
-    #                 print 'insert new Homepageimage'
-    #                 itemlist = []
-    #                 itemlist.append(item)
-    #                 self.insert_Homepage_image(itemlist,ucid)
-    #     except Exception, e:
-    #         print e
-    #         print 'doesn\'t exsit'
 
 
     # 得到个人照片大图
@@ -152,13 +151,11 @@ class UserImgHandler(object):
             print '有图片'
             for img in imgs:
                 img_url = img.UHpicurl
-                #img_size = authkeyhandler.getsize(img_url)
+                img_size = authkeyhandler.getsize(img_url)
                 img_info = dict(
                     imageUrl=authkeyhandler.download_abb_url(img_url),
-                    #width=img_size['width']/6,
-                    #height=img_size['height']/6,
-                    width= '',
-                    height='',
+                    width=img_size['width']/6,
+                    height=img_size['height']/6,
                 )
                 img_tokens.append(img_info)
         else:
@@ -166,7 +163,7 @@ class UserImgHandler(object):
         return img_tokens
 
     # b->c作品集详细信息(包括缩略图url和大图url)
-    def UCmodel(self,UCsample, uid):  # UCsample是一个UserCollection对象
+    def UCmodel(self,UCsample,uid):  # UCsample是一个UserCollection对象
         authkeyhandler = AuthKeyHandler()
         img = []
         imgsimple = []
@@ -175,17 +172,19 @@ class UserImgHandler(object):
             ucimgurl = item.UCIurl
             img.append(authkeyhandler.download_originpic_url(ucimgurl))   # 大图url
 
-            img_size = authkeyhandler.getsize(ucimgurl)   # 获取图片json对象
+            #img_size = authkeyhandler.getsize(ucimgurl)   # 获取图片json对象
             img_info = dict(
                 imageUrl=authkeyhandler.download_abb_url(ucimgurl),
-                width=img_size['width'] / 4,
-                height=img_size['height'] / 4,
+                #width=img_size['width'] / 6,
+                #height=img_size['height'] / 6,
+                width='200',
+                height='123'
             )
-            imgsimple.append(authkeyhandler.download_abb_url(img_info))
+            imgsimple.append(img_info)
         ret_uc = dict(
             UCid=UCsample.UCid,
             UCuser=uid,
-            UCcreateT=UCsample.UCcreateT,
+            UCcreateT=UCsample.UCcreateT.strftime('%Y-%m-%d %H:%M:%S'),
             UCtitle=UCsample.UCtitle,
             UCcontent=UCsample.UCcontent,
             UCimg=img,                  # 大图url
@@ -198,23 +197,21 @@ class UserImgHandler(object):
         authkeyhandler = AuthKeyHandler()
         # ucsample是一个UserCollection实例
         ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid).all()
-        if ucimg[0].UCIurl:
+        if ucimg:
             coverurl = authkeyhandler.download_abb_url(ucimg[0].UCIurl)   # 选取第一张作为封面(缩略图)
             img_size = authkeyhandler.getsize(ucimg[0].UCIurl)
             img_info = dict(
                 imageUrl=coverurl,
-                width=img_size['width'] / 4,
-                height=img_size['height'] / 4,
+                width=img_size['width'] / 6,
+                height=img_size['height'] / 6,
             )
         else:
             img_info = dict(
                 imageUrl='',
-                width='',
-                height='',
             )
         ret_uc = dict(
             UCid=UCsample.UCid,
-            UCcreateT=UCsample.UCcreateT,
+            UCcreateT=UCsample.UCcreateT.strftime('%Y-%m-%d %H:%M:%S'),
             UCimg=img_info,
         )
         return ret_uc

@@ -207,7 +207,7 @@ class Userhpimg(BaseHandler):
                     imghandler.insert_UserCollection_image(uc_images_json,uc_id)
                     self.db.commit()
                     self.retjson['code'] = '10806'
-                    self.retjson['contents'] = '发布作品集成功'
+                    self.retjson['contents'] = '修改/发布作品集成功'
                 except Exception, e:
                     print e
                     self.retjson['code']='10807'
@@ -215,34 +215,10 @@ class Userhpimg(BaseHandler):
             except Exception, e:
                 print e
 
-        # 获取作品集封面缩略图和标题
-        elif type == '10816':
-            u_id = self.get_argument('uid')
-            auth_key = self.get_argument("authkey")
-            imghandler = UserImgHandler()
-            retdata = []
-            pic = self.db.query(UserCollection).filter(UserCollection.UCuser == u_id).all()
-            for item in pic:
-                retdata.append(imghandler.UC_simple_model(item,u_id))
-            self.retjson['code'] = '10818'
-            self.retjson['contents'] = retdata
+            #删除【一个】作品集的图片
 
-        # 获取作品集详细信息
-        elif type == '10818':
-            print ''
-            u_id = self.get_argument('uid')
-            auth_key = self.get_argument("authkey")
-            imghandler=UserImgHandler()
-            retdata= []
-            pic = self.db.query(UserCollection).filter(UserCollection.UCuser==u_id).all()
-            for item in pic:
-                retdata.append(imghandler.UCmodel(item,u_id))
-            self.retjson['code']='10818'
-            self.retjson['contents']=retdata
-
-        # 删除作品集
+        # 删除作品集图片
         elif type == '10820':
-            print'10820'
             u_id = self.get_argument('uid')
             imgs = self.get_argument('imgs')
             auth_key = self.get_argument('authkey')
@@ -254,16 +230,46 @@ class Userhpimg(BaseHandler):
                     print '验证通过'
                     ap_imgs_json = json.loads(imgs)
                     imhandler = UserImgHandler()
-                    imhandler.delete_UserCollection_image(uc_id)
-                    imhandler.change_Homepage_image(ap_imgs_json, uc_id)
+                    imhandler.delete_UserCollection_image(ap_imgs_json)
                     self.retjson['code'] = '10820'
                     self.retjson['contents'] = '数据库操作成功'
                 else:
-                    self.retjson['code']='10821'
-                    self.retjson['contents']='认证失败'
-            except Exception,e:
+                    self.retjson['code'] = '10821'
+                    self.retjson['contents'] = '认证失败'
+            except Exception, e:
                 print e
-                self.retjson['code']='10821'
+                self.retjson['code'] = '10821'
                 self.retjson['contents'] = '未找到此用户'
+
+        # 获取作品集列表(缩略图+时间标题)
+        elif type == '10818':
+            u_id = self.get_argument('uid')
+            auth_key = self.get_argument("authkey")
+            imghandler = UserImgHandler()
+            retdata = []
+            pic = self.db.query(UserCollection).filter(UserCollection.UCuser == u_id).all()
+            for item in pic:
+                retdata.append(imghandler.UC_simple_model(item,u_id))
+            self.retjson['code'] = '10818'
+            self.retjson['contents'] = retdata
+
+        # 获取【单个】作品集信息（包括缩略图url和大图url）
+        elif type == '10816':
+            print ''
+            u_id = self.get_argument('uid')
+            auth_key = self.get_argument("authkey")
+            uc_id = self.get_argument('ucid')
+            imghandler=UserImgHandler()
+            retdata= []
+            try:
+                pic = self.db.query(UserCollection).filter(UserCollection.UCid==uc_id).one()
+                retdata.append(imghandler.UCmodel(pic,u_id))
+                self.retjson['code']='10818'
+                self.retjson['contents']=retdata
+            except Exception, e:
+                print e
+                self.retjson['code']='10817'
+                self.retjson['contents'] = '没有这个作品'
+
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
