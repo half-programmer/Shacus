@@ -172,13 +172,11 @@ class UserImgHandler(object):
             ucimgurl = item.UCIurl
             img.append(authkeyhandler.download_originpic_url(ucimgurl))   # 大图url
 
-            #img_size = authkeyhandler.getsize(ucimgurl)   # 获取图片json对象
+            img_size = authkeyhandler.getsize(ucimgurl)   # 获取图片json对象
             img_info = dict(
                 imageUrl=authkeyhandler.download_abb_url(ucimgurl),
-                #width=img_size['width'] / 6,
-                #height=img_size['height'] / 6,
-                width='200',
-                height='123'
+                width=img_size['width'] / 6,
+                height=img_size['height'] / 6,
             )
             imgsimple.append(img_info)
         ret_uc = dict(

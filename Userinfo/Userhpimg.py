@@ -88,13 +88,17 @@ class Userhpimg(BaseHandler):
             uhuser = self.get_argument('uid')
             authkey = self.get_argument('authkey')
             try:
-                userid = self.db.query(User).filter(User.Uid == uhuser).one()
-                key = userid.Uauthkey
-                if key == authkey:  # 验证通过
+                userid = self.db.query(User).filter(User.Uauthkey == authkey).one()
+                if userid:  # 验证通过
+                    if userid.Uid == uhuser:
+                        isself = 1
+                    else:
+                        isself = 0
                     img= UserImgHandler()
                     try:
                         piclist = img.UHpicgetassign(uhuser)
                         self.retjson['code']='10812'
+                        self.retjson['isself'] = isself
                         self.retjson['contents']= piclist
                     except Exception, e:
                         print e
@@ -114,23 +118,22 @@ class Userhpimg(BaseHandler):
             uhuser = self.get_argument('uid')
             authkey = self.get_argument('authkey')
             try:
-                userid = self.db.query(User).filter(User.Uid == uhuser).one()
-                key = userid.Uauthkey
-                if key == authkey:  # 验证通过
-                    img= UserImgHandler()
-                    retdataorigin=[]
-                    retdata = []
-                    piclist = img.UHpicget(uhuser)
-                    retdataorigin.append(piclist)
-                    piclist02 = img.UHpicgetassign(uhuser)
-                    retdata.append(piclist02)
-                    self.retjson['code'] = '10814'
-                    self.retjson['originurl'] = retdataorigin
-                    self.retjson['contents'] = retdata
+                userid = self.db.query(User).filter(User.Uauthkey == authkey).one()
+                if userid.Uid == uhuser:
+                    isself = 1
                 else:
-                    print'认证错误'
-                    self.retjson['code']='10815'
-                    self.retjson['contents']= '用户认证错误'
+                    isself = 0
+                img= UserImgHandler()
+                retdataorigin=[]
+                retdata = []
+                piclist = img.UHpicget(uhuser)
+                retdataorigin.append(piclist)
+                piclist02 = img.UHpicgetassign(uhuser)
+                retdata.append(piclist02)
+                self.retjson['code'] = '10814'
+                self.retjson['isself'] = isself
+                self.retjson['originurl'] = retdataorigin
+                self.retjson['contents'] = retdata
             except Exception, e:
                 print e
                 self.retjson['code']='10815'
@@ -245,13 +248,23 @@ class Userhpimg(BaseHandler):
         elif type == '10818':
             u_id = self.get_argument('uid')
             auth_key = self.get_argument("authkey")
-            imghandler = UserImgHandler()
-            retdata = []
-            pic = self.db.query(UserCollection).filter(UserCollection.UCuser == u_id).all()
-            for item in pic:
-                retdata.append(imghandler.UC_simple_model(item,u_id))
-            self.retjson['code'] = '10818'
-            self.retjson['contents'] = retdata
+            try:
+                userid = self.db.query(User).filter(User.Uauthkey == auth_key).one()
+                if userid.Uid == u_id:
+                    isself = 1
+                else:
+                    isself = 0
+                self.retjson['isself'] = isself
+                imghandler = UserImgHandler()
+                retdata = []
+                pic = self.db.query(UserCollection).filter(UserCollection.UCuser == u_id).all()
+                for item in pic:
+                    retdata.append(imghandler.UC_simple_model(item,u_id))
+                self.retjson['code'] = '10818'
+                self.retjson['contents'] = retdata
+            except Exception, e:
+                print e
+                self.retjson['contents'] = '用户认证失败'
 
         # 获取【单个】作品集信息（包括缩略图url和大图url）
         elif type == '10816':
@@ -262,14 +275,24 @@ class Userhpimg(BaseHandler):
             imghandler=UserImgHandler()
             retdata= []
             try:
-                pic = self.db.query(UserCollection).filter(UserCollection.UCid==uc_id).one()
-                retdata.append(imghandler.UCmodel(pic,u_id))
-                self.retjson['code']='10818'
-                self.retjson['contents']=retdata
+                userid = self.db.query(User).filter(User.Uauthkey == auth_key).one()
+                if userid.Uid == u_id:
+                    isself = 1
+                else:
+                    isself = 0
+                try:
+                    pic = self.db.query(UserCollection).filter(UserCollection.UCid==uc_id).one()
+                    retdata.append(imghandler.UCmodel(pic,u_id))
+                    self.retjson['code']='10818'
+                    self.retjson['isself'] = isself
+                    self.retjson['contents']=retdata
+                except Exception, e:
+                    print e
+                    self.retjson['code']='10817'
+                    self.retjson['contents'] = '没有这个作品'
             except Exception, e:
                 print e
-                self.retjson['code']='10817'
-                self.retjson['contents'] = '没有这个作品'
+                self.retjson['contents'] = '用户认证失败'
 
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
