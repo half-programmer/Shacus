@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 import time
-
+import urllib2
 from Database.models import get_db
 from Database.tables import User, UserHomepageimg, Image, UserCollection, UserCollectionimg
 from FileHandler.Upload import AuthKeyHandler
@@ -94,8 +94,8 @@ class UserImgHandler(object):
                 )
                 db.merge(image)
                 db.commit()
-                new_img = get_db().query(Image).filter(Image.IMname == picurl).one()
-                imid = new_img.IMid
+                new_img = get_db().query(Image).filter(Image.IMname == picurl).all()
+                imid = new_img[0].IMid
                 new_ucimg=UserCollectionimg(
                     UCIuser=ucid,
                     UCIimid=imid,
@@ -167,7 +167,7 @@ class UserImgHandler(object):
         authkeyhandler = AuthKeyHandler()
         img = []
         imgsimple = []
-        ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid).all()
+        ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid ,UserCollection.UCvalid == 1).all()
         for item in ucimg:
             ucimgurl = item.UCIurl
             img.append(authkeyhandler.download_originpic_url(ucimgurl))   # 大图url
@@ -209,7 +209,8 @@ class UserImgHandler(object):
             )
         ret_uc = dict(
             UCid=UCsample.UCid,
-            UCcreateT=UCsample.UCcreateT.strftime('%Y-%m-%d %H:%M:%S'),
+            UCcreateT=UCsample.UCcreateT.strftime('%Y-%m-%d'),
+            UCtitle = UCsample.UCtitle,
             UCimg=img_info,
         )
         return ret_uc
@@ -217,3 +218,5 @@ class UserImgHandler(object):
     # a:个人主页作品集封面
     def UC_homepage_model(self, ucsample, uid):
         print ''
+
+

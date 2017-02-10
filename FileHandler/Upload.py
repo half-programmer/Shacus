@@ -76,9 +76,12 @@ class AuthKeyHandler:
         return private_url
 
     def getsize(self,name):
+        auth = self.get_auth_key()
         bucket_domain = 'oci8c6557.bkt.clouddn.com'
-        base_url = 'http://%s/%s?imageInfo' % (bucket_domain, name)
-        #  testurl :url = "http://78re52.com1.z0.glb.clouddn.com/resource/gogopher.jpg?imageInfo"
+        originurl = 'http://%s/%s' % (bucket_domain, name)
+        private_url = auth.private_download_url(originurl, expires=3600)
+        base_url = '%s?imageInfo' % (private_url)
+        print 'urllib2----------'
         req = urllib2.Request(base_url)
         res_data = urllib2.urlopen(req)
         res = res_data.read()
