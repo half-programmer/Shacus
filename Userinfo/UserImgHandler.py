@@ -42,16 +42,25 @@ class UserImgHandler(object):
                     )
                     db.merge(image)
                     db.commit()
-                    new_img = get_db().query(Image).filter(Image.IMname == picurl).one()
-                    imid = new_img.IMid
-                    new_hpimg = UserHomepageimg(
-                        UHuser=userinfo.Uid,
-                        UHimgid=imid,
-                        UHpicurl=picurl,
-                        UHpicvalid=True,
-                    )
-                    db.merge(new_hpimg)
-                    db.commit()
+                    auth = AuthKeyHandler()
+                    try:
+                        # 获取图片大小的Json对象
+                        sizedata = auth.getsize(picurl)
+
+                        new_img = get_db().query(Image).filter(Image.IMname == picurl).one()
+                        imid = new_img.IMid
+                        new_hpimg = UserHomepageimg(
+                            UHuser=userinfo.Uid,
+                            UHimgid=imid,
+                            UHpicurl=picurl,
+                            UHpicvalid=True,
+                            UHheight=sizedata['height'],
+                            UHwidth=sizedata['width'],
+                        )
+                        db.merge(new_hpimg)
+                        db.commit()
+                    except Exception, e:
+                        print e
         except Exception, e:
             print e
 
@@ -94,6 +103,8 @@ class UserImgHandler(object):
                 )
                 db.merge(image)
                 db.commit()
+                auth = AuthKeyHandler()
+                sizedata = auth.getsize(picurl)
                 new_img = get_db().query(Image).filter(Image.IMname == picurl).all()
                 imid = new_img[0].IMid
                 new_ucimg=UserCollectionimg(
@@ -101,6 +112,8 @@ class UserImgHandler(object):
                     UCIimid=imid,
                     UCIurl=picurl,
                     UCIvalid=1,
+                    UCIheight = sizedata['height'],
+                    UCIwidth = sizedata['width'],
                 )
                 db.merge(new_ucimg)
                 db.commit()
@@ -145,17 +158,16 @@ class UserImgHandler(object):
     def UHpicgetassign(self,uid):
         img_tokens = []
         authkeyhandler = AuthKeyHandler()
-        imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid).all()  # 返回所有图片项
+        imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid and UserHomepageimg.UHpicvalid == 1).all()  # 返回所有图片项
 
         if imgs[0].UHpicurl:
             print '有图片'
             for img in imgs:
                 img_url = img.UHpicurl
-                img_size = authkeyhandler.getsize(img_url)
                 img_info = dict(
                     imageUrl=authkeyhandler.download_abb_url(img_url),
-                    width=img_size['width']/6,
-                    height=img_size['height']/6,
+                    width=img.UHwidth,
+                    height=img.UHheight,
                 )
                 img_tokens.append(img_info)
         else:
@@ -171,12 +183,10 @@ class UserImgHandler(object):
         for item in ucimg:
             ucimgurl = item.UCIurl
             img.append(authkeyhandler.download_originpic_url(ucimgurl))   # 大图url
-
-            img_size = authkeyhandler.getsize(ucimgurl)   # 获取图片json对象
             img_info = dict(
                 imageUrl=authkeyhandler.download_abb_url(ucimgurl),
-                width=img_size['width'] / 6,
-                height=img_size['height'] / 6,
+                width=item.width,
+                height=item.height,
             )
             imgsimple.append(img_info)
         ret_uc = dict(
@@ -197,11 +207,10 @@ class UserImgHandler(object):
         ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid).all()
         if ucimg:
             coverurl = authkeyhandler.download_abb_url(ucimg[0].UCIurl)   # 选取第一张作为封面(缩略图)
-            img_size = authkeyhandler.getsize(ucimg[0].UCIurl)
             img_info = dict(
                 imageUrl=coverurl,
-                width=img_size['width'] / 6,
-                height=img_size['height'] / 6,
+                width=ucimg[0].width,
+                height=ucimg[0].height,
             )
         else:
             img_info = dict(

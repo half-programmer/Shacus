@@ -78,11 +78,10 @@ class AuthKeyHandler:
     def getsize(self,name):
         auth = self.get_auth_key()
         bucket_domain = 'oci8c6557.bkt.clouddn.com'
-        originurl = 'http://%s/%s' % (bucket_domain, name)
+        originurl = 'http://%s/%s?imageInfo' % (bucket_domain, name )
         private_url = auth.private_download_url(originurl, expires=3600)
-        base_url = '%s?imageInfo' % (private_url)
         print 'urllib2----------'
-        req = urllib2.Request(base_url)
+        req = urllib2.Request(private_url)
         res_data = urllib2.urlopen(req)
         res = res_data.read()
         data = json.loads(res)

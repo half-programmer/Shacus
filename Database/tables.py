@@ -312,8 +312,8 @@ class UserHomepageimg(Base):
     UHimgid = Column (Integer, ForeignKey('Image.IMid', onupdate='CASCADE'))
     UHpicurl= Column(VARCHAR(128))
     UHpicvalid = Column(Integer, default=0)
-    #UHheight = Column(Integer,default=0)
-    #UHwidth = Column(Integer,default=0)
+    UHheight = Column(Integer,default=0)
+    UHwidth = Column(Integer,default=0)
 
 class UserCollection(Base):
     #用户作品集
@@ -332,8 +332,8 @@ class UserCollectionimg(Base):
     UCIimid = Column(Integer, ForeignKey(Image.IMid, onupdate='CASCADE'), primary_key=True)
     UCIurl = Column(VARCHAR(128))
     UCIvalid = Column(Integer, nullable=False, default=0)
-    #UCIheight = Column(Integer,default=0)
-    #UCIwidth = Column(Integer,default=0)
+    UCIheight = Column(Integer,default=0)
+    UCIwidth = Column(Integer,default=0)
 
 
 

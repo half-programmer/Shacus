@@ -48,6 +48,7 @@ class Userhpimg(BaseHandler):
                     ap_imgs_json = json.loads(imgs)
                     imhandler= UserImgHandler()
                     imhandler.insert_Homepage_image(ap_imgs_json,u_id)
+
                     self.retjson['code']= '10810'
                     self.retjson['contents'] = '数据库操作成功'
                 else:
@@ -254,9 +255,11 @@ class Userhpimg(BaseHandler):
                 key = userid.Uauthkey
                 if key == auth_key:  # 验证通过
                     print '删除作品集验证通过'
-                    user_collection = self.db.query(UserCollection).filter(UserCollection.UCid == uc_id).one()
-                    user_collection.UCvalid = 0
-                    self.db.commit()
+                    ucidlist = json.loads(uc_id);
+                    for item in ucidlist:
+                        user_collection = self.db.query(UserCollection).filter(UserCollection.UCid == item).one()
+                        user_collection.UCvalid = 0
+                        self.db.commit()
                 else:
                     self.retjson['code'] = '10827'
                     self.retjson['contents'] = '认证失败'
