@@ -172,7 +172,7 @@ class UserImgHandler(object):
                 )
                 img_tokens.append(img_info)
         else:
-            img_tokens.append('null')
+            img_tokens = []
         return img_tokens
 
     # b->c作品集详细信息(包括缩略图url和大图url)
