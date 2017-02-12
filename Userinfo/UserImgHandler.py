@@ -167,8 +167,8 @@ class UserImgHandler(object):
                 img_url = img.UHpicurl
                 img_info = dict(
                     imageUrl=authkeyhandler.download_abb_url(img_url),
-                    width=img.UHwidth,
-                    height=img.UHheight,
+                    width=img.UHwidth/6,
+                    height=img.UHheight/6,
                 )
                 img_tokens.append(img_info)
         else:
@@ -186,8 +186,8 @@ class UserImgHandler(object):
             img.append(authkeyhandler.download_originpic_url(ucimgurl))   # 大图url
             img_info = dict(
                 imageUrl=authkeyhandler.download_abb_url(ucimgurl),
-                width=item.width,
-                height=item.height,
+                width=item.width/6,
+                height=item.height/6,
             )
             imgsimple.append(img_info)
         ret_uc = dict(
@@ -210,8 +210,8 @@ class UserImgHandler(object):
             coverurl = authkeyhandler.download_abb_url(ucimg[0].UCIurl)   # 选取第一张作为封面(缩略图)
             img_info = dict(
                 imageUrl=coverurl,
-                width=ucimg[0].width,
-                height=ucimg[0].height,
+                width=ucimg[0].width/6,
+                height=ucimg[0].height/6,
             )
         else:
             img_info = dict(
