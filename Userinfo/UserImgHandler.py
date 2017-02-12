@@ -145,11 +145,12 @@ class UserImgHandler(object):
         img_tokens = []
         authkeyhandler = AuthKeyHandler()
         imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid).all()  # 返回所有图片项
-        for img in imgs:
-            img_url = img.UHpicurl
-            img_tokens.append(authkeyhandler.download_originpic_url(img_url)) # 裁剪？1200宽度
-        if img_tokens[0]:
-                print '有图片'
+        if imgs:
+            print '有个人照片图片'
+            for img in imgs:
+                img_url = img.UHpicurl
+                img_tokens.append(authkeyhandler.download_originpic_url(img_url)) # 裁剪？1200宽度
+
         else:
             img_tokens = []
         return img_tokens
@@ -160,7 +161,7 @@ class UserImgHandler(object):
         authkeyhandler = AuthKeyHandler()
         imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid and UserHomepageimg.UHpicvalid == 1).all()  # 返回所有图片项
 
-        if imgs[0].UHpicurl:
+        if imgs:
             print '有图片'
             for img in imgs:
                 img_url = img.UHpicurl
