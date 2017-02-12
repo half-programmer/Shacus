@@ -8,14 +8,14 @@ from FileHandler.Upload import AuthKeyHandler
 
 class UserImgHandler(object):
 
-    # 根据下载凭证生成图片名数组
+    # 根据下载凭证生成图片名
     def getpicurl(self,name):
         str = name.split("/")
         str2 = str[4].split("?")
         str[3] = str[3] + str2[0]
         return str[3]
     # 删除个人照片
-    def delete_Homepage_image(self,list,uid):#
+    def delete_Homepage_image(self,list,uid):
         try:
             db = get_db()
             userinfo = db.query(User).filter(User.Uid == uid).one()
@@ -174,8 +174,8 @@ class UserImgHandler(object):
                 img_url = img.UHpicurl
                 img_info = dict(
                     imageUrl=authkeyhandler.download_abb_url(img_url),
-                    width=img.UHwidth/6,
-                    height=img.UHheight/6,
+                    width=img.UHwidth/3,
+                    height=img.UHheight/3,
                 )
                 img_tokens.append(img_info)
         else:
@@ -217,8 +217,8 @@ class UserImgHandler(object):
             coverurl = authkeyhandler.download_abb_url(ucimg[0].UCIurl)   # 选取第一张作为封面(缩略图)
             img_info = dict(
                 imageUrl=coverurl,
-                width=ucimg[0].UCIwidth/6,
-                height=ucimg[0].UCIheight/6,
+                width=ucimg[0].UCIwidth/3,
+                height=ucimg[0].UCIheight/3,
             )
         else:
             img_info = dict(
@@ -233,7 +233,25 @@ class UserImgHandler(object):
         return ret_uc
 
     # a:个人主页作品集封面
-    def UC_homepage_model(self, ucsample, uid):
+    def UC_homepage_model(self, UCsample, uid):
         print ''
+        authkeyhandler = AuthKeyHandler()
+        # ucsample是一个UserCollection实例
+        ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid,
+                                                         UserCollection.UCvalid == 1).all()
+        if ucimg:
+            coverurl = authkeyhandler.download_assign_url(ucimg[0].UCIurl,200,200)  # 选取第一张作为封面(缩略图)
+            img_info = coverurl,
+        else:
+            img_info = dict(
+                imageUrl='',
+            )
+        ret_uc = dict(
+            UCid=UCsample.UCid,
+            UCcreateT=UCsample.UCcreateT.strftime('%Y-%m-%d'),
+            UCtitle=UCsample.UCtitle,
+            UCimg=img_info,
+        )
+        return ret_uc
 
 
