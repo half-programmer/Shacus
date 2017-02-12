@@ -11,8 +11,9 @@ class UserImgHandler(object):
     # 根据下载凭证生成图片名数组
     def getpicurl(self,name):
         str = name.split("/")
-        str2= str[3].split("?")
-        return str2[0]
+        str2 = str[4].split("?")
+        str[3] = str[3] + str2[0]
+        return str[3]
     # 删除个人照片
     def delete_Homepage_image(self,list,uid):#
         try:
@@ -129,11 +130,10 @@ class UserImgHandler(object):
         # list:要删除的图片
         try:
             db = get_db()
-            userinfo = db.query(UserCollection).filter(UserCollection.UCid == ucid).one()
-            allimage = db.query(UserCollectionimg).filter(UserCollectionimg.UCIuser == userinfo.UCid).all()
             for imageitem in list:
                 try:
-                    deleteimage = db.query(UserCollectionimg).filter(UserCollectionimg.UCIurl == imageitem,
+                    imageitemurl = self.getpicurl(imageitem)
+                    deleteimage = db.query(UserCollectionimg).filter(UserCollectionimg.UCIurl == imageitemurl,
                                                                      UserCollectionimg.UCIuser == ucid).one()
                     deleteimage.UCIvalid = 0
                     db.commit()
