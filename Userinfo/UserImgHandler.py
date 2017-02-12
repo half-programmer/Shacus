@@ -7,6 +7,12 @@ from FileHandler.Upload import AuthKeyHandler
 
 
 class UserImgHandler(object):
+
+    # 根据下载凭证生成图片名数组
+    def getpicurl(self,name):
+        str = name.split("/")
+        str2= str[3].split("?")
+        return str2[0]
     # 删除个人照片
     def delete_Homepage_image(self,list,uid):#
         try:
@@ -14,7 +20,8 @@ class UserImgHandler(object):
             userinfo = db.query(User).filter(User.Uid == uid).one()
             for imageitem in list:
                 try:
-                    deleteimage = db.query(UserHomepageimg).filter(UserHomepageimg.UHpicurl == imageitem,UserHomepageimg.UHuser==userinfo.Uid).one()
+                    imageitemurl = self.getpicurl(imageitem)
+                    deleteimage = db.query(UserHomepageimg).filter(UserHomepageimg.UHpicurl == imageitemurl,UserHomepageimg.UHuser==userinfo.Uid).one()
                     deleteimage.UHpicvalid = 0
                     db.commit()
                 except Exception, e:
@@ -186,8 +193,8 @@ class UserImgHandler(object):
             img.append(authkeyhandler.download_originpic_url(ucimgurl))   # 大图url
             img_info = dict(
                 imageUrl=authkeyhandler.download_abb_url(ucimgurl),
-                width=item.width/6,
-                height=item.height/6,
+                width=item.UCIwidth/6,
+                height=item.UCIheight/6,
             )
             imgsimple.append(img_info)
         ret_uc = dict(
@@ -210,8 +217,8 @@ class UserImgHandler(object):
             coverurl = authkeyhandler.download_abb_url(ucimg[0].UCIurl)   # 选取第一张作为封面(缩略图)
             img_info = dict(
                 imageUrl=coverurl,
-                width=ucimg[0].width/6,
-                height=ucimg[0].height/6,
+                width=ucimg[0].UCIwidth/6,
+                height=ucimg[0].UCIheight/6,
             )
         else:
             img_info = dict(

@@ -125,12 +125,8 @@ class Userhpimg(BaseHandler):
                 else:
                     isself = 0
                 img= UserImgHandler()
-                retdataorigin=[]
-                retdata = []
                 piclist = img.UHpicget(uhuser)
-                #retdataorigin.append(piclist)
                 piclist02 = img.UHpicgetassign(uhuser)
-                #retdata.append(piclist02)
                 self.retjson['code'] = '10814'
                 self.retjson['isself'] = isself
                 self.retjson['originurl'] = piclist
@@ -332,7 +328,6 @@ class Userhpimg(BaseHandler):
                     self.retjson['contents'] = retdata
                 except Exception ,e:
                     print e
-                    s
             except Exception, e:
                 print e
                 self.retjson['contents'] = '用户认证失败'
