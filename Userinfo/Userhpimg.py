@@ -344,9 +344,9 @@ class Userhpimg(BaseHandler):
                 else:
                     isself = 0
                 try:
-                    pic = self.db.query(UserCollection).filter(UserCollection.UCid==uc_id).one()
+                    pic = self.db.query(UserCollection).filter(UserCollection.UCid == uc_id).one()
                     retdata.append(imghandler.UCmodel(pic,u_id))
-                    self.retjson['code']='10818'
+                    self.retjson['code']='10816'
                     self.retjson['isself'] = isself
                     self.retjson['contents']=retdata
                 except Exception, e:
