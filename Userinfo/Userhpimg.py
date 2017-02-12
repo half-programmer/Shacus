@@ -251,6 +251,8 @@ class Userhpimg(BaseHandler):
                         user_collection = self.db.query(UserCollection).filter(UserCollection.UCid == item).one()
                         user_collection.UCvalid = 0
                         self.db.commit()
+                    self.retjson['code'] = '10826'
+                    self.retjson['contents'] = '删除作品集成功'
                 else:
                     self.retjson['code'] = '10827'
                     self.retjson['contents'] = '认证失败'
