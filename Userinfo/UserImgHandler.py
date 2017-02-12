@@ -151,7 +151,7 @@ class UserImgHandler(object):
     def UHpicget(self,uid):
         img_tokens = []
         authkeyhandler = AuthKeyHandler()
-        imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid).all()  # 返回所有图片项
+        imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid, UserHomepageimg.UHpicvalid == 1).all()  # 返回所有图片项
         if imgs:
             print '有个人照片图片'
             for img in imgs:
@@ -166,7 +166,7 @@ class UserImgHandler(object):
     def UHpicgetassign(self,uid):
         img_tokens = []
         authkeyhandler = AuthKeyHandler()
-        imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid and UserHomepageimg.UHpicvalid == 1).all()  # 返回所有图片项
+        imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid, UserHomepageimg.UHpicvalid == 1).all()  # 返回所有图片项
 
         if imgs:
             print '有图片'
