@@ -187,7 +187,7 @@ class UserImgHandler(object):
         authkeyhandler = AuthKeyHandler()
         img = []
         imgsimple = []
-        ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid ,UserCollectionimg.UCvalid == 1).all()
+        ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid ,UserCollectionimg.UCIvalid == 1).all()
         for item in ucimg:
             ucimgurl = item.UCIurl
             img.append(authkeyhandler.download_originpic_url(ucimgurl))   # 大图url
@@ -212,7 +212,7 @@ class UserImgHandler(object):
     def UC_simple_model(self,UCsample,uid):
         authkeyhandler = AuthKeyHandler()
         # ucsample是一个UserCollection实例
-        ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid,UserCollection.UCvalid == 1).all()
+        ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid,UserCollectionimg == 1).all()
         if ucimg:
             coverurl = authkeyhandler.download_url(ucimg[0].UCIurl)   # 选取第一张作为封面(缩略图)
             img_info = dict(
@@ -258,7 +258,7 @@ class UserImgHandler(object):
     def UHgetsquarepic(self,uid):
         img_tokens = []
         authkeyhandler = AuthKeyHandler()
-        imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid and UserHomepageimg.UHpicvalid == 1).all()  # 返回所有图片项
+        imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid , UserHomepageimg.UHpicvalid == 1).all()  # 返回所有图片项
         if imgs:
             print '有图片'
             for img in imgs:
