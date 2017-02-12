@@ -212,7 +212,7 @@ class UserImgHandler(object):
     def UC_simple_model(self,UCsample,uid):
         authkeyhandler = AuthKeyHandler()
         # ucsample是一个UserCollection实例
-        ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid).all()
+        ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid,UserCollection.UCvalid == 1).all()
         if ucimg:
             coverurl = authkeyhandler.download_abb_url(ucimg[0].UCIurl)   # 选取第一张作为封面(缩略图)
             img_info = dict(
