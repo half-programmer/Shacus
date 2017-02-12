@@ -12,7 +12,7 @@ class UserImgHandler(object):
     def getpicurl(self,name):
         str = name.split("/")
         str2 = str[4].split("?")
-        str[3] = str[3] + str2[0]
+        str[3] = str[3] +'/'+str2[0]
         return str[3]
     # 删除个人照片
     def delete_Homepage_image(self,list,uid):

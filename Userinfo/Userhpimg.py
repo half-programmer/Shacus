@@ -3,6 +3,7 @@
 import json
 import threading
 from BaseHandlerh import BaseHandler
+from Database.models import get_db
 from Database.tables import User, UserHomepageimg, UserCollection
 from FileHandler.Upload import AuthKeyHandler
 from Userinfo.UserImgHandler import UserImgHandler
@@ -222,10 +223,12 @@ class Userhpimg(BaseHandler):
                 userid = self.db.query(User).filter(User.Uid == u_id).one()
                 key = userid.Uauthkey
                 if key == auth_key:  # 验证通过
-                    print '作品集添加图片验证通过'
+                    print '作品集删除' \
+                          '图片验证通过'
                     ap_imgs_json = json.loads(imgs)
                     imhandler = UserImgHandler()
                     imhandler.delete_UserCollection_image(ap_imgs_json,uc_id)
+                    get_db().commit()
                     self.retjson['code'] = '10820'
                     self.retjson['contents'] = '数据库操作成功'
                 else:
