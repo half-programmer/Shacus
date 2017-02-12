@@ -187,7 +187,7 @@ class UserImgHandler(object):
         authkeyhandler = AuthKeyHandler()
         img = []
         imgsimple = []
-        ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid ,UserCollection.UCvalid == 1).all()
+        ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid ,UserCollectionimg.UCvalid == 1).all()
         for item in ucimg:
             ucimgurl = item.UCIurl
             img.append(authkeyhandler.download_originpic_url(ucimgurl))   # 大图url
