@@ -214,11 +214,11 @@ class UserImgHandler(object):
         # ucsample是一个UserCollection实例
         ucimg = get_db().query(UserCollectionimg).filter(UserCollectionimg.UCIuser == UCsample.UCid,UserCollection.UCvalid == 1).all()
         if ucimg:
-            coverurl = authkeyhandler.download_abb_url(ucimg[0].UCIurl)   # 选取第一张作为封面(缩略图)
+            coverurl = authkeyhandler.download_url(ucimg[0].UCIurl)   # 选取第一张作为封面(缩略图)
             img_info = dict(
                 imageUrl=coverurl,
-                width=ucimg[0].UCIwidth/3,
-                height=ucimg[0].UCIheight/3,
+                width=ucimg[0].UCIwidth/2,
+                height=ucimg[0].UCIheight/2,
             )
         else:
             img_info = dict(
@@ -253,5 +253,19 @@ class UserImgHandler(object):
             UCimg=img_info,
         )
         return ret_uc
+
+    # 个人主页照片集缩略图(缩略图是正方形)
+    def UHgetsquarepic(self,uid):
+        img_tokens = []
+        authkeyhandler = AuthKeyHandler()
+        imgs = get_db().query(UserHomepageimg).filter(UserHomepageimg.UHuser == uid and UserHomepageimg.UHpicvalid == 1).all()  # 返回所有图片项
+        if imgs:
+            print '有图片'
+            for img in imgs:
+                img_url = img.UHpicurl
+                img_tokens.append(authkeyhandler.download_assign_url(img_url,200,200))
+        else:
+            img_tokens = []
+        return img_tokens
 
 

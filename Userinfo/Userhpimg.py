@@ -84,22 +84,17 @@ class Userhpimg(BaseHandler):
                 self.retjson['code'] = '10811'
                 self.retjson['contents'] = '查找用户失败'
 
-        # 获取个人主页缩略图
+        # 获取个人主页缩略图(200*200)
         elif type == '10812':
             uhuser = self.get_argument('uid')
             authkey = self.get_argument('authkey')
             try:
                 userid = self.db.query(User).filter(User.Uauthkey == authkey).one()
                 if userid:  # 验证通过
-                    if userid.Uid == uhuser:
-                        isself = 1
-                    else:
-                        isself = 0
                     img= UserImgHandler()
                     try:
-                        piclist = img.UHpicgetassign(uhuser)
+                        piclist = img.UHgetsquarepic(uhuser)
                         self.retjson['code']='10812'
-                        self.retjson['isself'] = isself
                         self.retjson['contents']= piclist
                     except Exception, e:
                         print e
@@ -114,7 +109,7 @@ class Userhpimg(BaseHandler):
                 self.retjson['code']='10813'
                 self.retjson['contents']='未找到该用户'
 
-        # 获取个人缩略图片和大图url
+        # 获取个人缩略图片和大图url(个人主页点进去)
         elif type == '10814':
             uhuser = self.get_argument('uid')
             authkey = self.get_argument('authkey')
@@ -251,7 +246,7 @@ class Userhpimg(BaseHandler):
                 key = userid.Uauthkey
                 if key == auth_key:  # 验证通过
                     print '删除作品集验证通过'
-                    ucidlist = json.loads(uc_id);
+                    ucidlist = json.loads(uc_id)
                     for item in ucidlist:
                         user_collection = self.db.query(UserCollection).filter(UserCollection.UCid == item).one()
                         user_collection.UCvalid = 0
@@ -319,7 +314,7 @@ class Userhpimg(BaseHandler):
                 self.retjson['isself'] = isself
                 imghandler = UserImgHandler()
                 retdata = []
-                pic = self.db.query(UserCollection).filter(UserCollection.UCuser == u_id).all()
+                pic = self.db.query(UserCollection).filter(UserCollection.UCuser == u_id,UserCollection.UCvalid == 1).all()
                 print '进入作品集列表获取'
                 try:
                     for item in pic:
@@ -360,5 +355,25 @@ class Userhpimg(BaseHandler):
                 print e
                 self.retjson['contents'] = '用户认证失败'
 
+        # 获取个人主页作品集封面(200*200)
+        elif type == '10824':
+            u_id = self.get_argument('uid')
+            auth_key = self.get_argument("authkey")
+            try:
+                userid = self.db.query(User).filter(User.Uauthkey == auth_key).one()
+                imghandler = UserImgHandler()
+                retdata = []
+                pic = self.db.query(UserCollection).filter(UserCollection.UCuser == u_id,UserCollection.UCvalid == 1).all()
+                print '进入作品集列表获取'
+                try:
+                    for item in pic:
+                        retdata.append(imghandler.UC_simple_model(item, u_id))
+                    self.retjson['code'] = '10824'
+                    self.retjson['contents'] = retdata
+                except Exception, e:
+                    print e
+            except Exception, e:
+                print e
+                self.retjson['contents'] = '用户认证失败'
         self.write(json.dumps(self.retjson, ensure_ascii=False, indent=2))
 
