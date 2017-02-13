@@ -74,7 +74,9 @@ class Userhpimg(BaseHandler):
                 key = userid.Uauthkey
                 if key == auth_key:  # 验证通过
                     print '验证通过'
+                    print imgs
                     ap_imgs_json = json.loads(imgs)
+                    print ap_imgs_json
                     imhandler = UserImgHandler()
                     imhandler.delete_Homepage_image(ap_imgs_json, u_id)
                     retjson['code'] = '10811'
