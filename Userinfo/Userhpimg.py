@@ -318,6 +318,7 @@ class Userhpimg(BaseHandler):
                     ap_imgs_json = json.loads(imgs)
                     imhandler = UserImgHandler()
                     imhandler.insert_UserCollection_image(ap_imgs_json,uc_id)
+                    self.db.commit()
                     retjson['code'] = '10824'
                     retjson['contents'] = '数据库操作成功'
                 else:

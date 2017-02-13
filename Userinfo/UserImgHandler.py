@@ -200,7 +200,7 @@ class UserImgHandler(object):
         ret_uc = dict(
             UCid=UCsample.UCid,
             UCuser=uid,
-            UCcreateT=UCsample.UCcreateT.strftime('%Y-%m-%d %H:%M:%S'),
+            UCcreateT=UCsample.UCcreateT.strftime('%Y-%m-%d'),
             UCtitle=UCsample.UCtitle,
             UCcontent=UCsample.UCcontent,
             UCimg=img,                  # 大图url
