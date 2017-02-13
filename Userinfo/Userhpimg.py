@@ -301,11 +301,20 @@ class Userhpimg(BaseHandler):
             imgs = self.get_argument('imgs')
             auth_key = self.get_argument('authkey')
             uc_id = self.get_argument('ucid')
+            uc_content =self.get_argument('content')
+            uc_title = self.get_argument('title')
             try:
                 userid = self.db.query(User).filter(User.Uid == u_id).one()
                 key = userid.Uauthkey
                 if key == auth_key:  # 验证通过
                     print '验证通过'
+                    self.db.query(UserCollection).filter(UserCollection.UCid == uc_id). \
+                        update({UserCollection.UCcontent: uc_content,
+                                UserCollection.UCvalid: 1,
+                                UserCollection.UCtitle: uc_title,
+                                }, synchronize_session=False)
+                    self.db.commit()
+                    print '更新完成'
                     ap_imgs_json = json.loads(imgs)
                     imhandler = UserImgHandler()
                     imhandler.insert_UserCollection_image(ap_imgs_json,uc_id)
@@ -386,7 +395,7 @@ class Userhpimg(BaseHandler):
                 print '进入作品集列表获取'
                 try:
                     for item in pic:
-                        retdata.append(imghandler.UC_simple_model(item, u_id))
+                        retdata.append(imghandler.UC_homepage_model(item,u_id))
                     retjson['code'] = '10828'
                     retjson['contents'] = retdata
                 except Exception, e:
