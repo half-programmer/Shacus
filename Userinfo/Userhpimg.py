@@ -342,7 +342,7 @@ class Userhpimg(BaseHandler):
                     print e
             except Exception, e:
                 print e
-                self.retjson['contents'] = '用户认证失败'
+                retjson['contents'] = '用户认证失败'
 
         # 获取【单个】作品集信息（包括缩略图url和大图url）
         elif type == '10816':
@@ -372,7 +372,7 @@ class Userhpimg(BaseHandler):
                 retjson['contents'] = '用户认证失败'
 
         # 获取个人主页作品集封面(200*200)
-        elif type == '10824':
+        elif type == '10828':
             retjson = {'code': '', 'contents': ""}
             u_id = self.get_argument('uid')
             auth_key = self.get_argument("authkey")
@@ -385,7 +385,7 @@ class Userhpimg(BaseHandler):
                 try:
                     for item in pic:
                         retdata.append(imghandler.UC_simple_model(item, u_id))
-                    retjson['code'] = '10824'
+                    retjson['code'] = '10828'
                     retjson['contents'] = retdata
                 except Exception, e:
                     print e
