@@ -31,6 +31,7 @@ from RegisterHandler import RegisterHandler
 from Settings import PaswChange
 from TRends.TRendspost import TRendspost
 from TRends.TrendHandler import TrendHandler
+from Userinfo.UserCollectionHandler import UserCollectionHandler
 from Userinfo.UserFavoriteHandler import UserFavorite
 from Userinfo.UserImgHandler import UserImgHandler
 from Userinfo.UserIndent import UserIndent
@@ -77,7 +78,8 @@ class Application(tornado.web.Application):
              (r"/", WBasic),
              (r"/weixin/getsign",WgetSign),
              (r"/appointment/chat",APchatCreateHandler),
-             (r"/Userinfo/imghandler",Userhpimg)
+             (r"/Userinfo/imghandler",Userhpimg),
+             (r"/Userinfo/CollectionHandler",UserCollectionHandler),
         ]
         tornado.web.Application.__init__(self, handlers)
         self.db = scoped_session(sessionmaker(bind=engine,

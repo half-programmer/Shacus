@@ -325,6 +325,8 @@ class UserCollection(Base):
     UCcontent = Column(VARCHAR(128))               #作品集描述
     UCvalid = Column(Integer, default=0)
     UCiscollection = Column(Integer, default=0) #0是作品集 1是动态
+    UClikeNum = Column(Integer, default=0)
+    UCcommentNum = Column(Integer, default=0)
 
 class UserCollectionimg(Base):
     __tablename__ = 'UserCollectionimg'
@@ -334,6 +336,23 @@ class UserCollectionimg(Base):
     UCIvalid = Column(Integer, nullable=False, default=0)
     UCIheight = Column(Integer,default=0)
     UCIwidth = Column(Integer,default=0)
+
+class UClike(Base):
+    __tablename__ = 'UClike'
+    UCLid = Column(Integer, primary_key=True)
+    UClikeid = Column(Integer, ForeignKey(UserCollection.UCid, onupdate='CASCADE'))  #作品集id
+    UClikeUserid = Column(Integer, ForeignKey(User.Uid, onupdate='CASCADE'))
+    UCLvalid = Column(Boolean, nullable=False, default=1)
+    UCLTime = Column(DateTime(timezone=True), default=func.now())
+class UCcomment(Base):
+    __tablename__ = 'UCcomment'
+    UCCid = Column(Integer, primary_key=True)
+    UCcomvalid = Column(Boolean, nullable=False, default=1)
+    UCcommentid = Column(Integer, ForeignKey(UserCollection.UCid, onupdate='CASCADE'))
+    UCcommentUserid = Column(Integer, ForeignKey(User.Uid, onupdate='CASCADE'))
+    UCcontent = Column(VARCHAR(128))
+    UCcommentTime = Column(DateTime(timezone=True), default=func.now())
+
 
 
 
