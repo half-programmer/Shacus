@@ -10,6 +10,7 @@ from tornado import gen
 from tornado.concurrent import Future
 from tornado.web import asynchronous
 
+from Appointment.APgroupHandler import APgroupHandler
 from BaseHandlerh import BaseHandler
 from Database.tables import Appointment, User
 from Userinfo import Usermodel
@@ -34,7 +35,7 @@ class LoginHandler(BaseHandler):
             if not m_phone or not m_password:
                 self.retjson['code'] = 400
                 self.retjson['contents'] = 10105  # '用户名密码不能为空'
-        #todo:登录返回json的retdata多一层[]，客户端多0.5秒处理时间
+        # todo:登录返回json的retdata多一层[]，客户端多0.5秒处理时间
         # 防止重复注册
             else:
                 try:
@@ -117,11 +118,16 @@ class LoginHandler(BaseHandler):
 
             ap_model_handler.ap_Model_simply(photo_list_all, photo_list, user.Uid)
             ap_model_handler.ap_Model_simply(model_list_all, model_list, user.Uid)
+
+            # 约拍类型和id
+            Apgourp = APgroupHandler()
+            grouplist = Apgourp.GetGroupId()
             data = dict(
                 userModel=user_model,
                 daohanglan=self.bannerinit(),
                 photoList=photo_list,
                 modelList=model_list,
+                groupList=grouplist
             )
 
             retdata.append(data)

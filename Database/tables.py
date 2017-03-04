@@ -165,6 +165,7 @@ class Appointment(Base):  #摄影师-模特约拍
     APvalid = Column(Boolean, default=1, nullable=False)
     APregistN = Column(Integer, nullable=False, default=0)
     APstatus = Column(Integer, nullable=False, default=0)
+    APgroup = Column(Integer, nullable=False, default=0)
 
 
 class AppointmentInfo(Base):
@@ -189,7 +190,6 @@ class AppointEntry(Base):
     AEvalid = Column(Boolean, nullable=False,default=1)
     AEchoosed = Column(Boolean, nullable=False,default=0)
     AEregistT = Column(DateTime(timezone=True), default=func.now())
-
 
 
 class AppointLike(Base):

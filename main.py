@@ -40,9 +40,6 @@ from Userinfo.UserLike import FindUlike
 from Userinfo.Userhomepager import Userhomepager
 from Userinfo.Userhpimg import Userhpimg
 from loginHandler import LoginHandler
-from Wechatserver.Wver import Wver
-from Wechatserver.WBasic import WBasic
-from Wechatserver.WgetSign import WgetSign
 define("port", default=800, help="run on the given port", type=int)
 
 
@@ -75,8 +72,6 @@ class Application(tornado.web.Application):
              (r"/course/like",Courselike),
              (r"/course/fav",Coursefav),
              (r"/ranklist", Ranklist),
-             (r"/", WBasic),
-             (r"/weixin/getsign",WgetSign),
              (r"/appointment/chat",APchatCreateHandler),
              (r"/Userinfo/imghandler",Userhpimg),
              (r"/Userinfo/CollectionHandler",UserCollectionHandler),
