@@ -120,14 +120,12 @@ class LoginHandler(BaseHandler):
             ap_model_handler.ap_Model_simply(model_list_all, model_list, user.Uid)
 
             # 约拍类型和id
-            Apgourp = APgroupHandler()
-            grouplist = Apgourp.GetGroupId()
             data = dict(
                 userModel=user_model,
                 daohanglan=self.bannerinit(),
                 photoList=photo_list,
                 modelList=model_list,
-                groupList=grouplist
+                groupList=APgroupHandler.Group(),
             )
 
             retdata.append(data)

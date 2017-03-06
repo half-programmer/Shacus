@@ -40,3 +40,19 @@ class APgroupHandler(object):
             return 4
         elif groupid == '商业跟拍':
             return 5
+
+    @staticmethod
+    def Group():
+        retdata = []
+        apdata1 = {'type': '1', 'name' : '写真客片'}
+        retdata.append(apdata1)
+        apdata2 = {'type': '2', 'name': '记录随拍'}
+        retdata.append(apdata2)
+        apdata3 = {'type': '3', 'name': '练手互免'}
+        retdata.append(apdata3)
+        apdata4 = {'type': '4', 'name': '活动跟拍'}
+        retdata.append(apdata4)
+        apdata5 = {'type': '5', 'name': '商业跟拍'}
+        retdata.append(apdata5)
+
+        return retdata
