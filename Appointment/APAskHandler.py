@@ -9,6 +9,7 @@ from sqlalchemy import desc
 
 import Userinfo
 from APmodel import APmodelHandler
+from Appointment.APgroupHandler import APgroupHandler
 from BaseHandlerh import BaseHandler
 from Database.tables import Appointment, AppointEntry
 from Userinfo import Ufuncs
@@ -94,8 +95,8 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
         u_auth_key = self.get_argument('authkey')
         request_type = self.get_argument('type')
         u_id = self.get_argument('uid')
-
-
+        ap_group = self.get_argument('group')
+        groupid = APgroupHandler.GetGroupNum(ap_group)
         ufuncs = Userinfo.Ufuncs.Ufuncs()
         if ufuncs.judge_user_valid(u_id, u_auth_key):
 
@@ -104,7 +105,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 try:
                     appointments = self.db.query(Appointment). \
                         filter(Appointment.APtype == 1, Appointment.APclosed == 0, Appointment.APvalid == 1,
-                               Appointment.APstatus != 2).\
+                               Appointment.APstatus != 2, Appointment.APgroup == groupid).\
                         order_by(desc(Appointment.APid)).limit(6).all()
                     APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
                     self.retjson['code'] = '10251'
@@ -117,7 +118,7 @@ class APaskHandler(BaseHandler):  # 请求约拍相关信息
                 try:
                     appointments = self.db.query(Appointment). \
                         filter(Appointment.APtype == 0, Appointment.APclosed == 0, Appointment.APvalid == 1,
-                               Appointment.APstatus != 2).\
+                               Appointment.APstatus != 2 , Appointment.APgroup == groupid).\
                     order_by(desc(Appointment.APid)).limit(6).all()
                     APmodelHandler.ap_Model_simply(appointments, retdata, u_id)
                     self.retjson['code'] = '10252'

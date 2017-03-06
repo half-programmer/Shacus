@@ -137,7 +137,8 @@ class APmodelHandler(object):
                 APregisters=ap_regist_users,  # 返回所有报名人用户模型
                 APimgurl=apimgurls,
                 APstatus=appointment.APstatus,
-                Userliked=liked
+                Userliked=liked,
+                APgroup=appointment.APgroup,
             )
             return m_response
         except Exception, e:

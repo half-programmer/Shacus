@@ -5,6 +5,7 @@
 '''
 import json
 
+from Appointment.APgroupHandler import APgroupHandler
 from BaseHandlerh import BaseHandler
 from Database.tables import Appointment, User
 from FileHandler.ImageHandler import ImageHandler
@@ -102,6 +103,7 @@ class APcreateHandler(BaseHandler):  # 创建约拍
             ap_addallowed = self.get_argument('ap_allowed')
             ap_type = self.get_argument('ap_type')
             ap_imgs = self.get_argument('imgs')
+            ap_group = self.get_argument('group')
             try:
                 ap_imgs_json = json.loads(ap_imgs)
                 user = self.db.query(User.Uid).filter(User.Uauthkey == auth_key).one()  # 查看该用户id
@@ -137,7 +139,8 @@ class APcreateHandler(BaseHandler):  # 创建约拍
                                             Appointment.APcontent: ap_content,
                                             Appointment.APaddallowed: ap_addallowed,
                                             Appointment.APtype: ap_type,
-                                            Appointment.APvalid: 1
+                                            Appointment.APvalid: 1,
+                                            Appointment.APgroup: APgroupHandler.GetGroupNum(ap_group),
                                             }, synchronize_session=False)
                                 imghandler = ImageHandler()
                                 try:

@@ -27,3 +27,16 @@ class APgroupHandler(object):
                 apdata['apid'].append(item.APid)
             retdata.append(apdata)
         return retdata
+
+    @staticmethod
+    def GetGroupNum(groupid):
+        if groupid=='写真客片':
+            return 1
+        elif groupid=='记录随拍':
+            return 2
+        elif groupid == '练手互免':
+            return 3
+        elif groupid == '活动更拍':
+            return 4
+        elif groupid == '商业跟拍':
+            return 5
